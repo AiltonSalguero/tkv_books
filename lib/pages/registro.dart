@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tkv_books/dao/usuario_dao.dart';
 import 'package:tkv_books/model/usuario.dart';
 
 class RegistroPage extends StatefulWidget {
@@ -7,11 +8,10 @@ class RegistroPage extends StatefulWidget {
 }
 
 class _RegistroPageState extends State<RegistroPage> {
-
-  Usuario userioNuevo = Usuario();
+  Usuario usuarioNuevo;
   final nombres = TextEditingController();
   final apellidos = TextEditingController();
-  final apodo = TextEditingController();
+  final nickname = TextEditingController();
   final contrasenia = TextEditingController();
 
   @override
@@ -19,14 +19,21 @@ class _RegistroPageState extends State<RegistroPage> {
     // Limpia los controlodadores
     nombres.dispose();
     apellidos.dispose();
-    apodo.dispose();
+    nickname.dispose();
     contrasenia.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Registro",
+        ),
+      ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           TextFormField(
             controller: nombres,
@@ -41,7 +48,7 @@ class _RegistroPageState extends State<RegistroPage> {
             ),
           ),
           TextFormField(
-            controller: apodo,
+            controller: nickname,
             decoration: InputDecoration(
               labelText: 'Apodo',
             ),
@@ -53,8 +60,19 @@ class _RegistroPageState extends State<RegistroPage> {
             ),
             obscureText: true,
           ),
+          FlatButton(
+            child: Text("Listo"),
+            onPressed: () => _validarRegistro(),
+          )
         ],
       ),
     );
+  }
+
+  void _validarRegistro() {
+    usuarioNuevo =
+        Usuario(nombres.text, apellidos.text, nickname.text, contrasenia.text);
+    // validar datos
+    UsuarioDao.postUsuario(usuarioNuevo);
   }
 }
