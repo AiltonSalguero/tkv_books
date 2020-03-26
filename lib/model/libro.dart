@@ -1,11 +1,14 @@
 class Libro {
   int codLibro;
-  String codUsuario;
+  int codUsuario;
   String nombre;
   String autor;
   int paginasLeidas;
   int paginasTotales;
-
+  Libro() {
+    this.codLibro = 0;
+    this.codUsuario = 0;
+  }
   Libro.fromJson(Map<String, dynamic> json) {
     codLibro = json['codLibro'];
     codUsuario = json['codUsuario'];

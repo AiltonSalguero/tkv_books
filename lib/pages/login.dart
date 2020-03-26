@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dao/usuario_dao.dart';
 import 'package:tkv_books/util/router.dart';
-import 'package:tkv_books/widgets/error_login_dialog.dart';
+import 'package:tkv_books/dialogs/error_login_dialog.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -23,6 +23,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         title: Text(
           "Login",
@@ -36,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
           TextFormField(
             controller: nickname,
             decoration: InputDecoration(
-              labelText: 'Apodo',
+              labelText: 'Nickname',
             ),
           ),
           TextFormField(
@@ -46,10 +47,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             obscureText: true,
           ),
-          FlatButton(
-            child: Icon(Icons.send),
-            onPressed: () => _validarUsuario(),
-          ),
+          _ingresarButton(_validarUsuario()),
           FlatButton(
             child: Text("Registrarme"),
             onPressed: () => Router.irRegistro(context),
@@ -59,7 +57,34 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  Widget _ingresarButton(void onPressed) {
+    return Container(
+      width: double.infinity,
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: RaisedButton(
+          color: Color(0xFF35A8A1),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(6.0),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              "Ingresar",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24.0,
+                  fontFamily: "Product_Sans_Bold"),
+            ),
+          ),
+          onPressed: () => onPressed,
+        ),
+      ),
+    );
+  }
+
   void _validarUsuario() {
+    if(nickname.text=="" || contrasenia.text == "") return null;
     UsuarioDao.existeUsuario(nickname.text, contrasenia.text).then((existe) {
       if (existe) {
         _logearUsuario();
@@ -74,9 +99,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _logearUsuario() {
-    UsuarioDao.getUsuarioByNickname(nickname.text).then((user){
+    UsuarioDao.getUsuarioByNickname(nickname.text).then((user) {
       Sesion.usuarioLogeado = user;
+      Router.irPerfil(context);
     });
-    Router.irPerfil(context);
   }
 }

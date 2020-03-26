@@ -27,6 +27,7 @@ class _RegistroPageState extends State<RegistroPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         title: Text(
           "Registro",
@@ -50,7 +51,7 @@ class _RegistroPageState extends State<RegistroPage> {
           TextFormField(
             controller: nickname,
             decoration: InputDecoration(
-              labelText: 'Apodo',
+              labelText: 'Nickname',
             ),
           ),
           TextFormField(

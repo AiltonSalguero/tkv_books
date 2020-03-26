@@ -10,8 +10,16 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Trikavengers"),),
+      appBar: AppBar(
+        title: Text(
+          "Trikavengers",
+          style: TextStyle(
+            fontSize: 14.0,
+          ),
+        ),
+      ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Text(
             "Trikavengers",
@@ -20,6 +28,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               FlatButton(
                 child: Icon(Icons.list),

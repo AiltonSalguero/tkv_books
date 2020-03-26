@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tkv_books/pages/agregar_libro.dart';
 import 'package:tkv_books/pages/home.dart';
 import 'package:tkv_books/pages/lista_total.dart';
 import 'package:tkv_books/pages/login.dart';
@@ -24,7 +23,6 @@ class MyApp extends StatelessWidget {
         '/registro': (context) => RegistroPage(),
         '/perfil': (context) => PerfilPage(),
         '/lista_total': (context) => ListaTotalPage(),
-        '/agregar_libro': (context) => AgregarLibroPage(),
       },
       initialRoute: '/',
     );

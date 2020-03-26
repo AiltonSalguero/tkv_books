@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tkv_books/model/libro_leyendose.dart';
 
 class ListaTotalPage extends StatefulWidget {
   @override
@@ -11,5 +12,9 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
     return Container(
       
     );
+  }
+
+  Widget _libroLeyendoseItem(LibroLeyendose libro){
+    return Text("");
   }
 }
