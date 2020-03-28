@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tkv_books/dao/usuario_dao.dart';
 import 'package:tkv_books/model/usuario.dart';
+import 'package:tkv_books/widgets/botonPersonalizado.dart';
 
 class RegistroPage extends StatefulWidget {
   @override
@@ -61,10 +62,7 @@ class _RegistroPageState extends State<RegistroPage> {
             ),
             obscureText: true,
           ),
-          FlatButton(
-            child: Text("Listo"),
-            onPressed: () => _validarRegistro(),
-          )
+          botonPrincipal(_validarRegistro, "Crear cuenta")
         ],
       ),
     );

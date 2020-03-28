@@ -3,6 +3,9 @@ import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dao/usuario_dao.dart';
 import 'package:tkv_books/util/router.dart';
 import 'package:tkv_books/dialogs/error_login_dialog.dart';
+import 'package:tkv_books/widgets/botonPersonalizado.dart';
+import 'package:tkv_books/widgets/inputPersonalizado.dart';
+import 'package:tkv_books/widgets/labelPerzonalizado.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -12,9 +15,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final nickname = TextEditingController();
   final contrasenia = TextEditingController();
-
   void dispose() {
-    // Limpia los controlodadores
+    //Limpia los controlodadores
     nickname.dispose();
     contrasenia.dispose();
     super.dispose();
@@ -22,69 +24,70 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
-      appBar: AppBar(
-        title: Text(
-          "Login",
-        ),
-      ),
-      body: Column(
+      //resizeToAvoidBottomPadding: false,
+      body: Stack(
+        fit: StackFit.passthrough,
+        alignment: Alignment.topLeft,
         children: <Widget>[
-          Text(
-            "Trikavengers",
+          Image.asset(
+            "images/logo.jpg",
+            fit: BoxFit.cover,
+            height: screenHeight * 0.35, // Responsive
+            width: double.infinity,
           ),
-          TextFormField(
-            controller: nickname,
-            decoration: InputDecoration(
-              labelText: 'Nickname',
+          Container(
+            height: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(32.0),
+                topLeft: Radius.circular(32.0),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey,
+                  blurRadius: 32.0,
+                ),
+              ],
+              color: Color(0xfffafafa),
+            ),
+            margin: EdgeInsets.only(
+              top: screenHeight * 0.3, // Responsive 266
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(
+                top: 32.0,
+              ),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  //crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    tituloLabel("Login"),
+                    inputPrincipal("Nickname", nickname),
+                    inputSecundario("Contrasenia", contrasenia),
+                    _ingresarButton(),
+                  ],
+                ),
+              ),
             ),
           ),
-          TextFormField(
-            controller: contrasenia,
-            decoration: InputDecoration(
-              labelText: 'Contraseña',
-            ),
-            obscureText: true,
-          ),
-          _ingresarButton(_validarUsuario()),
-          FlatButton(
-            child: Text("Registrarme"),
-            onPressed: () => Router.irRegistro(context),
-          )
         ],
       ),
     );
   }
 
-  Widget _ingresarButton(void onPressed) {
-    return Container(
-      width: double.infinity,
-      child: Padding(
-        padding: const EdgeInsets.all(32.0),
-        child: RaisedButton(
-          color: Color(0xFF35A8A1),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(6.0),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              "Ingresar",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24.0,
-                  fontFamily: "Product_Sans_Bold"),
-            ),
-          ),
-          onPressed: () => onPressed,
-        ),
-      ),
-    );
+  Widget _ingresarButton() {
+    return botonPrincipal(_validarUsuario, "Ingresar");
   }
 
-  void _validarUsuario() {
-    if(nickname.text=="" || contrasenia.text == "") return null;
+  _validarUsuario() {
+    print("Validando");
+    // si no hay datos que se ponga de color celeste turquesa
+    if (nickname.text == "" || contrasenia.text == "") return null;
     UsuarioDao.existeUsuario(nickname.text, contrasenia.text).then((existe) {
       if (existe) {
         _logearUsuario();
@@ -94,11 +97,11 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  void _abrirErrorLoginDialog(String nickname) async {
+  _abrirErrorLoginDialog(String nickname) async {
     final ConfirmAction action = await ErrorLoginDialog(context);
   }
 
-  void _logearUsuario() {
+  _logearUsuario() {
     UsuarioDao.getUsuarioByNickname(nickname.text).then((user) {
       Sesion.usuarioLogeado = user;
       Router.irPerfil(context);

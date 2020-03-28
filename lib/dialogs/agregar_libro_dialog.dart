@@ -1,14 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tkv_books/dao/sesion.dart';
-import 'package:tkv_books/model/libro.dart';
 
 Future agregarLibroDialog(BuildContext context) {
-  
-
   void _cerrarDialog() {
     Sesion.libroAgregado.codUsuario = Sesion.usuarioLogeado.codUsuario;
-    Navigator.pop(context);
+    Sesion.libroAgregado.paginasLeidas < Sesion.libroAgregado.paginasTotales
+        ? Navigator.pop(context)
+        : null;
   }
 
   return showDialog(
@@ -22,13 +21,18 @@ Future agregarLibroDialog(BuildContext context) {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
+              TextFormField(
+                decoration: InputDecoration.collapsed(hintText: "Nombre"),
+                validator: (value) {
+                  if (value.isEmpty) return "Ingrese el nombre";
+                },
+              ),
               TextField(
                 autofocus: true,
                 decoration: InputDecoration(
                   hintText: "Nombre",
                 ),
                 onChanged: (nombre) {
-                  print("nomnaaaaaaare");
                   Sesion.libroAgregado.nombre = nombre;
                 },
               ),
@@ -47,7 +51,8 @@ Future agregarLibroDialog(BuildContext context) {
                   hintText: "Numero total de paginas",
                 ),
                 onChanged: (paginasTotales) {
-                  Sesion.libroAgregado.paginasTotales = int.parse(paginasTotales);
+                  Sesion.libroAgregado.paginasTotales =
+                      int.parse(paginasTotales);
                 },
               ),
               TextField(
