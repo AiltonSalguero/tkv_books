@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:tkv_books/util/confirmAction.dart';
 
-enum ConfirmAction { ACCEPT }
 
-Future<ConfirmAction> ErrorLoginDialog(BuildContext context) {
+Future<ConfirmAction> errorLoginDialog(BuildContext context) {
   // Opcion con varios idiomas
   return showDialog<ConfirmAction>(
     context: context,

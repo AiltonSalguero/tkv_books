@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dao/usuario_dao.dart';
+import 'package:tkv_books/util/confirmAction.dart';
 import 'package:tkv_books/util/router.dart';
 import 'package:tkv_books/dialogs/error_login_dialog.dart';
 import 'package:tkv_books/widgets/botonPersonalizado.dart';
@@ -98,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   _abrirErrorLoginDialog(String nickname) async {
-    final ConfirmAction action = await ErrorLoginDialog(context);
+    final ConfirmAction action = await errorLoginDialog(context);
   }
 
   _logearUsuario() {

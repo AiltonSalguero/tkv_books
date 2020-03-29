@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tkv_books/dao/sesion.dart';
+import 'package:tkv_books/util/confirmAction.dart';
 import 'package:tkv_books/widgets/inputPersonalizado.dart';
 
-Future<void> agregarLibroDialog(BuildContext context) {
+
+Future<ConfirmAction> editarLibroDialog(BuildContext context) {
   final _formKey = GlobalKey<FormState>();
 
   final nombre = TextEditingController();

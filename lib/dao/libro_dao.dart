@@ -4,21 +4,22 @@ import 'package:http/http.dart' as http;
 import 'package:tkv_books/model/libro.dart';
 
 class LibroDao {
-  static String apiUrl =
-      "https://io3689ejvd.execute-api.us-east-2.amazonaws.com/test";
   static Libro libroLeyendo;
   static ListaLibros librosAgregados;
 
-  static Future<Libro> getLibroByCod(
-      int codUsuario, int codLibro) async {
+  static Future<Libro> getLibroByCod(int codUsuario, int codLibro) async {
+    String apiUrl =
+      "https://io3689ejvd.execute-api.us-east-2.amazonaws.com/test";
     apiUrl += "/librosTKV?codUsuario=" + codUsuario.toString();
-    apiUrl += "/&codLibro=" + codLibro.toString();
+    apiUrl += "&codLibro=" + codLibro.toString();
     var response = await http.get(apiUrl);
     var decodedData = json.decode(response.body);
     return ListaLibros.fromJson(decodedData).lista[0];
   }
 
   static Future<ListaLibros> getLibrosOfUsuario(int codUsuario) async {
+    String apiUrl =
+      "https://io3689ejvd.execute-api.us-east-2.amazonaws.com/test";
     var response = await http
         .get(apiUrl + "/librosTKV?codUsuario=" + codUsuario.toString());
     var decodedData = json.decode(response.body);
@@ -26,6 +27,8 @@ class LibroDao {
   }
 
   static Future<Null> postLibro(Libro libro) async {
+    String apiUrl =
+      "https://io3689ejvd.execute-api.us-east-2.amazonaws.com/test";
     http.post(apiUrl + "/librosTKV",
         body: jsonEncode(libro.toJson()),
         headers: {
@@ -36,5 +39,11 @@ class LibroDao {
     });
   }
 
-  static Future<Null> deleteLibro(Libro libro) async {}
+  static Future<Null> deleteLibro(int codLibro) async {
+    String apiUrl =
+      "https://io3689ejvd.execute-api.us-east-2.amazonaws.com/test";
+    apiUrl += "/librosTKV?codLibro=" + codLibro.toString();
+    print(apiUrl);
+    http.delete(apiUrl);
+  }
 }
