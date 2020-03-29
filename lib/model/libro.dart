@@ -5,6 +5,7 @@ class Libro {
   String autor;
   int paginasLeidas;
   int paginasTotales;
+
   Libro() {
     this.codLibro = 0;
     this.codUsuario = 0;

@@ -9,7 +9,6 @@ import 'package:tkv_books/dialogs/eliminar_libro_dialog.dart';
 import 'package:tkv_books/model/libro.dart';
 import 'package:tkv_books/model/usuario.dart';
 import 'package:tkv_books/util/confirmAction.dart';
-import 'package:tkv_books/util/router.dart';
 import 'package:tkv_books/util/utilFunctions.dart';
 import 'package:tkv_books/widgets/botonPersonalizado.dart';
 import 'package:tkv_books/widgets/labelPerzonalizado.dart';
@@ -62,7 +61,7 @@ class _PerfilPageState extends State<PerfilPage> {
             height: screenHeight * 0.35, // Responsive
             width: double.infinity,
           ),
-          botonRetrocederPagina(() {}),
+          botonRetrocederPagina(_irAlistaTotal),
           Container(
             height: double.infinity,
             width: double.infinity,
@@ -250,7 +249,7 @@ class _PerfilPageState extends State<PerfilPage> {
   }
 
   _irAlistaTotal() {
-    Router.irListaTotal(context);
+    Navigator.of(context).pushNamed("/lista_total");
   }
 
   Widget testStream() {

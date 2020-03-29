@@ -40,39 +40,32 @@ Widget bookMark() {
   );
 }
 
-Widget botonExtra() {
-  return Padding(
-    padding: const EdgeInsets.only(
-      top: 32.0,
-      left: 16.0,
-    ),
+Widget botonPerfil() {
+  return Align(
+    alignment: Alignment.topRight,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         SizedBox(
-          height: 62, // Separa widgets
-        ),
+          height: 30,
+        ), // responsive
         Container(
-          height: 24,
-          width: 72,
+          height: 36,
+          width: 80,
           decoration: BoxDecoration(
             color: Color(0xFFffffffff),
             borderRadius: BorderRadius.circular(20.0),
           ),
           child: Center(
             child: Text(
-              "Design",
+              "Mis libros",
               style: TextStyle(
                 color: Colors.black,
                 fontFamily: "Product_Sans_Regular",
                 fontSize: 12.0,
-                height: 1.4,
               ),
             ),
           ),
-        ),
-        SizedBox(
-          height: 8,
         ),
       ],
     ),
