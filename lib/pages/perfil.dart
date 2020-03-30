@@ -9,6 +9,7 @@ import 'package:tkv_books/dialogs/eliminar_libro_dialog.dart';
 import 'package:tkv_books/model/libro.dart';
 import 'package:tkv_books/model/usuario.dart';
 import 'package:tkv_books/util/confirmAction.dart';
+import 'package:tkv_books/util/screen.dart';
 import 'package:tkv_books/util/utilFunctions.dart';
 import 'package:tkv_books/widgets/botonPersonalizado.dart';
 import 'package:tkv_books/widgets/labelPerzonalizado.dart';
@@ -24,8 +25,6 @@ class _PerfilPageState extends State<PerfilPage> {
   bool tieneLibros = false;
   ListaLibros librosAgregados;
 
-  double screenWidth;
-  double screenHeight;
   @override
   void initState() {
     // traer datos
@@ -47,8 +46,6 @@ class _PerfilPageState extends State<PerfilPage> {
 
   @override
   Widget build(BuildContext context) {
-    screenWidth = MediaQuery.of(context).size.width;
-    screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       body: Stack(
@@ -56,9 +53,9 @@ class _PerfilPageState extends State<PerfilPage> {
         alignment: Alignment.topLeft,
         children: <Widget>[
           Image.asset(
-            "images/logo.jpg",
+            "images/banner_nubes.jpg",
             fit: BoxFit.cover,
-            height: screenHeight * 0.35, // Responsive
+            height: Screen.height * 0.35, // Responsive
             width: double.infinity,
           ),
           botonRetrocederPagina(_irAlistaTotal),
@@ -79,7 +76,7 @@ class _PerfilPageState extends State<PerfilPage> {
               color: Color(0xfffafafa),
             ),
             margin: EdgeInsets.only(
-              top: screenHeight * 0.3, // Responsive 266
+              top: Screen.height * 0.3, // Responsive 266
             ),
             child: Padding(
               padding: const EdgeInsets.only(
@@ -89,13 +86,13 @@ class _PerfilPageState extends State<PerfilPage> {
                 //mainAxisSize: MainAxisSize.min,
                 //crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  tituloLabel("Biblioteca"),
+                  titulo2Label("Biblioteca"),
                   Column(
                     //mainAxisSize: MainAxisSize.min,
                     //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      subTituloLabel("Esta leyendo:"),
-                      subTituloLabel("Biblioteca"),
+                      subTitulo1Label("Esta leyendo:"),
+                      subTitulo1Label("Biblioteca"),
                       tieneLibros
                           ? _buildListaLibros()
                           : Text("Este men no tiene libros")
@@ -121,7 +118,7 @@ class _PerfilPageState extends State<PerfilPage> {
 
   Widget _buildListaLibros() {
     return Container(
-      height: screenHeight * 0.45,
+      height: Screen.height * 0.45,
       child: ListView.builder(
         physics: AlwaysScrollableScrollPhysics(),
         shrinkWrap: true,
@@ -150,40 +147,27 @@ class _PerfilPageState extends State<PerfilPage> {
     return Column(
       children: <Widget>[
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             Column(
               children: <Widget>[
-                Text(
-                  libro.nombre,
-                  style: TextStyle(
-                    color: Colors.grey.shade800,
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  libro.autor,
-                  style: TextStyle(
-                    color: Colors.grey.shade800,
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                titulo3Label(libro.nombre),
+                subTitulo3Label(libro.autor),
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              //mainAxisAlignment: MainAxisAlignment.end,
+              //mainAxisSize: MainAxisSize.min,
+              //crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
                 FlatButton(
-                  child: Icon(Icons.star),
+                  child: Icon(Icons.edit),
                   onPressed: () => _onFavoriteButton(libro.codLibro),
                 ),
                 FlatButton(
-                  child: Icon(Icons.delete),
+                  child: Icon(
+                    Icons.delete,
+                  ),
                   onPressed: () => _abrirEliminarLibroDialog(libro.codLibro),
                 )
               ],
@@ -196,7 +180,7 @@ class _PerfilPageState extends State<PerfilPage> {
           ),
           child: LinearPercentIndicator(
             backgroundColor: Color(0xFFB7B7B7),
-            width: screenWidth * 0.9,
+            width: Screen.width * 0.9,
             animation: true,
             lineHeight: 32.0,
             animationDuration: 2000,
@@ -244,6 +228,7 @@ class _PerfilPageState extends State<PerfilPage> {
   _abrirAgregarLibroDialog() {
     agregarLibroDialog(context).then((value) {
       LibroDao.postLibro(Sesion.libroAgregado);
+      print(Sesion.libroAgregado);
       _actualizarListaLibros();
     });
   }

@@ -1,3 +1,8 @@
+/*
+  
+
+  Por limpiar
+*/
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:tkv_books/model/usuario.dart';
@@ -50,14 +55,26 @@ class UsuarioDao {
   static Future<Null> postUsuario(Usuario usuario) async {
     String apiUrl =
         "https://io3689ejvd.execute-api.us-east-2.amazonaws.com/test";
-    http.post(apiUrl + "/usuariosTKV",
-        body: jsonEncode(usuario.toJson()),
-        headers: {
-          'Content-type': 'application/json',
-          'Accept': 'application/json'
-        }).then((response) {
-      print(response);
-      print(jsonEncode(usuario.toJson()));
-    });
+    http.post(
+      apiUrl + "/usuariosTKV",
+      body: jsonEncode(usuario.toJson()),
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json'
+      },
+    );
+  }
+
+  static Future<Null> putUsuarioSetLibroLeyendo(int codUsuario, int codLibroLeyendo) async {
+    String apiUrl =
+        "https://io3689ejvd.execute-api.us-east-2.amazonaws.com/test";
+    http.put(
+      apiUrl + "/usuariosTKV?codUsuario=" + codUsuario.toString(),
+      body: jsonEncode({codLibroLeyendo: codLibroLeyendo}),
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json'
+      },
+    );
   }
 }

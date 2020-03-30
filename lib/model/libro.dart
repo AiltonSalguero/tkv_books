@@ -5,6 +5,7 @@ class Libro {
   String autor;
   int paginasLeidas;
   int paginasTotales;
+  String nicknameUsuario;
 
   Libro() {
     this.codLibro = 0;
@@ -17,6 +18,7 @@ class Libro {
     autor = json['autor'];
     paginasLeidas = json['paginasLeidas'];
     paginasTotales = json['paginasTotales'];
+    nicknameUsuario= json['nicknameUsuario'];
   }
 
   Map<String, dynamic> toJson() {
@@ -28,6 +30,7 @@ class Libro {
     data['autor'] = this.autor;
     data['paginasLeidas'] = this.paginasLeidas;
     data['paginasTotales'] = this.paginasTotales;
+    data['nicknameUsuario'] = this.nicknameUsuario;
     return data;
   }
 }

@@ -72,7 +72,7 @@ class _RegistroPageState extends State<RegistroPage> {
                 child: Column(
                   //crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    tituloLabel("Registro"),
+                    titulo1Label("Registro"),
                     inputPrincipal("Nombres", nombres),
                     inputPrincipal("Apellidos", apellidos),
                     inputPrincipal("Nickname", nickname),

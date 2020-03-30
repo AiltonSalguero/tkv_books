@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dao/usuario_dao.dart';
 import 'package:tkv_books/util/confirmAction.dart';
-import 'package:tkv_books/util/router.dart';
 import 'package:tkv_books/dialogs/error_login_dialog.dart';
+import 'package:tkv_books/util/screen.dart';
 import 'package:tkv_books/widgets/botonPersonalizado.dart';
 import 'package:tkv_books/widgets/inputPersonalizado.dart';
 import 'package:tkv_books/widgets/labelPerzonalizado.dart';
@@ -25,9 +25,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
       //resizeToAvoidBottomPadding: false,
       body: Stack(
@@ -37,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
           Image.asset(
             "images/logo.jpg",
             fit: BoxFit.cover,
-            height: screenHeight * 0.35, // Responsive
+            height: Screen.height * 0.35, // Responsive
             width: double.infinity,
           ),
           Container(
@@ -56,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
               color: Color(0xfffafafa),
             ),
             margin: EdgeInsets.only(
-              top: screenHeight * 0.3, // Responsive 266
+              top: Screen.height * 0.3, // Responsive 266
             ),
             child: Padding(
               padding: const EdgeInsets.only(
@@ -67,9 +64,9 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   //crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    tituloLabel("Login"),
+                    titulo1Label("Login"),
                     inputPrincipal("Nickname", nickname),
-                    inputSecundario("Contrasenia", contrasenia),
+                    inputSecundario("Contraseña", contrasenia),
                     _ingresarButton(),
                   ],
                 ),
@@ -105,7 +102,8 @@ class _LoginPageState extends State<LoginPage> {
   _logearUsuario() {
     UsuarioDao.getUsuarioByNickname(nickname.text).then((user) {
       Sesion.usuarioLogeado = user;
-      Router.irPerfil(context);
+      // ('/perfil/codUusario=1')
+      Navigator.of(context).pushReplacementNamed('/perfil');
     });
   }
 }

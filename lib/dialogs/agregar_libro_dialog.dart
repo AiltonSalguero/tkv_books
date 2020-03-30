@@ -1,3 +1,8 @@
+/*
+  
+
+  Por limpiar
+*/
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tkv_books/dao/sesion.dart';
@@ -17,9 +22,11 @@ Future<void> agregarLibroDialog(BuildContext context) {
     Sesion.libroAgregado.autor = autor.text;
     Sesion.libroAgregado.paginasLeidas = int.parse(paginasLeidas.text);
     Sesion.libroAgregado.paginasTotales = int.parse(paginasTotales.text);
+    Sesion.libroAgregado.nicknameUsuario =  Sesion.usuarioLogeado.nickname;
     Sesion.libroAgregado.paginasLeidas < Sesion.libroAgregado.paginasTotales
         ? Navigator.pop(context)
         : null;
+        // validar que las paginas sean menores
   }
 
   return showDialog(

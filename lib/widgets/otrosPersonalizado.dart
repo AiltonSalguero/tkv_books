@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tkv_books/widgets/labelPerzonalizado.dart';
 
 Widget bookMark() {
   return Align(
@@ -40,7 +41,7 @@ Widget bookMark() {
   );
 }
 
-Widget botonPerfil() {
+Widget botonMiPerfil(Function accion) {
   return Align(
     alignment: Alignment.topRight,
     child: Column(
@@ -49,21 +50,20 @@ Widget botonPerfil() {
         SizedBox(
           height: 30,
         ), // responsive
-        Container(
-          height: 36,
-          width: 80,
-          decoration: BoxDecoration(
-            color: Color(0xFFffffffff),
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          child: Center(
-            child: Text(
-              "Mis libros",
-              style: TextStyle(
-                color: Colors.black,
-                fontFamily: "Product_Sans_Regular",
-                fontSize: 12.0,
+        GestureDetector(
+          onTap: accion,
+          child: Container(
+            height: 36,
+            width: 80,
+            decoration: BoxDecoration(
+              color: Color(0xFF35A8A1),
+              borderRadius: BorderRadius.circular(
+                20.0,
               ),
+              border: Border.all(color: Colors.black),
+            ),
+            child: Center(
+              child: titulo3Label("Mi perfil"),
             ),
           ),
         ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tkv_books/util/router.dart';
+import 'package:tkv_books/util/screen.dart';
 import 'package:tkv_books/widgets/botonPersonalizado.dart';
 
 class HomePage extends StatefulWidget {
@@ -10,25 +10,39 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFF5CC5E5),
-      body: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          //mainAxisSize: MainAxisSize.min,
-          //crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Image.asset("images/logo.jpg"),
-            _loginButton(),
-            _registroButton(),
-            Text(
-              "#SimiosJuntosFuertes",
-              style: TextStyle(
-                fontSize: 20.0,
-                color: Colors.white,
+    Screen.width = MediaQuery.of(context).size.width;
+    Screen.height = MediaQuery.of(context).size.height;
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("images/background_nubes.jpg"),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+        ),
+        body: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            //mainAxisSize: MainAxisSize.min,
+            //crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Image.asset("images/logo_sin_nubes_v2.jpg"),
+              _loginButton(),
+              _registroButton(),
+              Text(
+                "#SimiosJuntosFuertes",
+                style: TextStyle(
+                  fontSize: 18.0,
+                  color: Colors.white,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
