@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tkv_books/widgets/labelPerzonalizado.dart';
 
 Widget bookMark() {
   return Align(
@@ -54,16 +53,26 @@ Widget botonMiPerfil(Function accion) {
           onTap: accion,
           child: Container(
             height: 36,
-            width: 80,
+            width: 90,
             decoration: BoxDecoration(
               color: Color(0xFF35A8A1),
               borderRadius: BorderRadius.circular(
                 20.0,
               ),
-              border: Border.all(color: Colors.black),
+              border: Border.all(
+                color: Colors.black,
+              ),
             ),
             child: Center(
-              child: titulo3Label("Mi perfil"),
+              child: Text(
+                "Mi perfil",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14.0,
+                  fontFamily: "Product_Sans_Bold",
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ),
         ),

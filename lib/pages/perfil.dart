@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:tkv_books/dao/libro_dao.dart';
 import 'package:tkv_books/dao/sesion.dart';
+import 'package:tkv_books/dao/usuario_dao.dart';
 import 'package:tkv_books/dialogs/agregar_libro_dialog.dart';
 import 'package:tkv_books/dialogs/editar_libro_dialog.dart';
 import 'package:tkv_books/dialogs/eliminar_libro_dialog.dart';
@@ -10,6 +11,7 @@ import 'package:tkv_books/model/libro.dart';
 import 'package:tkv_books/model/usuario.dart';
 import 'package:tkv_books/util/confirmAction.dart';
 import 'package:tkv_books/util/screen.dart';
+import 'package:tkv_books/util/temaPersonlizado.dart';
 import 'package:tkv_books/util/utilFunctions.dart';
 import 'package:tkv_books/widgets/botonPersonalizado.dart';
 import 'package:tkv_books/widgets/labelPerzonalizado.dart';
@@ -59,6 +61,7 @@ class _PerfilPageState extends State<PerfilPage> {
             width: double.infinity,
           ),
           botonRetrocederPagina(_irAlistaTotal),
+          _buildEncabezado(),
           Container(
             height: double.infinity,
             width: double.infinity,
@@ -67,10 +70,13 @@ class _PerfilPageState extends State<PerfilPage> {
                 topRight: Radius.circular(32.0),
                 topLeft: Radius.circular(32.0),
               ),
+              border: Border.all(
+                color: Colors.black,
+              ),
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey,
-                  blurRadius: 32.0,
+                  blurRadius: 24.0,
                 ),
               ],
               color: Color(0xfffafafa),
@@ -86,18 +92,10 @@ class _PerfilPageState extends State<PerfilPage> {
                 //mainAxisSize: MainAxisSize.min,
                 //crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  titulo2Label("Biblioteca"),
-                  Column(
-                    //mainAxisSize: MainAxisSize.min,
-                    //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      subTitulo1Label("Esta leyendo:"),
-                      subTitulo1Label("Biblioteca"),
-                      tieneLibros
-                          ? _buildListaLibros()
-                          : Text("Este men no tiene libros")
-                    ],
-                  ),
+                  titulo1Label("Biblioteca"),
+                  tieneLibros
+                      ? _buildListaLibros()
+                      : Text("Este men no tiene libros"),
                 ],
               ),
             ),
@@ -107,18 +105,42 @@ class _PerfilPageState extends State<PerfilPage> {
       floatingActionButton:
           //usuarioPerfil.codUsuario == ApiDao.usuarioLogeado.codUsuario?
           FloatingActionButton(
+        shape: CircleBorder(
+            side: BorderSide(
+          color: Colors.black,
+        ),),
+        backgroundColor: ColoresTkv.cyan,
         child: Icon(
           Icons.add,
         ),
         onPressed: () => _abrirAgregarLibroDialog(),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
     //      : null);
   }
 
+  Widget _buildEncabezado() {
+    return Align(
+      alignment: Alignment.topCenter,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          SizedBox(
+            height: 50,
+          ),
+          titulo1Label(Sesion.usuarioLogeado.nickname),
+          subTitulo1Label(Sesion.usuarioLogeado.nombres +
+              " " +
+              Sesion.usuarioLogeado.apellidos),
+        ],
+      ),
+    );
+  }
+
   Widget _buildListaLibros() {
     return Container(
-      height: Screen.height * 0.45,
+      height: Screen.height * 0.50,
       child: ListView.builder(
         physics: AlwaysScrollableScrollPhysics(),
         shrinkWrap: true,
@@ -139,78 +161,102 @@ class _PerfilPageState extends State<PerfilPage> {
         porcentajeDouble(libro.paginasLeidas, libro.paginasTotales);
     String paginas = "${libro.paginasLeidas} / ${libro.paginasTotales}";
 
-    Color colorBarra;
-    if (porcentaje == 1.00) colorBarra = Color(0xFFFFD938); // Amarillo
-    if (porcentaje < 0.75) colorBarra = Color(0xFF35A8A1); // Turquesa
-    if (porcentaje < 0.25) colorBarra = Color(0xFFF37D93); // Naranja
-    if (porcentaje < 0.15) colorBarra = Color(0xFFEE5F35); // Rosa
-    return Column(
-      children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+    Color colorBarra = colorProgressBar(porcentaje);
+
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: 4.0,
+        vertical: 4.0,
+      ),
+      child: Container(
+        height: 90,
+        width: Screen.width * 0.95,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(
+            Radius.circular(32.0),
+          ),
+          border: Border.all(
+            color: Colors.black,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey,
+              blurRadius: 16.0,
+            ),
+          ],
+          color: Color(0xfffafafa),
+        ),
+        child: Column(
           children: <Widget>[
-            Column(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                titulo3Label(libro.nombre),
-                subTitulo3Label(libro.autor),
+                Column(
+                  children: <Widget>[
+                    titulo3Label(libro.nombre),
+                    subTitulo3Label(libro.autor),
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    FlatButton(
+                      child: Icon(Icons.edit),
+                      onPressed: () => _abrirEditarLibroDialog(libro.codLibro),
+                    ),
+                    FlatButton(
+                      child: Icon(
+                        Icons.delete,
+                      ),
+                      onPressed: () =>
+                          _abrirEliminarLibroDialog(libro.codLibro),
+                    )
+                  ],
+                ),
               ],
             ),
-            Row(
-              //mainAxisAlignment: MainAxisAlignment.end,
-              //mainAxisSize: MainAxisSize.min,
-              //crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                FlatButton(
-                  child: Icon(Icons.edit),
-                  onPressed: () => _onFavoriteButton(libro.codLibro),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 16.0,
+              ),
+              child: LinearPercentIndicator(
+                backgroundColor: Color(0xFFB7B7B7),
+                width: Screen.width * 0.85,
+                animation: true,
+                lineHeight: 28.0,
+                animationDuration: 2000,
+                percent: porcentaje,
+                center: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(porcentajeTexto),
+                    Text(paginas),
+                  ],
                 ),
-                FlatButton(
-                  child: Icon(
-                    Icons.delete,
-                  ),
-                  onPressed: () => _abrirEliminarLibroDialog(libro.codLibro),
-                )
-              ],
+                progressColor: colorBarra,
+              ),
             ),
           ],
         ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: 16.0,
-          ),
-          child: LinearPercentIndicator(
-            backgroundColor: Color(0xFFB7B7B7),
-            width: Screen.width * 0.9,
-            animation: true,
-            lineHeight: 32.0,
-            animationDuration: 2000,
-            percent: porcentaje,
-            center: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(porcentajeTexto),
-                Text(paginas),
-              ],
-            ),
-            progressColor: colorBarra,
-          ),
-        ),
-      ],
+      ),
     );
   }
 
-  _onFavoriteButton(int codLibro) {}
-
   _abrirEditarLibroDialog(int codLibro) {
     // mostrar dialog de alerta . then(){... if accept
-    editarLibroDialog(context).then(
-      (value) {
-        if (value == ConfirmAction.ACCEPT) {
-          LibroDao.deleteLibro(codLibro);
-          _actualizarListaLibros();
-        }
-      },
-    );
+    UsuarioDao.putUsuarioSetLibroLeyendo(
+            Sesion.usuarioLogeado.codUsuario, codLibro)
+        .then((val) {
+      Sesion.usuarioLogeado.codLibroLeyendo = codLibro;
+    });
+
+    //editarLibroDialog(context).then(
+    // (value) {
+    //  if (value == ConfirmAction.ACCEPT) {
+    //   LibroDao.deleteLibro(codLibro);
+    //  _actualizarListaLibros();
+    //}
+    //},
+    //);
   }
 
   _abrirEliminarLibroDialog(int codLibro) {
@@ -234,7 +280,7 @@ class _PerfilPageState extends State<PerfilPage> {
   }
 
   _irAlistaTotal() {
-    Navigator.of(context).pushNamed("/lista_total");
+    Navigator.of(context).pushReplacementNamed("/lista_total");
   }
 
   Widget testStream() {

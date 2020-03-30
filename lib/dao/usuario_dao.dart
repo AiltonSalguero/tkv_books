@@ -65,12 +65,13 @@ class UsuarioDao {
     );
   }
 
-  static Future<Null> putUsuarioSetLibroLeyendo(int codUsuario, int codLibroLeyendo) async {
+  static Future<Null> putUsuarioSetLibroLeyendo(
+      int codUsuario, int codLibro) async {
     String apiUrl =
         "https://io3689ejvd.execute-api.us-east-2.amazonaws.com/test";
     http.put(
       apiUrl + "/usuariosTKV?codUsuario=" + codUsuario.toString(),
-      body: jsonEncode({codLibroLeyendo: codLibroLeyendo}),
+      body: jsonEncode({"codLibroLeyendo": codLibro}),
       headers: {
         'Content-type': 'application/json',
         'Accept': 'application/json'

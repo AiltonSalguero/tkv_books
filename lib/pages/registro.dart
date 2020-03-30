@@ -52,6 +52,9 @@ class _RegistroPageState extends State<RegistroPage> {
                 topRight: Radius.circular(32.0),
                 topLeft: Radius.circular(32.0),
               ),
+              border: Border.all(
+                color: Colors.black,
+              ),
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey,

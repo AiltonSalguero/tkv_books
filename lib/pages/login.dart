@@ -44,6 +44,9 @@ class _LoginPageState extends State<LoginPage> {
                 topRight: Radius.circular(32.0),
                 topLeft: Radius.circular(32.0),
               ),
+              border: Border.all(
+                color: Colors.black,
+              ),
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey,
