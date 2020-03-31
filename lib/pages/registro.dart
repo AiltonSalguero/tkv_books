@@ -3,6 +3,7 @@ import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dao/usuario_dao.dart';
 import 'package:tkv_books/dialogs/error_dialog.dart';
 import 'package:tkv_books/model/usuario.dart';
+import 'package:tkv_books/util/screen.dart';
 import 'package:tkv_books/widgets/botonPersonalizado.dart';
 import 'package:tkv_books/widgets/inputPersonalizado.dart';
 import 'package:tkv_books/widgets/labelPerzonalizado.dart';
@@ -31,9 +32,6 @@ class _RegistroPageState extends State<RegistroPage> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
       //resizeToAvoidBottomPadding: false,
       body: Stack(
@@ -43,7 +41,7 @@ class _RegistroPageState extends State<RegistroPage> {
           Image.asset(
             "images/logo.jpg",
             fit: BoxFit.cover,
-            height: screenHeight * 0.35, // Responsive
+            height: Screen.height * 0.35, // Responsive
             width: double.infinity,
           ),
           Container(
@@ -65,7 +63,7 @@ class _RegistroPageState extends State<RegistroPage> {
               color: Color(0xfffafafa),
             ),
             margin: EdgeInsets.only(
-              top: screenHeight * 0.3, // Responsive 266
+              top: Screen.height * 0.3, // Responsive 266
             ),
             child: Padding(
               padding: const EdgeInsets.only(

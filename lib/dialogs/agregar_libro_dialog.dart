@@ -11,22 +11,40 @@ import 'package:tkv_books/widgets/inputPersonalizado.dart';
 Future<void> agregarLibroDialog(BuildContext context) {
   final _formKey = GlobalKey<FormState>();
 
-  final nombre = TextEditingController();
-  final autor = TextEditingController();
-  final paginasLeidas = TextEditingController();
-  final paginasTotales = TextEditingController();
+  final _nombre = TextEditingController();
+  final _autor = TextEditingController();
+  final _paginasLeidas = TextEditingController();
+  final _paginasTotales = TextEditingController();
 
-  void _cerrarDialog() {
+  _guardarDatos() {
     Sesion.libroAgregado.codUsuario = Sesion.usuarioLogeado.codUsuario;
-    Sesion.libroAgregado.nombre = nombre.text;
-    Sesion.libroAgregado.autor = autor.text;
-    Sesion.libroAgregado.paginasLeidas = int.parse(paginasLeidas.text);
-    Sesion.libroAgregado.paginasTotales = int.parse(paginasTotales.text);
-    Sesion.libroAgregado.nicknameUsuario =  Sesion.usuarioLogeado.nickname;
-    Sesion.libroAgregado.paginasLeidas <= Sesion.libroAgregado.paginasTotales
-        ? Navigator.pop(context)
-        : null;
-        // validar que las paginas sean menores
+    Sesion.libroAgregado.nombre = _nombre.text;
+    Sesion.libroAgregado.autor = _autor.text;
+    Sesion.libroAgregado.paginasLeidas = int.parse(_paginasLeidas.text);
+    Sesion.libroAgregado.paginasTotales = int.parse(_paginasTotales.text);
+    Sesion.libroAgregado.nicknameUsuario = Sesion.usuarioLogeado.nickname;
+  }
+
+  _cerrarDialog() {
+    Navigator.pop(context);
+  }
+
+  _validarDatos() {
+    print(_nombre.text);
+    if (_formKey.currentState.validate()) {
+      if (int.parse(_paginasLeidas.text) > int.parse(_paginasTotales.text)) {
+        _paginasLeidas.text = null;
+        _paginasTotales.text = null;
+
+        if (_formKey.currentState.validate()) {
+          print("validado2");
+        }
+      } else {
+        print("validado");
+        _guardarDatos();
+        _cerrarDialog();
+      }
+    }
   }
 
   return showDialog(
@@ -35,6 +53,17 @@ Future<void> agregarLibroDialog(BuildContext context) {
     builder: (BuildContext context) {
       return AlertDialog(
         title: Text("Nuevo libro"),
+        shape: RoundedRectangleBorder(
+          side: BorderSide(
+            color: Colors.black,
+            width: 2.0,
+          ),
+          borderRadius: BorderRadius.all(
+            Radius.circular(
+              28.0,
+            ),
+          ),
+        ),
         content: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Form(
@@ -44,10 +73,12 @@ Future<void> agregarLibroDialog(BuildContext context) {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                inputDialogText("Nombre", nombre),
-                inputDialogText("Autor", autor),
-                inputDialogNumber("Paginas leidas", paginasLeidas),
-                inputDialogNumber("Paginas totales", paginasTotales),
+                inputDialogText("Nombre", _nombre, "Ingrese un nombre"),
+                inputDialogText("Autor", _autor, "Ingrese un autor"),
+                inputDialogNumber("Paginas leidas", _paginasLeidas,
+                    "Paginas leidas deben ser menores a las paginas totales"),
+                inputDialogNumber("Paginas totales", _paginasTotales,
+                    "Ingrese el numero total de paginas"),
               ],
             ),
           ),
@@ -57,13 +88,13 @@ Future<void> agregarLibroDialog(BuildContext context) {
             child: Text(
               "Cancelar",
             ),
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => _cerrarDialog(),
           ),
           FlatButton(
             child: Text(
               "Agregar",
             ),
-            onPressed: () => _cerrarDialog(),
+            onPressed: () => _validarDatos(),
           )
         ],
       );

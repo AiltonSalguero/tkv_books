@@ -28,9 +28,12 @@ class _HomePageState extends State<HomePage> {
         body: Container(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            //mainAxisSize: MainAxisSize.min,
+            mainAxisSize: MainAxisSize.min,
             //crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              SizedBox(
+                height: Screen.height * 0.05,
+              ),
               Image.asset("images/logo_sin_nubes_v2.jpg"),
               _loginButton(),
               _registroButton(),

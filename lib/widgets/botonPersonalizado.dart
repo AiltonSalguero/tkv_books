@@ -58,6 +58,47 @@ Widget botonSecundario(Function accion, String texto) {
   );
 }
 
+Widget botonTercero(String texto, Function accion) {
+  return Align(
+    alignment: Alignment.topLeft,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        SizedBox(
+          height: 30,
+        ), // responsive
+        GestureDetector(
+          onTap: accion,
+          child: Container(
+            height: 36,
+            width: 90,
+            decoration: BoxDecoration(
+              color: Color(0xFF35A8A1),
+              borderRadius: BorderRadius.circular(
+                20.0,
+              ),
+              border: Border.all(
+                color: Colors.black,
+              ),
+            ),
+            child: Center(
+              child: Text(
+              texto,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14.0,
+                  fontFamily: "Product_Sans_Bold",
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 Widget botonRetrocederPagina(Function retrocederPage) {
   return Padding(
     padding: EdgeInsets.only(

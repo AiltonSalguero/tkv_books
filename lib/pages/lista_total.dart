@@ -14,7 +14,7 @@ import 'package:tkv_books/util/screen.dart';
 import 'package:tkv_books/util/temaPersonlizado.dart';
 import 'package:tkv_books/util/utilFunctions.dart';
 import 'package:tkv_books/widgets/labelPerzonalizado.dart';
-import 'package:tkv_books/widgets/otrosPersonalizado.dart';
+import 'package:tkv_books/widgets/botonPersonalizado.dart';
 
 class ListaTotalPage extends StatefulWidget {
   @override
@@ -36,7 +36,7 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
     _obtenerLibroLeyendosePorUsuario();
   }
 
-  void _actualizarListaLibros() {
+  _actualizarListaLibros() {
     print("actualizando...");
 
     LibroDao.getLibrosTotales().then((libros) {
@@ -78,9 +78,16 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
             width: double.infinity,
           ),
           Align(
-              alignment: Alignment(-0.85, -0.9),
-              child: titulo1Label(Sesion.usuarioLogeado.nickname)),
-          botonMiPerfil(_irAmiPerfil),
+            alignment: Alignment(0, -0.9),
+            //alignment: AlignmentDirectional.topCenter,
+            child: titulo1Label(Sesion.usuarioLogeado.nickname),
+          ),
+          Align(
+            alignment: Alignment(0, -0.8),
+            //alignment: AlignmentDirectional.topCenter,
+            child: subTitulo1Label("Leyendo:"),
+          ),
+          botonTercero("Mi perfil", _irAmiPerfil),
           hayLibroLeyendosePorUsuario
               ? _libroLeyendosePorUsuario(Sesion.libroLeyendoPorUsuario)
               : Text("Agregue un libro"),
@@ -116,7 +123,7 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
                   titulo1Label("Biblioteca global"),
                   hayLibrosLeyendose
                       ? _buildGridLibros()
-                      : Text("Este men no tiene libros")
+                      : Text("No hay libros")
                 ],
               ),
             ),
@@ -135,7 +142,7 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
         child: Icon(
           Icons.refresh,
         ),
-        onPressed: () => {},
+        onPressed: () => _actualizarListaLibros(),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
@@ -153,6 +160,11 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
       child: Container(
         height: screenHeight * 0.55,
         width: screenHeight * 0.90, // responsive
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(
+            Radius.circular(16.0),
+          ),
+        ),
         child: GridView.count(
           childAspectRatio: 24 / 29,
           crossAxisSpacing: 4.0,
@@ -341,18 +353,27 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
   }
 
   _aumentarPaginas() {
-    int paginaActual = Sesion.libroLeyendoPorUsuario.paginasLeidas++;
+    print(Sesion.libroLeyendoPorUsuario.paginasLeidas);
+    int paginaActual = Sesion.libroLeyendoPorUsuario.paginasLeidas + 1;
     if (paginaActual > Sesion.libroLeyendoPorUsuario.paginasTotales)
       return null;
     LibroDao.putLibroSetPaginasLeidas(
             Sesion.usuarioLogeado.codLibroLeyendo, paginaActual)
-        .then((val) => setState(() {}));
+        .then((val) {
+      Sesion.libroLeyendoPorUsuario.paginasLeidas++;
+      _actualizarListaLibros();
+    });
   }
 
   _disminuirPaginas() {
-    int paginaActual = Sesion.libroLeyendoPorUsuario.paginasLeidas--;
+    int paginaActual = Sesion.libroLeyendoPorUsuario.paginasLeidas - 1;
     if (paginaActual == -1) return null;
     LibroDao.putLibroSetPaginasLeidas(
-        Sesion.usuarioLogeado.codLibroLeyendo, paginaActual);
+            Sesion.usuarioLogeado.codLibroLeyendo, paginaActual)
+        .then((val) {
+      Sesion.libroLeyendoPorUsuario.paginasLeidas--;
+      _actualizarListaLibros();
+    });
+    ;
   }
 }

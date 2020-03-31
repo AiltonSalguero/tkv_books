@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 
 Widget inputPrincipal(String texto, TextEditingController controller) {
   return Container(
+    height: 100.0,
     width: double.infinity,
     child: Padding(
-      padding: const EdgeInsets.all(24.0),
+      padding: const EdgeInsets.all(
+        24.0,
+      ),
       child: TextField(
         textCapitalization: TextCapitalization.words,
         controller: controller,
@@ -12,9 +15,10 @@ Widget inputPrincipal(String texto, TextEditingController controller) {
           border: OutlineInputBorder(
             borderSide: BorderSide(
               color: Colors.black,
+              width: 4.0,
             ),
-            borderRadius: const BorderRadius.all(
-              const Radius.circular(
+            borderRadius: BorderRadius.all(
+              Radius.circular(
                 28.0,
               ),
             ),
@@ -33,18 +37,22 @@ Widget inputPrincipal(String texto, TextEditingController controller) {
 }
 
 Widget inputSecundario(String texto, TextEditingController controller) {
-  bool mostrarTexto = true;
+  bool ocultarTexto = true;
   return Container(
+    height: 100.0,
     width: double.infinity,
     child: Padding(
-      padding: const EdgeInsets.all(24.0),
+      padding: const EdgeInsets.all(
+        24.0,
+      ),
       child: TextField(
-        obscureText: mostrarTexto,
+        obscureText: ocultarTexto,
         controller: controller,
         decoration: InputDecoration(
           border: OutlineInputBorder(
             borderSide: BorderSide(
               color: Colors.black,
+              width: 1.0,
             ),
             borderRadius: const BorderRadius.all(
               const Radius.circular(
@@ -65,9 +73,12 @@ Widget inputSecundario(String texto, TextEditingController controller) {
   );
 }
 
-Widget inputDialogText(String texto, TextEditingController controlador) {
+Widget inputDialogText(
+  String texto, TextEditingController controlador, String textoAdvertencia) {
   return Padding(
-    padding: EdgeInsets.all(8.0),
+    padding: EdgeInsets.all(
+      8.0,
+    ),
     child: TextFormField(
       textCapitalization: texto == "Autor"
           ? TextCapitalization.words
@@ -78,7 +89,7 @@ Widget inputDialogText(String texto, TextEditingController controlador) {
       controller: controlador,
       validator: (value) {
         if (value.isEmpty)
-          return "Complete el campo";
+          return textoAdvertencia;
         else
           return null;
       },
@@ -86,7 +97,8 @@ Widget inputDialogText(String texto, TextEditingController controlador) {
   );
 }
 
-Widget inputDialogNumber(String texto, TextEditingController controlador) {
+Widget inputDialogNumber(
+    String texto, TextEditingController controlador, String textoAdvertencia) {
   return Padding(
     padding: EdgeInsets.all(8.0),
     child: TextFormField(
@@ -97,7 +109,7 @@ Widget inputDialogNumber(String texto, TextEditingController controlador) {
       controller: controlador,
       validator: (value) {
         if (value.isEmpty)
-          return "Complete el campo";
+          return textoAdvertencia;
         else
           return null;
       },

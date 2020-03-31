@@ -6,8 +6,6 @@
 import 'package:flutter/material.dart';
 import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/util/confirmAction.dart';
-import 'package:tkv_books/widgets/inputPersonalizado.dart';
-
 
 Future<ConfirmAction> editarLibroDialog(BuildContext context) {
   final _formKey = GlobalKey<FormState>();
@@ -43,10 +41,10 @@ Future<ConfirmAction> editarLibroDialog(BuildContext context) {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                inputDialogText("Nombre", nombre),
-                inputDialogText("Autor", autor),
-                inputDialogNumber("Paginas leidas", paginasLeidas),
-                inputDialogNumber("Paginas totales", paginasTotales),
+                //inputDialogText("Nombre", nombre),
+                //inputDialogText("Autor", autor),
+                //inputDialogNumber("Paginas leidas", paginasLeidas),
+                //inputDialogNumber("Paginas totales", paginasTotales),
               ],
             ),
           ),

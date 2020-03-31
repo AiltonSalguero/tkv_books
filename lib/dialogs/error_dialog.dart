@@ -10,6 +10,17 @@ Future<ConfirmAction> errorLoginDialog(
     builder: (BuildContext context) {
       return AlertDialog(
         title: Text(titulo),
+        shape: RoundedRectangleBorder(
+          side: BorderSide(
+            color: Colors.black,
+            width: 2.0,
+          ),
+          borderRadius: BorderRadius.all(
+            Radius.circular(
+              28.0,
+            ),
+          ),
+        ),
         content: Text(contenido),
         actions: <Widget>[
           FlatButton(
