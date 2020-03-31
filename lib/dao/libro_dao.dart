@@ -39,8 +39,9 @@ class LibroDao {
   static Future<Null> postLibro(Libro nuevoLibro) async {
     String apiUrl =
         "https://io3689ejvd.execute-api.us-east-2.amazonaws.com/test";
+    apiUrl += "/librosTKV";
     http.post(
-      apiUrl + "/librosTKV",
+      apiUrl,
       body: jsonEncode(nuevoLibro.toJson()),
       headers: {
         'Content-type': 'application/json',
@@ -55,6 +56,20 @@ class LibroDao {
     http.put(
       apiUrl + "/librosTKV?codLibro=" + actualizacionLibro.codLibro.toString(),
       body: jsonEncode(actualizacionLibro.toJson()),
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json'
+      },
+    );
+  }
+
+  static Future<Null> putLibroSetPaginasLeidas(
+      int codLibro, int paginas) async {
+    String apiUrl =
+        "https://io3689ejvd.execute-api.us-east-2.amazonaws.com/test";
+    http.put(
+      apiUrl + "/librosTKV?codLibro=" + codLibro.toString(),
+      body: jsonEncode({"paginasLeidas": paginas}),
       headers: {
         'Content-type': 'application/json',
         'Accept': 'application/json'

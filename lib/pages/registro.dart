@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dao/usuario_dao.dart';
+import 'package:tkv_books/dialogs/error_dialog.dart';
 import 'package:tkv_books/model/usuario.dart';
 import 'package:tkv_books/widgets/botonPersonalizado.dart';
 import 'package:tkv_books/widgets/inputPersonalizado.dart';
@@ -79,7 +80,7 @@ class _RegistroPageState extends State<RegistroPage> {
                     inputPrincipal("Nombres", nombres),
                     inputPrincipal("Apellidos", apellidos),
                     inputPrincipal("Nickname", nickname),
-                    inputSecundario("Contrasenia", contrasenia),
+                    inputSecundario("Contraseña", contrasenia),
                     _registrarButton(),
                   ],
                 ),
@@ -95,16 +96,41 @@ class _RegistroPageState extends State<RegistroPage> {
     return botonPrincipal(_validarRegistro, "Crear cuenta");
   }
 
-  void _validarRegistro() {
-    usuarioNuevo =
-        Usuario(nombres.text, apellidos.text, nickname.text, contrasenia.text);
-    // validar datos
-    // validad nickname no repetido ni con espacions
-    // validar contrasenia mayor a 6 caracteres
-    // validar que todos los campos esten llenos
-    UsuarioDao.postUsuario(usuarioNuevo).then((value) {
-      Sesion.usuarioLogeado = usuarioNuevo;
-      Navigator.of(context).pushNamed('/perfil');
+  _validarRegistro() {
+    if (nombres.text == "")
+      return errorLoginDialog(context, "Campo incompleto", "Escriba un nombre");
+    if (apellidos.text == "")
+      return errorLoginDialog(
+          context, "Campo incompleto", "Escriba un apellido");
+    if (nickname.text == "")
+      return errorLoginDialog(
+          context, "Campo incompleto", "Escriba un nickname");
+    if (contrasenia.text == "") {
+      return errorLoginDialog(
+          context, "Campo incompleto", "Escriba una contraseña");
+    } else {
+      if (contrasenia.text.length < 6)
+        return errorLoginDialog(context, "Contrasenia debil",
+            "Escriba una contraseña con más de 6 caracteres");
+    }
+
+    UsuarioDao.existeUsuarioByNickname(nickname.text).then((yaExiste) {
+      if (yaExiste) {
+        return errorLoginDialog(
+            context, "Nickname ya existe", "Escriba un nuevo nickname");
+      } else {
+        usuarioNuevo = Usuario(
+            nombres.text, apellidos.text, nickname.text, contrasenia.text);
+        // validar datos
+        // validad nickname no repetido ni con espacions
+        // validar contrasenia mayor a 6 caracteres
+        // validar que todos los campos esten llenos
+
+        UsuarioDao.postUsuario(usuarioNuevo).then((value) {
+          Sesion.usuarioLogeado = usuarioNuevo;
+          Navigator.of(context).pushNamed('/perfil');
+        });
+      }
     });
   }
 }

@@ -52,6 +52,22 @@ class UsuarioDao {
     return existe;
   }
 
+  static Future<bool> existeUsuarioByNickname(String nickname) async {
+    String apiUrl =
+        "https://io3689ejvd.execute-api.us-east-2.amazonaws.com/test";
+    var response = await http.get(apiUrl +
+        "/usuariosTKV?nickname=" +
+        nickname);
+    var decodedData = json.decode(response.body);
+    print(response.body);
+    bool existe;
+    ListaUsuarios.fromJson(decodedData).lista.length != 0
+        ? existe = true
+        : existe = false;
+    print(existe);
+    return existe;
+  }
+
   static Future<Null> postUsuario(Usuario usuario) async {
     String apiUrl =
         "https://io3689ejvd.execute-api.us-east-2.amazonaws.com/test";

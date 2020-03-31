@@ -29,7 +29,6 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
   ListaLibros librosTotales;
 
   bool hayLibroLeyendosePorUsuario = false;
-  Libro libroLeyendosePorUsuario;
   @override
   void initState() {
     // traer datos
@@ -55,7 +54,7 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
           .then((libro) {
         if (libro != null) {
           hayLibroLeyendosePorUsuario = true;
-          libroLeyendosePorUsuario = libro;
+          Sesion.libroLeyendoPorUsuario = libro;
         }
         setState(() {});
       });
@@ -79,11 +78,11 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
             width: double.infinity,
           ),
           Align(
-      alignment: Alignment(-0.85,-0.9),
-      child:titulo1Label(Sesion.usuarioLogeado.nickname)),
+              alignment: Alignment(-0.85, -0.9),
+              child: titulo1Label(Sesion.usuarioLogeado.nickname)),
           botonMiPerfil(_irAmiPerfil),
           hayLibroLeyendosePorUsuario
-              ? _libroLeyendosePorUsuario(libroLeyendosePorUsuario)
+              ? _libroLeyendosePorUsuario(Sesion.libroLeyendoPorUsuario)
               : Text("Agregue un libro"),
           subTitulo1Label("Libros leyéndose actualmente"),
           Container(
@@ -267,7 +266,7 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
     Color colorBarra = colorProgressBar(porcentaje);
 
     return Align(
-      alignment: Alignment(0.4,-0.7),
+      alignment: Alignment(0.4, -0.7),
       child: Container(
         height: 90,
         width: Screen.width * 0.95,
@@ -341,6 +340,19 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
     );
   }
 
-  _aumentarPaginas() {}
-  _disminuirPaginas() {}
+  _aumentarPaginas() {
+    int paginaActual = Sesion.libroLeyendoPorUsuario.paginasLeidas++;
+    if (paginaActual > Sesion.libroLeyendoPorUsuario.paginasTotales)
+      return null;
+    LibroDao.putLibroSetPaginasLeidas(
+            Sesion.usuarioLogeado.codLibroLeyendo, paginaActual)
+        .then((val) => setState(() {}));
+  }
+
+  _disminuirPaginas() {
+    int paginaActual = Sesion.libroLeyendoPorUsuario.paginasLeidas--;
+    if (paginaActual == -1) return null;
+    LibroDao.putLibroSetPaginasLeidas(
+        Sesion.usuarioLogeado.codLibroLeyendo, paginaActual);
+  }
 }

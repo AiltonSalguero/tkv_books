@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dao/usuario_dao.dart';
 import 'package:tkv_books/util/confirmAction.dart';
-import 'package:tkv_books/dialogs/error_login_dialog.dart';
+import 'package:tkv_books/dialogs/error_dialog.dart';
 import 'package:tkv_books/util/screen.dart';
 import 'package:tkv_books/widgets/botonPersonalizado.dart';
 import 'package:tkv_books/widgets/inputPersonalizado.dart';
@@ -88,7 +88,8 @@ class _LoginPageState extends State<LoginPage> {
   _validarUsuario() {
     print("Validando");
     // si no hay datos que se ponga de color celeste turquesa
-    if (nickname.text == "" || contrasenia.text == "") return null;
+    if (nickname.text == "" || contrasenia.text == "")
+      return _abrirErrorDatosDialog();
     UsuarioDao.existeUsuario(nickname.text, contrasenia.text).then((existe) {
       if (existe) {
         _logearUsuario();
@@ -98,8 +99,14 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+  _abrirErrorDatosDialog() async {
+    final ConfirmAction action = await errorLoginDialog(
+        context, "No hay datos", "Escriba el nickname y la contraseña.");
+  }
+
   _abrirErrorLoginDialog(String nickname) async {
-    final ConfirmAction action = await errorLoginDialog(context);
+    final ConfirmAction action = await errorLoginDialog(
+        context, "Usuario incorrecto", "Escribe bien los datos gaa");
   }
 
   _logearUsuario() {

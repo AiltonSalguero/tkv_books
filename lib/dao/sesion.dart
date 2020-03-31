@@ -20,5 +20,9 @@ class Sesion{
 
   // General
   static ListaLibros librosLeyendoseTotales;
+
+  // Otros perfiles
+  static Usuario usuarioSeleccionado;
+  static ListaLibros librosDelUsuarioSeleccionado;
   // que se guarden los datos en estas variables estaticas?
 }

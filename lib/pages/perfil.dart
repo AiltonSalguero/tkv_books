@@ -5,7 +5,6 @@ import 'package:tkv_books/dao/libro_dao.dart';
 import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dao/usuario_dao.dart';
 import 'package:tkv_books/dialogs/agregar_libro_dialog.dart';
-import 'package:tkv_books/dialogs/editar_libro_dialog.dart';
 import 'package:tkv_books/dialogs/eliminar_libro_dialog.dart';
 import 'package:tkv_books/model/libro.dart';
 import 'package:tkv_books/model/usuario.dart';
@@ -25,12 +24,20 @@ class _PerfilPageState extends State<PerfilPage> {
   Usuario usuarioPerfil;
 
   bool tieneLibros = false;
-  ListaLibros librosAgregados;
-
   @override
   void initState() {
     // traer datos
     _actualizarListaLibros();
+    _getLibroLeyendose();
+  }
+
+  _getLibroLeyendose() {
+    if (Sesion.usuarioLogeado.codLibroLeyendo != null) {
+      LibroDao.getLibroByCod(Sesion.usuarioLogeado.codLibroLeyendo)
+          .then((libro) {
+        Sesion.libroLeyendoPorUsuario = libro;
+      });
+    }
   }
 
   void _actualizarListaLibros() {
@@ -40,7 +47,7 @@ class _PerfilPageState extends State<PerfilPage> {
         .then((libros) {
       if (libros.lista.isNotEmpty) {
         tieneLibros = true;
-        librosAgregados = libros;
+        Sesion.librosDelUsuario = libros;
       }
       setState(() {});
     });
@@ -95,7 +102,7 @@ class _PerfilPageState extends State<PerfilPage> {
                   titulo1Label("Biblioteca"),
                   tieneLibros
                       ? _buildListaLibros()
-                      : Text("Este men no tiene libros"),
+                      : Text("Aún no tienes libros agregados"),
                 ],
               ),
             ),
@@ -106,9 +113,10 @@ class _PerfilPageState extends State<PerfilPage> {
           //usuarioPerfil.codUsuario == ApiDao.usuarioLogeado.codUsuario?
           FloatingActionButton(
         shape: CircleBorder(
-            side: BorderSide(
-          color: Colors.black,
-        ),),
+          side: BorderSide(
+            color: Colors.black,
+          ),
+        ),
         backgroundColor: ColoresTkv.cyan,
         child: Icon(
           Icons.add,
@@ -144,10 +152,10 @@ class _PerfilPageState extends State<PerfilPage> {
       child: ListView.builder(
         physics: AlwaysScrollableScrollPhysics(),
         shrinkWrap: true,
-        itemCount: librosAgregados.lista.length,
+        itemCount: Sesion.librosDelUsuario.lista.length,
         itemBuilder: (BuildContext content, int index) {
           return _buildLibroListItem(
-            librosAgregados.lista[index],
+            Sesion.librosDelUsuario.lista[index],
           );
         },
       ),
@@ -201,7 +209,7 @@ class _PerfilPageState extends State<PerfilPage> {
                   children: <Widget>[
                     FlatButton(
                       child: Icon(Icons.edit),
-                      onPressed: () => _abrirEditarLibroDialog(libro.codLibro),
+                      onPressed: () => _abrirEditarLibroDialog(libro),
                     ),
                     FlatButton(
                       child: Icon(
@@ -241,12 +249,13 @@ class _PerfilPageState extends State<PerfilPage> {
     );
   }
 
-  _abrirEditarLibroDialog(int codLibro) {
+  _abrirEditarLibroDialog(Libro libro) {
     // mostrar dialog de alerta . then(){... if accept
+    Sesion.libroLeyendoPorUsuario = libro;
     UsuarioDao.putUsuarioSetLibroLeyendo(
-            Sesion.usuarioLogeado.codUsuario, codLibro)
+            Sesion.usuarioLogeado.codUsuario, libro.codLibro)
         .then((val) {
-      Sesion.usuarioLogeado.codLibroLeyendo = codLibro;
+      Sesion.usuarioLogeado.codLibroLeyendo = libro.codLibro;
     });
 
     //editarLibroDialog(context).then(

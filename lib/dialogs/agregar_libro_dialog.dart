@@ -23,7 +23,7 @@ Future<void> agregarLibroDialog(BuildContext context) {
     Sesion.libroAgregado.paginasLeidas = int.parse(paginasLeidas.text);
     Sesion.libroAgregado.paginasTotales = int.parse(paginasTotales.text);
     Sesion.libroAgregado.nicknameUsuario =  Sesion.usuarioLogeado.nickname;
-    Sesion.libroAgregado.paginasLeidas < Sesion.libroAgregado.paginasTotales
+    Sesion.libroAgregado.paginasLeidas <= Sesion.libroAgregado.paginasTotales
         ? Navigator.pop(context)
         : null;
         // validar que las paginas sean menores
