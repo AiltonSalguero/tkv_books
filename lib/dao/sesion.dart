@@ -12,8 +12,9 @@ class Sesion{
   
   // Usuario
   static Usuario usuarioLogeado;
-  static ListaLibros librosDelUsuario;
+  static ListaLibros librosDelUsuario = ListaLibros();
   static Libro libroLeyendoPorUsuario;
+  
 
   // Dialog
   static Libro libroAgregado = Libro();
@@ -24,5 +25,6 @@ class Sesion{
   // Otros perfiles
   static Usuario usuarioSeleccionado;
   static ListaLibros librosDelUsuarioSeleccionado;
+  static int numeroLibrosUsuario = 0;
   // que se guarden los datos en estas variables estaticas?
 }

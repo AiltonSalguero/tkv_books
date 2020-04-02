@@ -55,9 +55,7 @@ class UsuarioDao {
   static Future<bool> existeUsuarioByNickname(String nickname) async {
     String apiUrl =
         "https://io3689ejvd.execute-api.us-east-2.amazonaws.com/test";
-    var response = await http.get(apiUrl +
-        "/usuariosTKV?nickname=" +
-        nickname);
+    var response = await http.get(apiUrl + "/usuariosTKV?nickname=" + nickname);
     var decodedData = json.decode(response.body);
     print(response.body);
     bool existe;
@@ -88,6 +86,32 @@ class UsuarioDao {
     http.put(
       apiUrl + "/usuariosTKV?codUsuario=" + codUsuario.toString(),
       body: jsonEncode({"codLibroLeyendo": codLibro}),
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json'
+      },
+    );
+  }
+
+  static Future<Null> putUsuarioSetPuntaje(int codUsuario, int puntaje) async {
+    String apiUrl =
+        "https://io3689ejvd.execute-api.us-east-2.amazonaws.com/test";
+    http.put(
+      apiUrl + "/usuariosTKV?codUsuario=" + codUsuario.toString(),
+      body: jsonEncode({"puntaje": puntaje}),
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json'
+      },
+    );
+  }
+
+  static Future<Null> putUsuarioSetLevel(int codUsuario, int level) async {
+    String apiUrl =
+        "https://io3689ejvd.execute-api.us-east-2.amazonaws.com/test";
+    http.put(
+      apiUrl + "/usuariosTKV?codUsuario=" + codUsuario.toString(),
+      body: jsonEncode({"level": level}),
       headers: {
         'Content-type': 'application/json',
         'Accept': 'application/json'

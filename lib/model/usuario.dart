@@ -5,10 +5,14 @@ class Usuario {
   String nickname;
   String contrasenia;
   int codLibroLeyendo;
+  int level;
+  int puntaje;
   // cod usuario generado
   Usuario(this.nombres, this.apellidos, this.nickname, this.contrasenia) {
     this.codUsuario = 0;
     this.codLibroLeyendo = 0;
+    this.level = 1;
+    this.puntaje = 0;
   }
 
   Usuario.fromJson(Map<String, dynamic> json) {
@@ -18,6 +22,8 @@ class Usuario {
     nickname = json['nickname'];
     contrasenia = json['contrasenia'];
     codLibroLeyendo = json['codLibroLeyendo'];
+    level = json['level'];
+    puntaje = json['puntaje'];
   }
 
   Map<String, dynamic> toJson() {
@@ -29,6 +35,8 @@ class Usuario {
     data['nickname'] = this.nickname;
     data['contrasenia'] = this.contrasenia;
     data['codLibroLeyendo'] = this.codLibroLeyendo;
+    data['level'] = this.level;
+    data['puntaje'] = this.puntaje;
     return data;
   }
 }

@@ -22,16 +22,12 @@ class ListaTotalPage extends StatefulWidget {
 }
 
 class _ListaTotalPageState extends State<ListaTotalPage> {
-  double screenWidth;
-  double screenHeight;
-
   bool hayLibrosLeyendose = false;
   ListaLibros librosTotales;
 
   bool hayLibroLeyendosePorUsuario = false;
   @override
   void initState() {
-    // traer datos
     _actualizarListaLibros();
     _obtenerLibroLeyendosePorUsuario();
   }
@@ -49,7 +45,8 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
   }
 
   _obtenerLibroLeyendosePorUsuario() {
-    if (Sesion.usuarioLogeado.codLibroLeyendo != null) {
+    if (Sesion.usuarioLogeado.codLibroLeyendo != 0 &&
+        Sesion.usuarioLogeado.codLibroLeyendo != null) {
       LibroDao.getLibroByCod(Sesion.usuarioLogeado.codLibroLeyendo)
           .then((libro) {
         if (libro != null) {
@@ -63,18 +60,15 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
 
   @override
   Widget build(BuildContext context) {
-    screenWidth = MediaQuery.of(context).size.width;
-    screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       body: Stack(
         fit: StackFit.passthrough,
-        //alignment: Alignment.topLeft,
         children: <Widget>[
           Image.asset(
             "images/banner_nubes.jpg",
             fit: BoxFit.cover,
-            height: screenHeight * 0.35, // Responsive
+            height: Screen.height * 0.35, // Responsive
             width: double.infinity,
           ),
           Align(
@@ -82,16 +76,10 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
             //alignment: AlignmentDirectional.topCenter,
             child: titulo1Label(Sesion.usuarioLogeado.nickname),
           ),
-          Align(
-            alignment: Alignment(0, -0.8),
-            //alignment: AlignmentDirectional.topCenter,
-            child: subTitulo1Label("Leyendo:"),
-          ),
           botonTercero("Mi perfil", _irAmiPerfil),
           hayLibroLeyendosePorUsuario
               ? _libroLeyendosePorUsuario(Sesion.libroLeyendoPorUsuario)
               : Text("Agregue un libro"),
-          subTitulo1Label("Libros leyéndose actualmente"),
           Container(
             height: double.infinity,
             width: double.infinity,
@@ -112,7 +100,7 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
               color: Color(0xfffafafa),
             ),
             margin: EdgeInsets.only(
-              top: screenHeight * 0.3, // Responsive 266
+              top: Screen.height * 0.3, // Responsive 266
             ),
             child: Padding(
               padding: const EdgeInsets.only(
@@ -158,8 +146,8 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
         horizontal: 8.0,
       ),
       child: Container(
-        height: screenHeight * 0.55,
-        width: screenHeight * 0.90, // responsive
+        height: Screen.height * 0.55,
+        width: Screen.width * 0.90, // responsive
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(
             Radius.circular(16.0),
@@ -168,8 +156,6 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
         child: GridView.count(
           childAspectRatio: 24 / 29,
           crossAxisSpacing: 4.0,
-          //mainAxisSpacing: 0.2,
-          //padding:,
           crossAxisCount: 2,
           children: librosTotales.lista
               .map(
@@ -197,7 +183,9 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(
-            Radius.circular(48.0),
+            Radius.circular(
+              48.0,
+            ),
           ),
           border: Border.all(
             color: Colors.black,
@@ -262,12 +250,6 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
     );
   }
 
-  _irAhome() {
-    // Deslogear al usuario
-    // mostrar ventana que se esta cerrando la sesion
-    Navigator.of(context).pushNamed("/");
-  }
-
   Widget _libroLeyendosePorUsuario(Libro libro) {
     String porcentajeTexto =
         porcentajeString(libro.paginasLeidas, libro.paginasTotales);
@@ -278,9 +260,9 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
     Color colorBarra = colorProgressBar(porcentaje);
 
     return Align(
-      alignment: Alignment(0.4, -0.7),
+      alignment: Alignment(0, -0.7),
       child: Container(
-        height: 90,
+        height: 85,
         width: Screen.width * 0.95,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(
@@ -297,53 +279,81 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
           ],
           color: Color(0xfffafafa),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+        child: Stack(
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    titulo3Label(libro.nombre),
-                    subTitulo3Label(libro.autor),
-                  ],
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: Screen.width * 0.05,
+                  vertical: 8.0,
                 ),
-                Row(
-                  children: <Widget>[
-                    FlatButton(
-                      child: Icon(Icons.keyboard_arrow_up),
-                      onPressed: () => _aumentarPaginas(),
-                    ),
-                    FlatButton(
-                      child: Icon(
-                        Icons.keyboard_arrow_down,
-                      ),
-                      onPressed: () => _disminuirPaginas(),
-                    )
-                  ],
+                child: LinearPercentIndicator(
+                  backgroundColor: Color(0xFFB7B7B7),
+                  width: Screen.width * 0.84,
+                  animation: true,
+                  lineHeight: 28.0,
+                  animationDuration: 2000,
+                  percent: porcentaje,
+                  center: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(porcentajeTexto),
+                      Text(paginas),
+                    ],
+                  ),
+                  progressColor: colorBarra,
                 ),
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 16.0,
               ),
-              child: LinearPercentIndicator(
-                backgroundColor: Color(0xFFB7B7B7),
-                width: Screen.width * 0.85,
-                animation: true,
-                lineHeight: 28.0,
-                animationDuration: 2000,
-                percent: porcentaje,
-                center: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 24.0,
+                  vertical: 8.0,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    Text(porcentajeTexto),
-                    Text(paginas),
+                    Container(
+                      height: 20,
+                      width: Screen.width * 0.6,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: titulo3Label(libro.nombre),
+                      ),
+                    ),
+                    Container(
+                      height: 20,
+                      width: Screen.width * 0.6,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: subTitulo3Label(libro.autor),
+                      ),
+                    ),
                   ],
                 ),
-                progressColor: colorBarra,
+              ),
+            ),
+            Align(
+              alignment: Alignment(
+                0.6,
+                -1,
+              ),
+              child: FlatButton(
+                child: Icon(
+                  Icons.keyboard_arrow_up,
+                ),
+                onPressed: () => _aumentarPaginas(),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topRight,
+              child: FlatButton(
+                child: Icon(Icons.keyboard_arrow_down),
+                onPressed: () => _disminuirPaginas(),
               ),
             ),
           ],
@@ -353,7 +363,6 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
   }
 
   _aumentarPaginas() {
-    print(Sesion.libroLeyendoPorUsuario.paginasLeidas);
     int paginaActual = Sesion.libroLeyendoPorUsuario.paginasLeidas + 1;
     if (paginaActual > Sesion.libroLeyendoPorUsuario.paginasTotales)
       return null;
@@ -361,7 +370,10 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
             Sesion.usuarioLogeado.codLibroLeyendo, paginaActual)
         .then((val) {
       Sesion.libroLeyendoPorUsuario.paginasLeidas++;
-      _actualizarListaLibros();
+      Sesion.usuarioLogeado.puntaje++;
+      Sesion.usuarioLogeado.level =
+          calcularLevelUsuario(Sesion.usuarioLogeado.puntaje);
+      setState(() {});
     });
   }
 
@@ -372,7 +384,10 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
             Sesion.usuarioLogeado.codLibroLeyendo, paginaActual)
         .then((val) {
       Sesion.libroLeyendoPorUsuario.paginasLeidas--;
-      _actualizarListaLibros();
+      Sesion.usuarioLogeado.puntaje--;
+      Sesion.usuarioLogeado.level =
+          calcularLevelUsuario(Sesion.usuarioLogeado.puntaje);
+      setState(() {});
     });
     ;
   }

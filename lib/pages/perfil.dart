@@ -1,4 +1,8 @@
-// si es su perfil le sale el floating button de aniadir curso
+/*
+
+
+  si es su perfil le sale el floating button de aniadir curso
+*/
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:tkv_books/dao/libro_dao.dart';
@@ -7,7 +11,6 @@ import 'package:tkv_books/dao/usuario_dao.dart';
 import 'package:tkv_books/dialogs/agregar_libro_dialog.dart';
 import 'package:tkv_books/dialogs/eliminar_libro_dialog.dart';
 import 'package:tkv_books/model/libro.dart';
-import 'package:tkv_books/model/usuario.dart';
 import 'package:tkv_books/util/confirmAction.dart';
 import 'package:tkv_books/util/screen.dart';
 import 'package:tkv_books/util/temaPersonlizado.dart';
@@ -21,18 +24,19 @@ class PerfilPage extends StatefulWidget {
 }
 
 class _PerfilPageState extends State<PerfilPage> {
-  Usuario usuarioPerfil;
+  //Usuario usuarioPerfil;
 
   bool tieneLibros = false;
+  bool listoLevel = false;
+  String numeroLibros = "0";
   @override
   void initState() {
     // traer datos
     _actualizarListaLibros();
-    _getLibroLeyendose();
+    _getLibroLeyendosePorUsuario();
   }
 
-  _getLibroLeyendose() {
-    print(Sesion.usuarioLogeado.codLibroLeyendo);
+  _getLibroLeyendosePorUsuario() {
     if (Sesion.usuarioLogeado.codLibroLeyendo != 0) {
       LibroDao.getLibroByCod(Sesion.usuarioLogeado.codLibroLeyendo)
           .then((libro) {
@@ -41,30 +45,39 @@ class _PerfilPageState extends State<PerfilPage> {
     }
   }
 
-  void _actualizarListaLibros() {
-    print("actualizando...");
+  _actualizarLevel(ListaLibros libros) {
+    for (int i = 0; i < libros.lista.length; i++) {
+      Sesion.usuarioLogeado.puntaje += libros.lista[i].paginasLeidas;
+    }
+    Sesion.usuarioLogeado.level =
+        calcularLevelUsuario(Sesion.usuarioLogeado.puntaje);
+    listoLevel = true;
+    print("a" + Sesion.usuarioLogeado.level.toString());
+  }
+
+  _actualizarListaLibros() {
+    print("obteniendo...");
 
     LibroDao.getLibrosOfUsuario(Sesion.usuarioLogeado.codUsuario)
         .then((libros) {
       if (libros.lista.isNotEmpty) {
         tieneLibros = true;
+        numeroLibros = libros.lista.length.toString();
         Sesion.librosDelUsuario = libros;
+        _actualizarLevel(libros);
       }
       setState(() {});
     });
   }
 
-  _irAhome() {
-    Navigator.of(context).pushNamedAndRemoveUntil("/", (route) => false);
-  }
-
   Future<bool> _abrirCerrarSesionDialog() {
-    alertaDialog(context, "Cerrar sesion", "Quieres salir de tu cuenta?", "No",
+    alertaDialog(context, "Cerrar sesión", "Quieres salir de tu cuenta?", "No",
                 "Si")
             .then(
           (value) {
             if (value == ConfirmAction.ACCEPT) {
               Sesion.usuarioLogeado = null;
+              Sesion.librosDelUsuario = null;
               _irAhome();
               return true;
             }
@@ -92,6 +105,10 @@ class _PerfilPageState extends State<PerfilPage> {
             ),
             botonTercero("Ver todos", _irAlistaTotal),
             _buildEncabezado(),
+            listoLevel
+                ? _buildExperiencia(
+                    Sesion.usuarioLogeado.puntaje, Sesion.usuarioLogeado.level)
+                : _buildExperiencia(0, 1),
             Container(
               height: double.infinity,
               width: double.infinity,
@@ -119,8 +136,6 @@ class _PerfilPageState extends State<PerfilPage> {
                   top: 32.0,
                 ),
                 child: Column(
-                  //mainAxisSize: MainAxisSize.min,
-                  //crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     titulo1Label("Biblioteca"),
                     tieneLibros
@@ -152,6 +167,23 @@ class _PerfilPageState extends State<PerfilPage> {
     //      : null);
   }
 
+  Widget _buildExperiencia(int puntaje, int level) {
+    int puntajeDelNivel =
+        puntaje - calcularExperienciaRequeridaTotal(level - 1);
+    double porcentajeExperiencia = porcentajeDouble(
+        puntajeDelNivel, calcularExperienciaRequerida(level + 1));
+    return Align(
+        alignment: Alignment(0, -0.55),
+        child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: Screen.width * 0.15),
+            child: LinearPercentIndicator(
+              width: Screen.width * 0.7,
+              lineHeight: 8.0,
+              percent: porcentajeExperiencia,
+              progressColor: ColoresTkv.amarillo,
+            )));
+  }
+
   Widget _buildEncabezado() {
     return Align(
       alignment: Alignment.topCenter,
@@ -162,9 +194,10 @@ class _PerfilPageState extends State<PerfilPage> {
             height: 50,
           ),
           titulo1Label(Sesion.usuarioLogeado.nickname),
-          subTitulo1Label(Sesion.usuarioLogeado.nombres +
+          subTitulo2Label(Sesion.usuarioLogeado.nombres +
               " " +
               Sesion.usuarioLogeado.apellidos),
+          titulo2Label("Lv. " + Sesion.usuarioLogeado.level.toString()),
         ],
       ),
     );
@@ -195,6 +228,10 @@ class _PerfilPageState extends State<PerfilPage> {
 
     Color colorBarra = colorProgressBar(porcentaje);
 
+    bool leyendo;
+    libro.codLibro == Sesion.usuarioLogeado.codLibroLeyendo
+        ? leyendo = true
+        : leyendo = false;
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: 4.0,
@@ -217,19 +254,6 @@ class _PerfilPageState extends State<PerfilPage> {
           ],
           color: Color(0xfffafafa),
         ),
-        //titulo3Label(libro.nombre),
-        //subTitulo3Label(libro.autor),
-        //FlatButton(
-        //    child: Icon(Icons.edit),
-        //    onPressed: () => _abrirEditarLibroDialog(libro),
-        //  ),
-        //FlatButton(
-        //  child: Icon(
-        //    Icons.delete,
-        //  ),
-        //  onPressed: () =>
-        //      _abrirEliminarLibroDialog(libro.codLibro),
-        //)
         child: Stack(
           children: <Widget>[
             Align(
@@ -265,9 +289,25 @@ class _PerfilPageState extends State<PerfilPage> {
                   vertical: 16.0,
                 ),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    titulo3Label(libro.nombre),
-                    subTitulo3Label(libro.autor),
+                    Container(
+                      height: 20,
+                      width: Screen.width * 0.6,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: titulo3Label(libro.nombre),
+                      ),
+                    ),
+                    Container(
+                      height: 20,
+                      width: Screen.width * 0.6,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: subTitulo3Label(libro.autor),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -278,47 +318,45 @@ class _PerfilPageState extends State<PerfilPage> {
                 child: Icon(
                   Icons.delete,
                 ),
-                onPressed: () => _abrirEliminarLibroDialog(libro.codLibro),
+                onPressed: () => _abrirEliminarLibroDialog(libro),
               ),
-            )
+            ),
+            Align(
+              alignment: Alignment(
+                0.6,
+                -1,
+              ),
+              child: FlatButton(
+                child: leyendo
+                    ? Icon(Icons.import_contacts)
+                    : Icon(Icons.library_books),
+                onPressed: () => _editarLibroLeyendoPorUsuario(libro),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  _abrirEditarLibroDialog(Libro libro) {
-    // mostrar dialog de alerta . then(){... if accept
+  _editarLibroLeyendoPorUsuario(Libro libro) {
     Sesion.libroLeyendoPorUsuario = libro;
+    Sesion.usuarioLogeado.codLibroLeyendo = libro.codLibro;
     UsuarioDao.putUsuarioSetLibroLeyendo(
             Sesion.usuarioLogeado.codUsuario, libro.codLibro)
-        .then((val) {
-      Sesion.usuarioLogeado.codLibroLeyendo = libro.codLibro;
-      LibroDao.getLibroByCod(Sesion.usuarioLogeado.codLibroLeyendo)
-          .then((libro) {
-        Sesion.libroLeyendoPorUsuario = libro;
-      });
-    });
-
-    //editarLibroDialog(context).then(
-    // (value) {
-    //  if (value == ConfirmAction.ACCEPT) {
-    //   LibroDao.deleteLibro(codLibro);
-    //  _actualizarListaLibros();
-    //}
-    //},
-    //);
+        .then((val) => setState(() {}));
   }
 
-  _abrirEliminarLibroDialog(int codLibro) {
-    // mostrar dialog de alerta . then(){... if accept
-    alertaDialog(context, "Eliminar libro",
-            "Quieres elimnarlo de tu biblioteca?", "No", "Si")
+  _abrirEliminarLibroDialog(Libro libro) {
+    alertaDialog(context, "Eliminar libro?",
+            "Al eliminarlo se disminuirá el puntaje ganado.", "No", "Si")
         .then(
       (value) {
         if (value == ConfirmAction.ACCEPT) {
-          LibroDao.deleteLibro(codLibro);
-          _actualizarListaLibros();
+          LibroDao.deleteLibro(libro.codLibro).then((val) {
+            Sesion.librosDelUsuario.lista.remove(libro);
+            setState(() {});
+          });
         }
       },
     );
@@ -326,9 +364,13 @@ class _PerfilPageState extends State<PerfilPage> {
 
   _abrirAgregarLibroDialog() {
     agregarLibroDialog(context).then((value) {
-      LibroDao.postLibro(Sesion.libroAgregado);
-      print(Sesion.libroAgregado.autor);
-      _actualizarListaLibros();
+      LibroDao.postLibro(Sesion.libroAgregado).then((onValue) {
+        //print(Sesion.libroAgregado.toJson());
+
+        Sesion.librosDelUsuario.lista.add(Sesion.libroAgregado);
+        tieneLibros = true;
+        setState(() {});
+      });
     });
   }
 
@@ -336,9 +378,7 @@ class _PerfilPageState extends State<PerfilPage> {
     Navigator.of(context).pushNamed("/lista_total");
   }
 
-  Widget testStream() {
-    return StreamBuilder(
-      initialData: [],
-    );
+  _irAhome() {
+    Navigator.of(context).pushNamedAndRemoveUntil("/", (route) => false);
   }
 }

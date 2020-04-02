@@ -103,6 +103,12 @@ class _RegistroPageState extends State<RegistroPage> {
     if (nickname.text == "")
       return errorLoginDialog(
           context, "Campo incompleto", "Escriba un nickname");
+    if (nickname.text.length > 12)
+      return errorLoginDialog(context, "Nickname muy largo",
+          "Escriba un nickname con menos de 12 caracteres");
+    if (nickname.text.length < 4)
+      return errorLoginDialog(context, "Nickname muy corto",
+          "Escriba un nickname con más de 3 caracteres");
     if (contrasenia.text == "") {
       return errorLoginDialog(
           context, "Campo incompleto", "Escriba una contraseña");
@@ -126,6 +132,10 @@ class _RegistroPageState extends State<RegistroPage> {
 
         UsuarioDao.postUsuario(usuarioNuevo).then((value) {
           Sesion.usuarioLogeado = usuarioNuevo;
+          UsuarioDao.getUsuarioByNickname(usuarioNuevo.nickname)
+              .then((usuario) {
+            Sesion.usuarioLogeado.codUsuario = usuario.codUsuario;
+          });
           Navigator.of(context).pushNamed('/perfil');
         });
       }

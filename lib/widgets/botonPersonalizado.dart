@@ -60,7 +60,10 @@ Widget botonSecundario(Function accion, String texto) {
 
 Widget botonTercero(String texto, Function accion) {
   return Align(
-    alignment: Alignment.topLeft,
+    alignment: Alignment(
+      -0.95,
+      0.7,
+    ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -83,7 +86,7 @@ Widget botonTercero(String texto, Function accion) {
             ),
             child: Center(
               child: Text(
-              texto,
+                texto,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 14.0,
