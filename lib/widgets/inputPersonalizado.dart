@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 Widget inputPrincipal(String texto, TextEditingController controller) {
   return Container(
@@ -9,6 +10,11 @@ Widget inputPrincipal(String texto, TextEditingController controller) {
         24.0,
       ),
       child: TextField(
+        inputFormatters: [
+          WhitelistingTextInputFormatter(
+            RegExp("[a-zA-Z]"),
+          ),
+        ],
         textCapitalization: TextCapitalization.words,
         controller: controller,
         decoration: InputDecoration(
@@ -74,12 +80,17 @@ Widget inputSecundario(String texto, TextEditingController controller) {
 }
 
 Widget inputDialogText(
-  String texto, TextEditingController controlador, String textoAdvertencia) {
+    String texto, TextEditingController controlador, String textoAdvertencia) {
   return Padding(
     padding: EdgeInsets.all(
       8.0,
     ),
     child: TextFormField(
+      inputFormatters: [
+        WhitelistingTextInputFormatter(
+          RegExp("[a-zA-Z ]"),
+        ),
+      ],
       textCapitalization: texto == "Autor"
           ? TextCapitalization.words
           : TextCapitalization.sentences,
@@ -102,6 +113,7 @@ Widget inputDialogNumber(
   return Padding(
     padding: EdgeInsets.all(8.0),
     child: TextFormField(
+      inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
       keyboardType: TextInputType.number,
       decoration: InputDecoration.collapsed(
         hintText: texto,

@@ -32,12 +32,14 @@ class _PerfilPageState extends State<PerfilPage> {
   @override
   void initState() {
     // traer datos
+
     _actualizarListaLibros();
     _getLibroLeyendosePorUsuario();
   }
 
   _getLibroLeyendosePorUsuario() {
-    if (Sesion.usuarioLogeado.codLibroLeyendo != 0) {
+    if (Sesion.usuarioLogeado.codLibroLeyendo != 0 &&
+        Sesion.usuarioLogeado.codLibroLeyendo != null) {
       LibroDao.getLibroByCod(Sesion.usuarioLogeado.codLibroLeyendo)
           .then((libro) {
         Sesion.libroLeyendoPorUsuario = libro;
@@ -57,16 +59,24 @@ class _PerfilPageState extends State<PerfilPage> {
 
   _actualizarListaLibros() {
     print("obteniendo...");
+    UsuarioDao.getUsuarioByNickname(Sesion.usuarioLogeado.nickname)
+        .then((user) {
+      Sesion.usuarioLogeado.codUsuario = user.codUsuario;
+      LibroDao.getLibrosOfUsuario(Sesion.usuarioLogeado.codUsuario)
+          .then((libros) {
+        if (libros.lista.isNotEmpty) {
+          tieneLibros = true;
+          numeroLibros = libros.lista.length.toString();
+          Sesion.librosDelUsuario = libros;
+          if (Sesion.usuarioLogeado.puntaje == 0) {
+            _actualizarLevel(libros);
+          } else {
+            listoLevel = true;
+          }
+        }
 
-    LibroDao.getLibrosOfUsuario(Sesion.usuarioLogeado.codUsuario)
-        .then((libros) {
-      if (libros.lista.isNotEmpty) {
-        tieneLibros = true;
-        numeroLibros = libros.lista.length.toString();
-        Sesion.librosDelUsuario = libros;
-        _actualizarLevel(libros);
-      }
-      setState(() {});
+        setState(() {});
+      });
     });
   }
 
@@ -132,8 +142,8 @@ class _PerfilPageState extends State<PerfilPage> {
                 top: Screen.height * 0.3, // Responsive 266
               ),
               child: Padding(
-                padding: const EdgeInsets.only(
-                  top: 32.0,
+                padding: EdgeInsets.only(
+                  top: 16.0,
                 ),
                 child: Column(
                   children: <Widget>[
@@ -173,15 +183,17 @@ class _PerfilPageState extends State<PerfilPage> {
     double porcentajeExperiencia = porcentajeDouble(
         puntajeDelNivel, calcularExperienciaRequerida(level + 1));
     return Align(
-        alignment: Alignment(0, -0.55),
-        child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: Screen.width * 0.15),
-            child: LinearPercentIndicator(
-              width: Screen.width * 0.7,
-              lineHeight: 8.0,
-              percent: porcentajeExperiencia,
-              progressColor: ColoresTkv.amarillo,
-            )));
+      alignment: Alignment(0, -0.55),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: Screen.width * 0.15),
+        child: LinearPercentIndicator(
+          width: Screen.width * 0.7,
+          lineHeight: 8.0,
+          percent: porcentajeExperiencia,
+          progressColor: ColoresTkv.amarillo,
+        ),
+      ),
+    );
   }
 
   Widget _buildEncabezado() {
@@ -363,15 +375,42 @@ class _PerfilPageState extends State<PerfilPage> {
   }
 
   _abrirAgregarLibroDialog() {
-    agregarLibroDialog(context).then((value) {
-      LibroDao.postLibro(Sesion.libroAgregado).then((onValue) {
-        //print(Sesion.libroAgregado.toJson());
-
-        Sesion.librosDelUsuario.lista.add(Sesion.libroAgregado);
-        tieneLibros = true;
-        setState(() {});
-      });
-    });
+    if (Sesion.librosDelUsuario.lista == null) {
+      Sesion.librosDelUsuario.lista = List();
+    }
+    if (Sesion.librosDelUsuario.lista.length < 2) {
+      agregarLibroDialog(context).then(
+        (value) {
+          if (Sesion.libroAgregado.nombre != null) {
+            LibroDao.postLibro(Sesion.libroAgregado).then(
+              (onValue) {
+                print(Sesion.libroAgregado.toJson());
+                if (Sesion.librosDelUsuario.lista == null) {
+                  LibroDao.getLibrosOfUsuario(Sesion.usuarioLogeado.codUsuario)
+                      .then((libs) {
+                    // primera vez que agrega curso
+                    tieneLibros = true;
+                    Sesion.librosDelUsuario = libs;
+                  });
+                } else {
+                  print("hkhku");
+                  Sesion.librosDelUsuario.lista.add(Sesion.libroAgregado);
+                  Sesion.libroAgregado = null;
+                }
+                setState(() {});
+              },
+            );
+          }
+        },
+      );
+    } else {
+      alertaDialog(
+          context,
+          "Limite superado",
+          "Adquiera la versión premium para agregar más libros.",
+          "Okay",
+          "Rai nau");
+    }
   }
 
   _irAlistaTotal() {

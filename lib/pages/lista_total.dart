@@ -45,16 +45,9 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
   }
 
   _obtenerLibroLeyendosePorUsuario() {
-    if (Sesion.usuarioLogeado.codLibroLeyendo != 0 &&
-        Sesion.usuarioLogeado.codLibroLeyendo != null) {
-      LibroDao.getLibroByCod(Sesion.usuarioLogeado.codLibroLeyendo)
-          .then((libro) {
-        if (libro != null) {
-          hayLibroLeyendosePorUsuario = true;
-          Sesion.libroLeyendoPorUsuario = libro;
-        }
-        setState(() {});
-      });
+    if (Sesion.libroLeyendoPorUsuario != null) {
+      hayLibroLeyendosePorUsuario = true;
+      setState(() {});
     }
   }
 
@@ -76,10 +69,13 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
             //alignment: AlignmentDirectional.topCenter,
             child: titulo1Label(Sesion.usuarioLogeado.nickname),
           ),
+          _buildLevel(),
+          _buildExperiencia(
+              Sesion.usuarioLogeado.puntaje, Sesion.usuarioLogeado.level),
           botonTercero("Mi perfil", _irAmiPerfil),
           hayLibroLeyendosePorUsuario
               ? _libroLeyendosePorUsuario(Sesion.libroLeyendoPorUsuario)
-              : Text("Agregue un libro"),
+              : Text(""),
           Container(
             height: double.infinity,
             width: double.infinity,
@@ -103,8 +99,8 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
               top: Screen.height * 0.3, // Responsive 266
             ),
             child: Padding(
-              padding: const EdgeInsets.only(
-                top: 32.0,
+              padding: EdgeInsets.only(
+                top: 16.0,
               ),
               child: Column(
                 children: <Widget>[
@@ -136,8 +132,37 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
     );
   }
 
-  _irAmiPerfil() {
-    Navigator.of(context).pushReplacementNamed('/perfil');
+  Widget _buildLevel() {
+    return Align(
+      alignment: Alignment(0, -0.79),
+      child: Text(
+        "Lv. " + Sesion.usuarioLogeado.level.toString(),
+        style: TextStyle(
+          fontSize: 14,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildExperiencia(int puntaje, int level) {
+    int puntajeDelNivel =
+        puntaje - calcularExperienciaRequeridaTotal(level - 1);
+    double porcentajeExperiencia = porcentajeDouble(
+        puntajeDelNivel, calcularExperienciaRequerida(level + 1));
+    print(puntaje);
+    print(level);
+    return Align(
+      alignment: Alignment(-0.5, -0.72),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: Screen.width * 0.15),
+        child: LinearPercentIndicator(
+          width: Screen.width * 0.7,
+          lineHeight: 8.0,
+          percent: porcentajeExperiencia,
+          progressColor: ColoresTkv.amarillo,
+        ),
+      ),
+    );
   }
 
   Widget _buildGridLibros() {
@@ -260,9 +285,9 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
     Color colorBarra = colorProgressBar(porcentaje);
 
     return Align(
-      alignment: Alignment(0, -0.7),
+      alignment: Alignment(0, -0.62),
       child: Container(
-        height: 85,
+        height: 70,
         width: Screen.width * 0.95,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(
@@ -307,7 +332,7 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
               ),
             ),
             Align(
-              alignment: Alignment.topLeft,
+              alignment: Alignment(-1, -1),
               child: Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: 24.0,
@@ -325,22 +350,14 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
                         child: titulo3Label(libro.nombre),
                       ),
                     ),
-                    Container(
-                      height: 20,
-                      width: Screen.width * 0.6,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: subTitulo3Label(libro.autor),
-                      ),
-                    ),
                   ],
                 ),
               ),
             ),
             Align(
               alignment: Alignment(
-                0.6,
-                -1,
+                0.5,
+                -1.5,
               ),
               child: FlatButton(
                 child: Icon(
@@ -350,7 +367,10 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
               ),
             ),
             Align(
-              alignment: Alignment.topRight,
+              alignment: Alignment(
+                1,
+                -1.5,
+              ),
               child: FlatButton(
                 child: Icon(Icons.keyboard_arrow_down),
                 onPressed: () => _disminuirPaginas(),
@@ -390,5 +410,9 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
       setState(() {});
     });
     ;
+  }
+
+  _irAmiPerfil() {
+    Navigator.of(context).pushReplacementNamed('/perfil');
   }
 }

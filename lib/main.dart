@@ -15,9 +15,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Trikavengers',
       debugShowCheckedModeBanner: false,
+      locale: Locale('es'),
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        
       ),
       routes: {
         '/': (context) => HomePage(),

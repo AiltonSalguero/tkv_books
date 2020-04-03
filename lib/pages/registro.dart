@@ -75,8 +75,8 @@ class _RegistroPageState extends State<RegistroPage> {
                   //crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     titulo1Label("Registro"),
-                    inputPrincipal("Nombres", nombres),
-                    inputPrincipal("Apellidos", apellidos),
+                    inputPrincipal("Nombre", nombres),
+                    inputPrincipal("Apellido", apellidos),
                     inputPrincipal("Nickname", nickname),
                     inputSecundario("Contraseña", contrasenia),
                     _registrarButton(),
@@ -97,9 +97,15 @@ class _RegistroPageState extends State<RegistroPage> {
   _validarRegistro() {
     if (nombres.text == "")
       return errorLoginDialog(context, "Campo incompleto", "Escriba un nombre");
+    if (nombres.text.length > 10)
+      return errorLoginDialog(context, "Nombre muy largo",
+          "Escriba un nombre con menos de 10 caracteres");
     if (apellidos.text == "")
       return errorLoginDialog(
           context, "Campo incompleto", "Escriba un apellido");
+    if (apellidos.text.length > 10)
+      return errorLoginDialog(context, "Apellido muy largo",
+          "Escriba un apellido con menos de 10 caracteres");
     if (nickname.text == "")
       return errorLoginDialog(
           context, "Campo incompleto", "Escriba un nickname");
@@ -132,10 +138,6 @@ class _RegistroPageState extends State<RegistroPage> {
 
         UsuarioDao.postUsuario(usuarioNuevo).then((value) {
           Sesion.usuarioLogeado = usuarioNuevo;
-          UsuarioDao.getUsuarioByNickname(usuarioNuevo.nickname)
-              .then((usuario) {
-            Sesion.usuarioLogeado.codUsuario = usuario.codUsuario;
-          });
           Navigator.of(context).pushNamed('/perfil');
         });
       }
