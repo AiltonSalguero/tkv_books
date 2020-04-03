@@ -43,12 +43,10 @@ class UsuarioDao {
         "&contrasenia=" +
         contrasenia);
     var decodedData = json.decode(response.body);
-    print(response.body);
     bool existe;
     ListaUsuarios.fromJson(decodedData).lista.length != 0
         ? existe = true
         : existe = false;
-    print(existe);
     return existe;
   }
 
@@ -57,12 +55,10 @@ class UsuarioDao {
         "https://io3689ejvd.execute-api.us-east-2.amazonaws.com/test";
     var response = await http.get(apiUrl + "/usuariosTKV?nickname=" + nickname);
     var decodedData = json.decode(response.body);
-    print(response.body);
     bool existe;
     ListaUsuarios.fromJson(decodedData).lista.length != 0
         ? existe = true
         : existe = false;
-    print(existe);
     return existe;
   }
 

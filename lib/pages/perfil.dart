@@ -31,19 +31,18 @@ class _PerfilPageState extends State<PerfilPage> {
   String numeroLibros = "0";
   @override
   void initState() {
-    // traer datos
-
     _actualizarListaLibros();
-    _getLibroLeyendosePorUsuario();
+    _obtenerLibroLeyendosePorUsuario();
   }
 
-  _getLibroLeyendosePorUsuario() {
+  _obtenerLibroLeyendosePorUsuario() {
     if (Sesion.usuarioLogeado.codLibroLeyendo != 0 &&
         Sesion.usuarioLogeado.codLibroLeyendo != null) {
-      LibroDao.getLibroByCod(Sesion.usuarioLogeado.codLibroLeyendo)
-          .then((libro) {
-        Sesion.libroLeyendoPorUsuario = libro;
-      });
+      LibroDao.getLibroByCod(Sesion.usuarioLogeado.codLibroLeyendo).then(
+        (libro) {
+          Sesion.libroLeyendoPorUsuario = libro;
+        },
+      );
     }
   }
 
@@ -376,7 +375,8 @@ class _PerfilPageState extends State<PerfilPage> {
 
   _abrirAgregarLibroDialog() {
     if (Sesion.librosDelUsuario.lista == null) {
-      Sesion.librosDelUsuario.lista = List();
+      Sesion.librosDelUsuario.lista = List<Libro>();
+      setState(() {});
     }
     if (Sesion.librosDelUsuario.lista.length < 2) {
       agregarLibroDialog(context).then(
