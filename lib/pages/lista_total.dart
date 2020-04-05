@@ -9,6 +9,7 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:tkv_books/dao/libro_dao.dart';
 import 'package:tkv_books/dao/sesion.dart';
+import 'package:tkv_books/dao/usuario_dao.dart';
 import 'package:tkv_books/model/libro.dart';
 import 'package:tkv_books/util/screen.dart';
 import 'package:tkv_books/util/temaPersonlizado.dart';
@@ -25,11 +26,12 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
   bool hayLibrosLeyendose = false;
   ListaLibros librosTotales;
 
-  bool hayLibroLeyendosePorUsuario = false;
+  bool hayLibroLeyendosePorUsuario;
   @override
   void initState() {
+    hayLibroLeyendosePorUsuario =
+        Sesion.usuarioLogeado.codLibroLeyendo == 0 ? false : true;
     _actualizarListaLibros();
-    _obtenerLibroLeyendosePorUsuario();
   }
 
   _actualizarListaLibros() {
@@ -42,13 +44,6 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
       }
       setState(() {});
     });
-  }
-
-  _obtenerLibroLeyendosePorUsuario() {
-    if (Sesion.libroLeyendoPorUsuario != null) {
-      hayLibroLeyendosePorUsuario = true;
-      setState(() {});
-    }
   }
 
   @override
@@ -387,29 +382,38 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
     if (paginaActual > Sesion.libroLeyendoPorUsuario.paginasTotales)
       return null;
     LibroDao.putLibroSetPaginasLeidas(
-            Sesion.usuarioLogeado.codLibroLeyendo, paginaActual)
-        .then((val) {
-      Sesion.libroLeyendoPorUsuario.paginasLeidas++;
-      Sesion.usuarioLogeado.puntaje++;
-      Sesion.usuarioLogeado.level =
-          calcularLevelUsuario(Sesion.usuarioLogeado.puntaje);
-      setState(() {});
-    });
+        Sesion.usuarioLogeado.codLibroLeyendo, paginaActual);
+
+    Sesion.libroLeyendoPorUsuario.paginasLeidas++;
+    Sesion.usuarioLogeado.puntaje++;
+
+    _actualizarPuntajeUsuario();
+    setState(() {});
   }
 
   _disminuirPaginas() {
     int paginaActual = Sesion.libroLeyendoPorUsuario.paginasLeidas - 1;
     if (paginaActual == -1) return null;
     LibroDao.putLibroSetPaginasLeidas(
-            Sesion.usuarioLogeado.codLibroLeyendo, paginaActual)
-        .then((val) {
-      Sesion.libroLeyendoPorUsuario.paginasLeidas--;
-      Sesion.usuarioLogeado.puntaje--;
+        Sesion.usuarioLogeado.codLibroLeyendo, paginaActual);
+
+    Sesion.libroLeyendoPorUsuario.paginasLeidas--;
+    Sesion.usuarioLogeado.puntaje--;
+
+    _actualizarPuntajeUsuario();
+    setState(() {});
+  }
+
+  _actualizarPuntajeUsuario() {
+    UsuarioDao.putUsuarioSetPuntaje(
+        Sesion.usuarioLogeado.codUsuario, Sesion.usuarioLogeado.puntaje);
+    if (Sesion.usuarioLogeado.level !=
+        calcularLevelUsuario(Sesion.usuarioLogeado.puntaje)) {
       Sesion.usuarioLogeado.level =
           calcularLevelUsuario(Sesion.usuarioLogeado.puntaje);
-      setState(() {});
-    });
-    ;
+      UsuarioDao.putUsuarioSetLevel(
+          Sesion.usuarioLogeado.codUsuario, Sesion.usuarioLogeado.level);
+    }
   }
 
   _irAmiPerfil() {

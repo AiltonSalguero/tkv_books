@@ -6,6 +6,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tkv_books/dao/sesion.dart';
+import 'package:tkv_books/dao/usuario_dao.dart';
 import 'package:tkv_books/widgets/inputPersonalizado.dart';
 
 Future<void> agregarLibroDialog(BuildContext context) {
@@ -23,6 +24,8 @@ Future<void> agregarLibroDialog(BuildContext context) {
     Sesion.libroAgregado.paginasLeidas = int.parse(_paginasLeidas.text);
     Sesion.libroAgregado.paginasTotales = int.parse(_paginasTotales.text);
     Sesion.libroAgregado.nicknameUsuario = Sesion.usuarioLogeado.nickname;
+
+    // aumentar puntaje y level en sesion y DB
   }
 
   _cerrarDialog() {
@@ -41,8 +44,18 @@ Future<void> agregarLibroDialog(BuildContext context) {
         }
       } else {
         print("validado");
-        _guardarDatos();
-        _cerrarDialog();
+        if (Sesion.usuarioLogeado.codUsuario == 0) {
+          UsuarioDao.getUsuarioByNickname(Sesion.usuarioLogeado.nickname)
+              .then((user) {
+            print(user.toJson());
+            Sesion.usuarioLogeado = user;
+            _guardarDatos();
+            _cerrarDialog();
+          });
+        } else {
+          _guardarDatos();
+          _cerrarDialog();
+        }
       }
     }
   }

@@ -11,6 +11,7 @@ import 'package:tkv_books/dao/usuario_dao.dart';
 import 'package:tkv_books/dialogs/agregar_libro_dialog.dart';
 import 'package:tkv_books/dialogs/eliminar_libro_dialog.dart';
 import 'package:tkv_books/model/libro.dart';
+import 'package:tkv_books/model/usuario.dart';
 import 'package:tkv_books/util/confirmAction.dart';
 import 'package:tkv_books/util/screen.dart';
 import 'package:tkv_books/util/temaPersonlizado.dart';
@@ -27,12 +28,21 @@ class _PerfilPageState extends State<PerfilPage> {
   //Usuario usuarioPerfil;
 
   bool tieneLibros = false;
-  bool listoLevel = false;
   String numeroLibros = "0";
   @override
   void initState() {
-    _actualizarListaLibros();
-    _obtenerLibroLeyendosePorUsuario();
+    if (!Sesion.vieneDeRegistro) {
+      UsuarioDao.getUsuarioByNickname(Sesion.usuarioLogeado.nickname)
+          .then((user) {
+        Sesion.usuarioLogeado.codUsuario = user.codUsuario;
+        _actualizarListaLibros();
+        Sesion.vieneDeRegistro = false;
+      });
+      //_obtenerLibroLeyendosePorUsuario();
+    } else {
+      _actualizarListaLibros();
+      _obtenerLibroLeyendosePorUsuario();
+    }
   }
 
   _obtenerLibroLeyendosePorUsuario() {
@@ -46,36 +56,18 @@ class _PerfilPageState extends State<PerfilPage> {
     }
   }
 
-  _actualizarLevel(ListaLibros libros) {
-    for (int i = 0; i < libros.lista.length; i++) {
-      Sesion.usuarioLogeado.puntaje += libros.lista[i].paginasLeidas;
-    }
-    Sesion.usuarioLogeado.level =
-        calcularLevelUsuario(Sesion.usuarioLogeado.puntaje);
-    listoLevel = true;
-    print("a" + Sesion.usuarioLogeado.level.toString());
-  }
-
   _actualizarListaLibros() {
     print("obteniendo...");
-    UsuarioDao.getUsuarioByNickname(Sesion.usuarioLogeado.nickname)
-        .then((user) {
-      Sesion.usuarioLogeado.codUsuario = user.codUsuario;
-      LibroDao.getLibrosOfUsuario(Sesion.usuarioLogeado.codUsuario)
-          .then((libros) {
-        if (libros.lista.isNotEmpty) {
-          tieneLibros = true;
-          numeroLibros = libros.lista.length.toString();
-          Sesion.librosDelUsuario = libros;
-          if (Sesion.usuarioLogeado.puntaje == 0) {
-            _actualizarLevel(libros);
-          } else {
-            listoLevel = true;
-          }
-        }
 
-        setState(() {});
-      });
+    LibroDao.getLibrosOfUsuario(Sesion.usuarioLogeado.codUsuario)
+        .then((libros) {
+      if (libros.lista.isNotEmpty) {
+        tieneLibros = true;
+        numeroLibros = libros.lista.length.toString();
+        Sesion.librosDelUsuario = libros;
+      }
+      print(Sesion.librosDelUsuario.toJson());
+      setState(() {});
     });
   }
 
@@ -85,8 +77,8 @@ class _PerfilPageState extends State<PerfilPage> {
             .then(
           (value) {
             if (value == ConfirmAction.ACCEPT) {
-              Sesion.usuarioLogeado = null;
-              Sesion.librosDelUsuario = null;
+              Sesion.usuarioLogeado = Usuario("", "", "", "");
+              Sesion.librosDelUsuario.lista = [];
               _irAhome();
               return true;
             }
@@ -98,6 +90,8 @@ class _PerfilPageState extends State<PerfilPage> {
 
   @override
   Widget build(BuildContext context) {
+    print("c" + Sesion.librosDelUsuario.lista.length.toString());
+    print(Sesion.usuarioLogeado.codUsuario);
     return WillPopScope(
       onWillPop: _abrirCerrarSesionDialog,
       child: Scaffold(
@@ -114,10 +108,8 @@ class _PerfilPageState extends State<PerfilPage> {
             ),
             botonTercero("Ver todos", _irAlistaTotal),
             _buildEncabezado(),
-            listoLevel
-                ? _buildExperiencia(
-                    Sesion.usuarioLogeado.puntaje, Sesion.usuarioLogeado.level)
-                : _buildExperiencia(0, 1),
+            _buildExperiencia(
+                Sesion.usuarioLogeado.puntaje, Sesion.usuarioLogeado.level),
             Container(
               height: double.infinity,
               width: double.infinity,
@@ -364,50 +356,57 @@ class _PerfilPageState extends State<PerfilPage> {
         .then(
       (value) {
         if (value == ConfirmAction.ACCEPT) {
-          LibroDao.deleteLibro(libro.codLibro).then((val) {
-            Sesion.librosDelUsuario.lista.remove(libro);
-            setState(() {});
-          });
+          Sesion.librosDelUsuario.lista.remove(libro);
+          Sesion.usuarioLogeado.puntaje -= Sesion.libroAgregado.paginasLeidas;
+          Sesion.usuarioLogeado.level =
+              calcularLevelUsuario(Sesion.usuarioLogeado.puntaje);
+
+          LibroDao.deleteLibro(libro.codLibro);
+          _actualizarListaLibros();
+          if (libro.codLibro == Sesion.usuarioLogeado.codLibroLeyendo) {
+            Sesion.usuarioLogeado.codLibroLeyendo = 0;
+          }
+          UsuarioDao.putUsuarioSetPuntaje(
+              Sesion.usuarioLogeado.codUsuario, Sesion.usuarioLogeado.puntaje);
+          UsuarioDao.putUsuarioSetLevel(
+              Sesion.usuarioLogeado.codUsuario, Sesion.usuarioLogeado.level);
         }
       },
     );
   }
 
   _abrirAgregarLibroDialog() {
-    if (Sesion.librosDelUsuario.lista == null) {
-      Sesion.librosDelUsuario.lista = List<Libro>();
-      setState(() {});
-    }
     if (Sesion.librosDelUsuario.lista.length < 2) {
       agregarLibroDialog(context).then(
         (value) {
           if (Sesion.libroAgregado.nombre != null) {
-            LibroDao.postLibro(Sesion.libroAgregado).then(
-              (onValue) {
-                print(Sesion.libroAgregado.toJson());
-                if (Sesion.librosDelUsuario.lista == null) {
-                  LibroDao.getLibrosOfUsuario(Sesion.usuarioLogeado.codUsuario)
-                      .then((libs) {
-                    // primera vez que agrega curso
-                    tieneLibros = true;
-                    Sesion.librosDelUsuario = libs;
-                  });
-                } else {
-                  print("hkhku");
-                  Sesion.librosDelUsuario.lista.add(Sesion.libroAgregado);
-                  Sesion.libroAgregado = null;
-                }
-                setState(() {});
-              },
-            );
+            // Si dio aceptar
+            Sesion.librosDelUsuario.lista.add(Sesion.libroAgregado);
+            print("a" + Sesion.librosDelUsuario.lista.length.toString());
+            print(Sesion.libroAgregado.toJson());
+            Sesion.usuarioLogeado.puntaje += Sesion.libroAgregado.paginasLeidas;
+            Sesion.usuarioLogeado.level =
+                calcularLevelUsuario(Sesion.usuarioLogeado.puntaje);
+
+            LibroDao.postLibro(Sesion.libroAgregado).then((val) {
+              //Sesion.libroAgregado = null;
+              print("afds");
+              _actualizarListaLibros();
+            });
+
+            UsuarioDao.putUsuarioSetPuntaje(Sesion.usuarioLogeado.codUsuario,
+                Sesion.usuarioLogeado.puntaje);
+            UsuarioDao.putUsuarioSetLevel(
+                Sesion.usuarioLogeado.codUsuario, Sesion.usuarioLogeado.level);
           }
+          print("b" + Sesion.librosDelUsuario.lista.length.toString());
         },
       );
     } else {
       alertaDialog(
           context,
           "Limite superado",
-          "Adquiera la versión premium para agregar más libros.",
+          "Adquiera la versión premium para agregar más libros: \n https://api.whatsapp.com/send?phone=51960762446&text=Buenas%20%2C%20deseo%20adquirir%20la%20version%20premium%20de%20Trikavengers.",
           "Okay",
           "Rai nau");
     }

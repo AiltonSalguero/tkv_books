@@ -136,8 +136,10 @@ class _RegistroPageState extends State<RegistroPage> {
         // validar contrasenia mayor a 6 caracteres
         // validar que todos los campos esten llenos
 
+        print(usuarioNuevo.toJson());
         UsuarioDao.postUsuario(usuarioNuevo).then((value) {
           Sesion.usuarioLogeado = usuarioNuevo;
+          Sesion.vieneDeRegistro = true;
           Navigator.of(context).pushNamed('/perfil');
         });
       }

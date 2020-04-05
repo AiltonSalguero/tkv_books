@@ -7,7 +7,7 @@ class Libro {
   int paginasTotales;
   String nicknameUsuario;
 
-  Libro() {
+  Libro(this.nombre, this.autor, this.paginasLeidas, this.paginasTotales){
     this.codLibro = 0;
     this.codUsuario = 0;
   }

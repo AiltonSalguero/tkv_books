@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dao/usuario_dao.dart';
-import 'package:tkv_books/dialogs/eliminar_libro_dialog.dart';
 import 'package:tkv_books/util/confirmAction.dart';
 import 'package:tkv_books/dialogs/error_dialog.dart';
 import 'package:tkv_books/util/screen.dart';
@@ -108,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
 
   _abrirErrorLoginDialog(String nickname) async {
     final ConfirmAction action = await errorLoginDialog(
-        context, "Usuario incorrecto", "Escribe bien los datos gaa");
+        context, "Usuario incorrecto", "Escribe bien los datos.");
   }
 
   _logearUsuario() {

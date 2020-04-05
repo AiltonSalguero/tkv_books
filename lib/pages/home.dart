@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tkv_books/dao/sesion.dart';
+import 'package:tkv_books/model/libro.dart';
 import 'package:tkv_books/util/screen.dart';
 import 'package:tkv_books/widgets/botonPersonalizado.dart';
 
@@ -10,6 +12,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    Sesion.librosDelUsuario.lista = List<Libro>();
     Screen.width = MediaQuery.of(context).size.width;
     Screen.height = MediaQuery.of(context).size.height;
     return Container(
