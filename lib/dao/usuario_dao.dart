@@ -97,6 +97,7 @@ class UsuarioDao {
   static Future<Null> postUsuario(Usuario usuario) async {
     String apiUrl = DotEnv().env['AWS_API_URL'];
     String apiKey = DotEnv().env['AWS_API_KEY'];
+    jsonEncode(usuario.toJson());
     http.post(
       apiUrl + "/usuariosTKV",
       body: jsonEncode(usuario.toJson()),
@@ -108,41 +109,29 @@ class UsuarioDao {
     );
   }
 
-  static Future<Null> putUsuarioSetLibroLeyendo(
-      int codUsuario, int codLibro) async {
+  static Future<Null> putUsuarioSetLibroLeyendo(Usuario usuario) async {
     String apiUrl = DotEnv().env['AWS_API_URL'];
+    apiUrl += "/usuariosTKV?codUsuario=" + usuario.codUsuario.toString();
+    apiUrl += "&codLibroLeyendo=" + usuario.codLibroLeyendo.toString();
+    print(apiUrl);
     String apiKey = DotEnv().env['AWS_API_KEY'];
     http.put(
-      apiUrl + "/usuariosTKV?codUsuario=" + codUsuario.toString(),
-      body: jsonEncode({"codLibroLeyendo": codLibro}),
+      apiUrl,
       headers: {
-        'Content-type': 'application/json',
         'x-api-key': apiKey,
-        'Accept': 'application/json'
       },
     );
   }
 
-  static Future<Null> putUsuarioSetPuntaje(int codUsuario, int puntaje) async {
+  static Future<Null> putUsuarioSetPuntajeLevel(Usuario usuario) async {
     String apiUrl = DotEnv().env['AWS_API_URL'];
+    apiUrl += "/usuariosTKV?codUsuario=" + usuario.codUsuario.toString();
+    apiUrl += "&puntaje=" + usuario.puntaje.toString();
+    apiUrl += "&level=" + usuario.level.toString();
     String apiKey = DotEnv().env['AWS_API_KEY'];
     http.put(
-      apiUrl + "/usuariosTKV?codUsuario=" + codUsuario.toString(),
-      body: jsonEncode({"puntaje": puntaje}),
-      headers: {
-        'Content-type': 'application/json',
-        'x-api-key': apiKey,
-        'Accept': 'application/json'
-      },
-    );
-  }
-
-  static Future<Null> putUsuarioSetLevel(int codUsuario, int level) async {
-    String apiUrl = DotEnv().env['AWS_API_URL'];
-    String apiKey = DotEnv().env['AWS_API_KEY'];
-    http.put(
-      apiUrl + "/usuariosTKV?codUsuario=" + codUsuario.toString(),
-      body: jsonEncode({"level": level}),
+      apiUrl,
+      body: jsonEncode(usuario.toJson()),
       headers: {
         'Content-type': 'application/json',
         'x-api-key': apiKey,

@@ -25,24 +25,19 @@ class PerfilPage extends StatefulWidget {
 }
 
 class _PerfilPageState extends State<PerfilPage> {
-  //Usuario usuarioPerfil;
-
-  bool tieneLibros = false;
-  String numeroLibros = "0";
   @override
   void initState() {
+    print("initState");
     if (!Sesion.vieneDeRegistro) {
       UsuarioDao.getUsuarioByNickname(Sesion.usuarioLogeado.nickname)
           .then((user) {
         Sesion.usuarioLogeado.codUsuario = user.codUsuario;
-        _actualizarListaLibros();
+
         Sesion.vieneDeRegistro = false;
       });
-      //_obtenerLibroLeyendosePorUsuario();
-    } else {
-      _actualizarListaLibros();
-      _obtenerLibroLeyendosePorUsuario();
     }
+    _obtenerLibroLeyendosePorUsuario();
+    _actualizarListaLibros();
   }
 
   _obtenerLibroLeyendosePorUsuario() {
@@ -57,13 +52,12 @@ class _PerfilPageState extends State<PerfilPage> {
   }
 
   _actualizarListaLibros() {
-    print("obteniendo...");
+    print("_actualizarListaLibros");
 
     LibroDao.getLibrosOfUsuario(Sesion.usuarioLogeado.codUsuario)
         .then((libros) {
       if (libros.lista.isNotEmpty) {
-        tieneLibros = true;
-        numeroLibros = libros.lista.length.toString();
+        print(libros.lista.length.toString());
         Sesion.librosDelUsuario = libros;
       }
       print(Sesion.librosDelUsuario.toJson());
@@ -72,6 +66,7 @@ class _PerfilPageState extends State<PerfilPage> {
   }
 
   Future<bool> _abrirCerrarSesionDialog() {
+    print("_abrirCerrarSesionDialog");
     alertaDialog(context, "Cerrar sesión", "Quieres salir de tu cuenta?", "No",
                 "Si")
             .then(
@@ -79,6 +74,7 @@ class _PerfilPageState extends State<PerfilPage> {
             if (value == ConfirmAction.ACCEPT) {
               Sesion.usuarioLogeado = Usuario("", "", "", "");
               Sesion.librosDelUsuario.lista = [];
+              Sesion.libroLeyendoPorUsuario = Libro("", "", 0, 0);
               _irAhome();
               return true;
             }
@@ -90,8 +86,8 @@ class _PerfilPageState extends State<PerfilPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("c" + Sesion.librosDelUsuario.lista.length.toString());
-    print(Sesion.usuarioLogeado.codUsuario);
+    print("build");
+
     return WillPopScope(
       onWillPop: _abrirCerrarSesionDialog,
       child: Scaffold(
@@ -139,7 +135,7 @@ class _PerfilPageState extends State<PerfilPage> {
                 child: Column(
                   children: <Widget>[
                     titulo1Label("Biblioteca"),
-                    tieneLibros
+                    Sesion.librosDelUsuario.lista.isNotEmpty
                         ? _buildListaLibros()
                         : Text("Aún no tienes libros agregados"),
                   ],
@@ -169,10 +165,12 @@ class _PerfilPageState extends State<PerfilPage> {
   }
 
   Widget _buildExperiencia(int puntaje, int level) {
-    int puntajeDelNivel =
-        puntaje - calcularExperienciaRequeridaTotal(level - 1);
+    print("_buildExperiencia");
+    int puntajeDelNivel = puntaje - calcularExperienciaRequeridaTotal(level);
     double porcentajeExperiencia = porcentajeDouble(
         puntajeDelNivel, calcularExperienciaRequerida(level + 1));
+    String expRequerida = calcularExperienciaRequerida(level + 1).toString();
+    String progresoLevel = "${puntajeDelNivel.toString()} / $expRequerida";
     return Align(
       alignment: Alignment(0, -0.55),
       child: Padding(
@@ -182,12 +180,19 @@ class _PerfilPageState extends State<PerfilPage> {
           lineHeight: 8.0,
           percent: porcentajeExperiencia,
           progressColor: ColoresTkv.amarillo,
+          center: Text(
+            progresoLevel,
+            style: TextStyle(
+              fontSize: 8.0,
+            ),
+          ),
         ),
       ),
     );
   }
 
   Widget _buildEncabezado() {
+    print("_buildEncabezado");
     return Align(
       alignment: Alignment.topCenter,
       child: Column(
@@ -207,6 +212,7 @@ class _PerfilPageState extends State<PerfilPage> {
   }
 
   Widget _buildListaLibros() {
+    print("_buildListaLibros");
     return Container(
       height: Screen.height * 0.50,
       child: ListView.builder(
@@ -223,6 +229,7 @@ class _PerfilPageState extends State<PerfilPage> {
   }
 
   Widget _buildLibroListItem(Libro libro) {
+    print("_buildLibroListItem");
     String porcentajeTexto =
         porcentajeString(libro.paginasLeidas, libro.paginasTotales);
     double porcentaje =
@@ -231,7 +238,7 @@ class _PerfilPageState extends State<PerfilPage> {
 
     Color colorBarra = colorProgressBar(porcentaje);
 
-    bool leyendo;
+    bool leyendo = false;
     libro.codLibro == Sesion.usuarioLogeado.codLibroLeyendo
         ? leyendo = true
         : leyendo = false;
@@ -343,61 +350,68 @@ class _PerfilPageState extends State<PerfilPage> {
   }
 
   _editarLibroLeyendoPorUsuario(Libro libro) {
+    print("_editarLibroLeyendoPorUsuario");
     Sesion.libroLeyendoPorUsuario = libro;
     Sesion.usuarioLogeado.codLibroLeyendo = libro.codLibro;
-    UsuarioDao.putUsuarioSetLibroLeyendo(
-            Sesion.usuarioLogeado.codUsuario, libro.codLibro)
+    UsuarioDao.putUsuarioSetLibroLeyendo(Sesion.usuarioLogeado)
         .then((val) => setState(() {}));
   }
 
   _abrirEliminarLibroDialog(Libro libro) {
+    print("_abrirEliminarLibroDialog");
     alertaDialog(context, "Eliminar libro?",
             "Al eliminarlo se disminuirá el puntaje ganado.", "No", "Si")
         .then(
       (value) {
         if (value == ConfirmAction.ACCEPT) {
-          Sesion.librosDelUsuario.lista.remove(libro);
-          Sesion.usuarioLogeado.puntaje -= Sesion.libroAgregado.paginasLeidas;
+          Sesion.usuarioLogeado.puntaje -= libro.paginasLeidas;
           Sesion.usuarioLogeado.level =
               calcularLevelUsuario(Sesion.usuarioLogeado.puntaje);
 
-          LibroDao.deleteLibro(libro.codLibro);
-          _actualizarListaLibros();
           if (libro.codLibro == Sesion.usuarioLogeado.codLibroLeyendo) {
             Sesion.usuarioLogeado.codLibroLeyendo = 0;
+            UsuarioDao.putUsuarioSetLibroLeyendo(Sesion.usuarioLogeado);
           }
-          UsuarioDao.putUsuarioSetPuntaje(
-              Sesion.usuarioLogeado.codUsuario, Sesion.usuarioLogeado.puntaje);
-          UsuarioDao.putUsuarioSetLevel(
-              Sesion.usuarioLogeado.codUsuario, Sesion.usuarioLogeado.level);
+
+          LibroDao.deleteLibro(libro.codLibro).then((val) {
+            Sesion.librosDelUsuario.lista.remove(libro);
+            UsuarioDao.putUsuarioSetPuntajeLevel(Sesion.usuarioLogeado)
+                .then((val) {
+              //_actualizarListaLibros();
+              setState(() {});
+            });
+          });
         }
       },
     );
   }
 
   _abrirAgregarLibroDialog() {
+    print("_abrirAgregarLibroDialog");
     if (Sesion.librosDelUsuario.lista.length < 2) {
       agregarLibroDialog(context).then(
         (value) {
-          if (Sesion.libroAgregado.nombre != null) {
+          if (Sesion.libroAgregado.codLibro != 0) {
             // Si dio aceptar
-            Sesion.librosDelUsuario.lista.add(Sesion.libroAgregado);
-            print("a" + Sesion.librosDelUsuario.lista.length.toString());
-            print(Sesion.libroAgregado.toJson());
+
             Sesion.usuarioLogeado.puntaje += Sesion.libroAgregado.paginasLeidas;
             Sesion.usuarioLogeado.level =
                 calcularLevelUsuario(Sesion.usuarioLogeado.puntaje);
 
             LibroDao.postLibro(Sesion.libroAgregado).then((val) {
               //Sesion.libroAgregado = null;
+              print("a0" + Sesion.librosDelUsuario.lista.length.toString());
+              Sesion.librosDelUsuario.lista.add(Sesion.libroAgregado);
+              print("a" + Sesion.librosDelUsuario.lista.length.toString());
               print("afds");
-              _actualizarListaLibros();
+              UsuarioDao.putUsuarioSetPuntajeLevel(Sesion.usuarioLogeado)
+                  .then((val) {
+                //_actualizarListaLibros();
+                setState(() {
+                  Sesion.libroAgregado.codLibro = 0;
+                });
+              });
             });
-
-            UsuarioDao.putUsuarioSetPuntaje(Sesion.usuarioLogeado.codUsuario,
-                Sesion.usuarioLogeado.puntaje);
-            UsuarioDao.putUsuarioSetLevel(
-                Sesion.usuarioLogeado.codUsuario, Sesion.usuarioLogeado.level);
           }
           print("b" + Sesion.librosDelUsuario.lista.length.toString());
         },
@@ -413,10 +427,12 @@ class _PerfilPageState extends State<PerfilPage> {
   }
 
   _irAlistaTotal() {
+    print("_irAlistaTotal");
     Navigator.of(context).pushNamed("/lista_total");
   }
 
   _irAhome() {
+    print("_irAhome");
     Navigator.of(context).pushNamedAndRemoveUntil("/", (route) => false);
   }
 }

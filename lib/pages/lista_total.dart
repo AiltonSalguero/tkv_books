@@ -10,6 +10,7 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:tkv_books/dao/libro_dao.dart';
 import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dao/usuario_dao.dart';
+import 'package:tkv_books/dialogs/error_dialog.dart';
 import 'package:tkv_books/model/libro.dart';
 import 'package:tkv_books/util/screen.dart';
 import 'package:tkv_books/util/temaPersonlizado.dart';
@@ -24,7 +25,6 @@ class ListaTotalPage extends StatefulWidget {
 
 class _ListaTotalPageState extends State<ListaTotalPage> {
   bool hayLibrosLeyendose = false;
-  ListaLibros librosTotales;
 
   bool hayLibroLeyendosePorUsuario;
   @override
@@ -40,7 +40,7 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
     LibroDao.getLibrosTotales().then((libros) {
       if (libros.lista.isNotEmpty) {
         hayLibrosLeyendose = true;
-        librosTotales = libros;
+        Sesion.librosLeyendoseTotales = libros;
       }
       setState(() {});
     });
@@ -48,6 +48,7 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
 
   @override
   Widget build(BuildContext context) {
+    print("lista_libros");
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       body: Stack(
@@ -140,12 +141,11 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
   }
 
   Widget _buildExperiencia(int puntaje, int level) {
-    int puntajeDelNivel =
-        puntaje - calcularExperienciaRequeridaTotal(level - 1);
+    int puntajeDelNivel = puntaje - calcularExperienciaRequeridaTotal(level);
     double porcentajeExperiencia = porcentajeDouble(
         puntajeDelNivel, calcularExperienciaRequerida(level + 1));
-    print(puntaje);
-    print(level);
+    String expRequerida = calcularExperienciaRequerida(level + 1).toString();
+    String progresoLevel = "${puntajeDelNivel.toString()} / $expRequerida";
     return Align(
       alignment: Alignment(-0.5, -0.72),
       child: Padding(
@@ -155,6 +155,12 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
           lineHeight: 8.0,
           percent: porcentajeExperiencia,
           progressColor: ColoresTkv.amarillo,
+          center: Text(
+            progresoLevel,
+            style: TextStyle(
+              fontSize: 8.0,
+            ),
+          ),
         ),
       ),
     );
@@ -177,7 +183,7 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
           childAspectRatio: 24 / 29,
           crossAxisSpacing: 4.0,
           crossAxisCount: 2,
-          children: librosTotales.lista
+          children: Sesion.librosLeyendoseTotales.lista
               .map(
                 (libro) => _buildLibroListItem(libro),
               )
@@ -381,11 +387,10 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
     int paginaActual = Sesion.libroLeyendoPorUsuario.paginasLeidas + 1;
     if (paginaActual > Sesion.libroLeyendoPorUsuario.paginasTotales)
       return null;
-    LibroDao.putLibroSetPaginasLeidas(
-        Sesion.usuarioLogeado.codLibroLeyendo, paginaActual);
 
     Sesion.libroLeyendoPorUsuario.paginasLeidas++;
     Sesion.usuarioLogeado.puntaje++;
+    LibroDao.putLibroSetPaginasLeidas(Sesion.libroLeyendoPorUsuario);
 
     _actualizarPuntajeUsuario();
     setState(() {});
@@ -394,26 +399,25 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
   _disminuirPaginas() {
     int paginaActual = Sesion.libroLeyendoPorUsuario.paginasLeidas - 1;
     if (paginaActual == -1) return null;
-    LibroDao.putLibroSetPaginasLeidas(
-        Sesion.usuarioLogeado.codLibroLeyendo, paginaActual);
 
     Sesion.libroLeyendoPorUsuario.paginasLeidas--;
     Sesion.usuarioLogeado.puntaje--;
-
+    LibroDao.putLibroSetPaginasLeidas(Sesion.libroLeyendoPorUsuario);
     _actualizarPuntajeUsuario();
     setState(() {});
   }
 
   _actualizarPuntajeUsuario() {
-    UsuarioDao.putUsuarioSetPuntaje(
-        Sesion.usuarioLogeado.codUsuario, Sesion.usuarioLogeado.puntaje);
-    if (Sesion.usuarioLogeado.level !=
+    if (Sesion.usuarioLogeado.level <
         calcularLevelUsuario(Sesion.usuarioLogeado.puntaje)) {
+      // Mostrar mensaje de subida de level
       Sesion.usuarioLogeado.level =
           calcularLevelUsuario(Sesion.usuarioLogeado.puntaje);
-      UsuarioDao.putUsuarioSetLevel(
-          Sesion.usuarioLogeado.codUsuario, Sesion.usuarioLogeado.level);
+      errorLoginDialog(context, "Subiste de nivel!",
+          "Ahora eres Lv. ${Sesion.usuarioLogeado.level}");
     }
+
+    UsuarioDao.putUsuarioSetPuntajeLevel(Sesion.usuarioLogeado);
   }
 
   _irAmiPerfil() {

@@ -19,14 +19,14 @@ Color colorProgressBar(double porcentaje) {
 }
 
 List<int> experienciaRequerida = [
-  0, // Lv 1
-  15, // Lv 2
-  49, // Lv 3
-  106, // Lv 4
-  198, // Lv 5
-  333, // Lv 6
-  705, // Lv 7
-  1265, // Lv 8
+  0, // Lv 1        0
+  15, // Lv 2       15
+  49, // Lv 3       34
+  106, // Lv 4      57
+  198, // Lv 5      92
+  333, // Lv 6      135
+  705, // Lv 7      372
+  1265, // Lv 8     560
   2105, // Lv 9
   3347, // Lv 10
   4589,
@@ -49,10 +49,14 @@ int calcularLevelUsuario(int puntaje) {
 }
 
 int calcularExperienciaRequerida(int level) {
-  if (level == 1) return 15;
-  return experienciaRequerida[level] - experienciaRequerida[level - 1];
+  if (level == 1) return 0;
+  return experienciaRequerida[level - 1] - experienciaRequerida[level - 2];
 }
 
 int calcularExperienciaRequeridaTotal(int level) {
-  return experienciaRequerida[level];
+  if (level == 0) {
+    return 0;
+  } else {
+    return experienciaRequerida[level - 1];
+  }
 }

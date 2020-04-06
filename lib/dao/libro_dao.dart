@@ -70,31 +70,17 @@ class LibroDao {
     );
   }
 
-  static Future<Null> putLibro(Libro actualizacionLibro) async {
+  static Future<Null> putLibroSetPaginasLeidas(Libro actualizacionLibro) async {
     String apiUrl = DotEnv().env['AWS_API_URL'];
+    apiUrl +=
+        "/librosTKV?codLibro=" + actualizacionLibro.codLibro.toString();
+    apiUrl += "&paginasLeidas=" + actualizacionLibro.paginasLeidas.toString();
     String apiKey = DotEnv().env['AWS_API_KEY'];
     http.put(
-      apiUrl + "/librosTKV?codLibro=" + actualizacionLibro.codLibro.toString(),
+      apiUrl,
       body: jsonEncode(actualizacionLibro.toJson()),
       headers: {
-        'Content-type': 'application/json',
         'x-api-key': apiKey,
-        'Accept': 'application/json'
-      },
-    );
-  }
-
-  static Future<Null> putLibroSetPaginasLeidas(
-      int codLibro, int paginas) async {
-    String apiUrl = DotEnv().env['AWS_API_URL'];
-    String apiKey = DotEnv().env['AWS_API_KEY'];
-    http.put(
-      apiUrl + "/librosTKV?codLibro=" + codLibro.toString(),
-      body: jsonEncode({"paginasLeidas": paginas}),
-      headers: {
-        'Content-type': 'application/json',
-        'x-api-key': apiKey,
-        'Accept': 'application/json'
       },
     );
   }

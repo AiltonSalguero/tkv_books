@@ -14,6 +14,7 @@ class Sesion {
   static Usuario usuarioLogeado = Usuario("", "", "", "");
   static bool vieneDeRegistro = false;
   static ListaLibros librosDelUsuario = ListaLibros();
+
   static Libro libroLeyendoPorUsuario = Libro("", "", 0, 0);
 
   // Dialog

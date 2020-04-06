@@ -18,6 +18,7 @@ Future<void> agregarLibroDialog(BuildContext context) {
   final _paginasTotales = TextEditingController();
 
   _guardarDatos() {
+    Sesion.libroAgregado.codLibro = 1;
     Sesion.libroAgregado.codUsuario = Sesion.usuarioLogeado.codUsuario;
     Sesion.libroAgregado.nombre = _nombre.text;
     Sesion.libroAgregado.autor = _autor.text;
