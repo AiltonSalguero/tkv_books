@@ -389,11 +389,13 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
       return null;
 
     Sesion.libroLeyendoPorUsuario.paginasLeidas++;
+    int levelAntiguo = Sesion.usuarioLogeado.level;
     Sesion.usuarioLogeado.puntaje++;
+    Sesion.usuarioLogeado.level =
+        calcularLevelUsuario(Sesion.usuarioLogeado.puntaje);
     LibroDao.putLibroSetPaginasLeidas(Sesion.libroLeyendoPorUsuario);
 
-    _actualizarPuntajeUsuario();
-    setState(() {});
+    _actualizarPuntajeUsuario(levelAntiguo);
   }
 
   _disminuirPaginas() {
@@ -402,22 +404,26 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
 
     Sesion.libroLeyendoPorUsuario.paginasLeidas--;
     Sesion.usuarioLogeado.puntaje--;
+    int levelAntiguo = Sesion.usuarioLogeado.level;
+    Sesion.usuarioLogeado.level =
+        calcularLevelUsuario(Sesion.usuarioLogeado.puntaje);
     LibroDao.putLibroSetPaginasLeidas(Sesion.libroLeyendoPorUsuario);
-    _actualizarPuntajeUsuario();
-    setState(() {});
+
+    _actualizarPuntajeUsuario(levelAntiguo);
   }
 
-  _actualizarPuntajeUsuario() {
-    if (Sesion.usuarioLogeado.level <
-        calcularLevelUsuario(Sesion.usuarioLogeado.puntaje)) {
-      // Mostrar mensaje de subida de level
-      Sesion.usuarioLogeado.level =
-          calcularLevelUsuario(Sesion.usuarioLogeado.puntaje);
+  _actualizarPuntajeUsuario(int levelAntiguo) {
+    if (levelAntiguo < calcularLevelUsuario(Sesion.usuarioLogeado.puntaje)) {
+      // Mostrar mensaje de subida de leve
       errorLoginDialog(context, "Subiste de nivel!",
           "Ahora eres Lv. ${Sesion.usuarioLogeado.level}");
     }
+    print(Sesion.usuarioLogeado.level);
+    print(Sesion.usuarioLogeado.puntaje);
 
-    UsuarioDao.putUsuarioSetPuntajeLevel(Sesion.usuarioLogeado);
+    UsuarioDao.putUsuarioSetPuntajeLevel(Sesion.usuarioLogeado).then((val) {
+      setState(() {});
+    });
   }
 
   _irAmiPerfil() {

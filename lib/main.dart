@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:tkv_books/pages/home.dart';
 import 'package:tkv_books/pages/lista_total.dart';
 import 'package:tkv_books/pages/login.dart';
@@ -25,6 +26,15 @@ class MyApp extends StatelessWidget {
         '/lista_total': (context) => ListaTotalPage(),
       },
       initialRoute: '/',
+      localizationsDelegates: [
+        // ... delegado[s] de localización específicos de la app aquí
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('en'), // Inglés
+        const Locale('es'), // Español
+      ],
     );
   }
 }

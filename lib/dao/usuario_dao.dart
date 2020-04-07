@@ -4,8 +4,10 @@
   Por limpiar
 */
 import 'dart:convert';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:tkv_books/dialogs/eliminar_libro_dialog.dart';
 import 'package:tkv_books/model/usuario.dart';
 
 class UsuarioDao {
@@ -52,27 +54,31 @@ class UsuarioDao {
     return ListaUsuarios.fromJson(decodedData).lista[0];
   }
 
-  static Future<bool> existeUsuario(String nickname, String contrasenia) async {
+  static Future<bool> existeUsuario(String nickname, String contrasenia, BuildContext context) async {
     String apiUrl = DotEnv().env['AWS_API_URL'];
     String apiKey = DotEnv().env['AWS_API_KEY'];
-    var response = await http.get(
-      apiUrl +
-          "/usuariosTKV?nickname=" +
-          nickname +
-          "&contrasenia=" +
-          contrasenia,
-      headers: {
-        'x-api-key': apiKey,
-      },
-    );
+    try {
+      var response = await http.get(
+        apiUrl +
+            "/usuariosTKV?nickname=" +
+            nickname +
+            "&contrasenia=" +
+            contrasenia,
+        headers: {
+          'x-api-key': apiKey,
+        },
+      );
 
-    var decodedData = json.decode(response.body);
-    bool existe;
-    print(decodedData);
-    ListaUsuarios.fromJson(decodedData).lista.length != 0
-        ? existe = true
-        : existe = false;
-    return existe;
+      var decodedData = json.decode(response.body);
+      bool existe;
+      print(decodedData);
+      ListaUsuarios.fromJson(decodedData).lista.length != 0
+          ? existe = true
+          : existe = false;
+      return existe;
+    } catch (e) {
+      alertaDialog(context,"Sin internet","No esta conectado a internet.","","Ok");
+    }
   }
 
   static Future<bool> existeUsuarioByNickname(String nickname) async {

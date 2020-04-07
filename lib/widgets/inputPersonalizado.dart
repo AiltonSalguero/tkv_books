@@ -87,9 +87,7 @@ Widget inputDialogText(
     ),
     child: TextFormField(
       inputFormatters: [
-        WhitelistingTextInputFormatter(
-          RegExp("[a-zA-Z ]"),
-        ),
+        WhitelistingTextInputFormatter(RegExp(r'\p{Letter}|\d| ', unicode: true)),
       ],
       textCapitalization: texto == "Autor"
           ? TextCapitalization.words

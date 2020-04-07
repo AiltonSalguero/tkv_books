@@ -96,7 +96,8 @@ class _LoginPageState extends State<LoginPage> {
     if (nickname.text.isEmpty)
       return errorLoginDialog(
           context, "No hay datos", "Escriba una contraseña");
-    UsuarioDao.existeUsuario(nickname.text, contrasenia.text).then((existe) {
+    UsuarioDao.existeUsuario(nickname.text, contrasenia.text, context)
+        .then((existe) {
       if (existe) {
         _logearUsuario();
       } else {

@@ -18,6 +18,7 @@ import 'package:tkv_books/util/temaPersonlizado.dart';
 import 'package:tkv_books/util/utilFunctions.dart';
 import 'package:tkv_books/widgets/botonPersonalizado.dart';
 import 'package:tkv_books/widgets/labelPerzonalizado.dart';
+import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
 
 class PerfilPage extends StatefulWidget {
   @override
@@ -41,8 +42,7 @@ class _PerfilPageState extends State<PerfilPage> {
   }
 
   _obtenerLibroLeyendosePorUsuario() {
-    if (Sesion.usuarioLogeado.codLibroLeyendo != 0 &&
-        Sesion.usuarioLogeado.codLibroLeyendo != null) {
+    if (Sesion.usuarioLogeado.codLibroLeyendo != 0) {
       LibroDao.getLibroByCod(Sesion.usuarioLogeado.codLibroLeyendo).then(
         (libro) {
           Sesion.libroLeyendoPorUsuario = libro;
@@ -420,9 +420,13 @@ class _PerfilPageState extends State<PerfilPage> {
       alertaDialog(
           context,
           "Limite superado",
-          "Adquiera la versión premium para agregar más libros: \n https://api.whatsapp.com/send?phone=51960762446&text=Buenas%20%2C%20deseo%20adquirir%20la%20version%20premium%20de%20Trikavengers.",
-          "Okay",
-          "Rai nau");
+          "Adquiera la versión premium por 5 soles para agregar más libros.",
+          "Okay :(",
+          "Comprar rai nau").then((val){
+            if(val == ConfirmAction.ACCEPT){
+              FlutterOpenWhatsapp.sendSingleMessage("51960762446", "Buenas, deseo adquirir la version premium de Trikavengers.");
+            }
+          });
     }
   }
 
