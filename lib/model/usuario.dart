@@ -7,14 +7,14 @@ class Usuario {
   int codLibroLeyendo;
   int level;
   int puntaje;
-  bool premium;
+  int premium;
   // cod usuario generado
   Usuario(this.nombres, this.apellidos, this.nickname, this.contrasenia) {
     this.codUsuario = 0;
     this.codLibroLeyendo = 0;
     this.level = 1;
     this.puntaje = 0;
-    this.premium = false;
+    this.premium = 0;
   }
 
   Usuario.fromJson(Map<String, dynamic> json) {
@@ -26,7 +26,7 @@ class Usuario {
     codLibroLeyendo = json['codLibroLeyendo'];
     level = json['level'];
     puntaje = json['puntaje'];
-    premium = json['preium'];
+    premium = json['premium'];
   }
 
   Map<String, dynamic> toJson() {

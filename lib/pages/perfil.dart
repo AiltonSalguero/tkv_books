@@ -388,7 +388,8 @@ class _PerfilPageState extends State<PerfilPage> {
 
   _abrirAgregarLibroDialog() {
     print("_abrirAgregarLibroDialog");
-    if (Sesion.librosDelUsuario.lista.length < 2) {
+    if (Sesion.librosDelUsuario.lista.length < 4 ||
+        Sesion.usuarioLogeado.premium == 1) {
       agregarLibroDialog(context).then(
         (value) {
           if (Sesion.libroAgregado.codLibro != 0) {
@@ -418,15 +419,17 @@ class _PerfilPageState extends State<PerfilPage> {
       );
     } else {
       alertaDialog(
-          context,
-          "Limite superado",
-          "Adquiera la versión premium por 5 soles para agregar más libros.",
-          "Okay :(",
-          "Comprar rai nau").then((val){
-            if(val == ConfirmAction.ACCEPT){
-              FlutterOpenWhatsapp.sendSingleMessage("51960762446", "Buenas, deseo adquirir la version premium de Trikavengers.");
-            }
-          });
+              context,
+              "Limite superado",
+              "Adquiera la versión premium por 5 soles para agregar más libros.",
+              "Okay :(",
+              "Comprar rai nau")
+          .then((val) {
+        if (val == ConfirmAction.ACCEPT) {
+          FlutterOpenWhatsapp.sendSingleMessage("51960762446",
+              "Buenas, deseo adquirir la version premium de Trikavengers.");
+        }
+      });
     }
   }
 
