@@ -1,3 +1,8 @@
+/*
+   Un libro solo le pertenece a un usuario
+   
+   Por limpiar
+*/
 class Libro {
   int codLibro;
   int codUsuario;
@@ -7,10 +12,11 @@ class Libro {
   int paginasTotales;
   String nicknameUsuario;
 
-  Libro(this.nombre, this.autor, this.paginasLeidas, this.paginasTotales){
+  Libro(this.nombre, this.autor, this.paginasLeidas, this.paginasTotales) {
     this.codLibro = 0;
     this.codUsuario = 0;
   }
+
   Libro.fromJson(Map<String, dynamic> json) {
     codLibro = json['codLibro'];
     codUsuario = json['codUsuario'];
@@ -18,11 +24,10 @@ class Libro {
     autor = json['autor'];
     paginasLeidas = json['paginasLeidas'];
     paginasTotales = json['paginasTotales'];
-    nicknameUsuario= json['nicknameUsuario'];
+    nicknameUsuario = json['nicknameUsuario'];
   }
 
   Map<String, dynamic> toJson() {
-    // Data a Json
     final data = Map<String, dynamic>();
     data['codLibro'] = this.codLibro;
     data['codUsuario'] = this.codUsuario;
@@ -36,13 +41,12 @@ class Libro {
 }
 
 class ListaLibros {
-  List<Libro> lista;
+  List<Libro> lista = List<Libro>();
 
   ListaLibros({this.lista});
 
   ListaLibros.fromJson(List<dynamic> json) {
     if (json != null) {
-      lista = List<Libro>();
       json.forEach((v) {
         lista.add(Libro.fromJson(v));
       });
@@ -51,7 +55,7 @@ class ListaLibros {
 
   List<dynamic> toJson() {
     List<dynamic> data = List<dynamic>();
-    if (this.lista != null) {
+    if (this.lista.isNotEmpty) {
       data = this.lista.map((v) => v.toJson()).toList();
     }
     return data;

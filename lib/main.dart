@@ -1,3 +1,6 @@
+/*
+  Clase principal, donde se inicia la aplicacion
+*/
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:tkv_books/pages/home.dart';
@@ -27,7 +30,6 @@ class MyApp extends StatelessWidget {
       },
       initialRoute: '/',
       localizationsDelegates: [
-        // ... delegado[s] de localización específicos de la app aquí
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],

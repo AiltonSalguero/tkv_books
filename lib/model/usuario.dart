@@ -46,13 +46,12 @@ class Usuario {
 }
 
 class ListaUsuarios {
-  List<Usuario> lista;
+  List<Usuario> lista = List<Usuario>();
 
   ListaUsuarios({this.lista});
 
   ListaUsuarios.fromJson(List<dynamic> json) {
     if (json != null) {
-      lista = List<Usuario>();
       json.forEach((v) {
         lista.add(Usuario.fromJson(v));
       });
@@ -61,7 +60,7 @@ class ListaUsuarios {
 
   List<dynamic> toJson() {
     List<dynamic> data = List<dynamic>();
-    if (this.lista != null) {
+    if (this.lista.isNotEmpty) {
       data = this.lista.map((v) => v.toJson()).toList();
     }
     return data;
