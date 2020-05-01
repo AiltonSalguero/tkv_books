@@ -65,12 +65,12 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
             //alignment: AlignmentDirectional.topCenter,
             child: titulo1Label(Sesion.usuarioLogeado.nickname),
           ),
-          _buildLevel(),
+          _buildLevel(Sesion.usuarioLogeado.level),
           _buildExperiencia(
               Sesion.usuarioLogeado.puntaje, Sesion.usuarioLogeado.level),
           botonTercero("Mi perfil", _irAmiPerfil),
           hayLibroLeyendosePorUsuario
-              ? _libroLeyendosePorUsuario(Sesion.libroLeyendoPorUsuario)
+              ? _buildLibroLeyendosePorUsuario(Sesion.libroLeyendoPorUsuario)
               : Text(""),
           Container(
             height: double.infinity,
@@ -128,11 +128,11 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
     );
   }
 
-  Widget _buildLevel() {
+  Widget _buildLevel(int level) {
     return Align(
       alignment: Alignment(0, -0.79),
       child: Text(
-        "Lv. " + Sesion.usuarioLogeado.level.toString(),
+        "Lv. " + level.toString(),
         style: TextStyle(
           fontSize: 14,
         ),
@@ -276,7 +276,7 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
     );
   }
 
-  Widget _libroLeyendosePorUsuario(Libro libro) {
+  Widget _buildLibroLeyendosePorUsuario(Libro libro) {
     String porcentajeTexto =
         porcentajeString(libro.paginasLeidas, libro.paginasTotales);
     double porcentaje =
@@ -418,9 +418,6 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
       errorLoginDialog(context, "Subiste de nivel!",
           "Ahora eres Lv. ${Sesion.usuarioLogeado.level}");
     }
-    print(Sesion.usuarioLogeado.level);
-    print(Sesion.usuarioLogeado.puntaje);
-
     UsuarioDao.putUsuarioSetPuntajeLevel(Sesion.usuarioLogeado).then((val) {
       setState(() {});
     });
