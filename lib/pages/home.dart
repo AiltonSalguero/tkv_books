@@ -12,13 +12,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   Future main() async {
     DotEnv().load('config.env');
-    if (Sesion.librosDelUsuario.lista == null) {
-      Sesion.librosDelUsuario.lista = [];
-    }
-    if (Sesion.librosLeyendoseTotales.lista == null) {
-      Sesion.librosLeyendoseTotales.lista = [];
-    }
-
     Screen.width = MediaQuery.of(context).size.width;
     Screen.height = MediaQuery.of(context).size.height;
   }
