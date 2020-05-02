@@ -7,7 +7,6 @@
 import 'package:flutter/material.dart';
 import 'package:tkv_books/dao/libro_dao.dart';
 import 'package:tkv_books/dao/sesion.dart';
-import 'package:tkv_books/dialogs/error_dialog.dart';
 import 'package:tkv_books/util/screen.dart';
 import 'package:tkv_books/util/temaPersonlizado.dart';
 import 'package:tkv_books/util/utilFunctions.dart';
@@ -207,8 +206,8 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
   _actualizarPuntajeUsuario(int levelAntiguo) {
     if (levelAntiguo < calcularLevelUsuario(Sesion.usuarioLogeado.puntaje)) {
       // Mostrar mensaje de subida de leve
-      errorLoginDialog(context, "Subiste de nivel!",
-          "Ahora eres Lv. ${Sesion.usuarioLogeado.level}");
+    //  errorLoginDialog(context, "Subiste de nivel!",
+      //    "Ahora eres Lv. ${Sesion.usuarioLogeado.level}");
     }
   }
 

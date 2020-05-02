@@ -28,4 +28,11 @@ class Sesion {
   static ListaLibros librosDelUsuarioSeleccionado = ListaLibros();
 
   // que se guarden los datos en estas variables estaticas?
+
+  static reiniciarDatos() {
+    Sesion.usuarioLogeado = Usuario("", "", "", "");
+    Sesion.librosDelUsuario = ListaLibros();
+    Sesion.libroLeyendoPorUsuario = Libro("", "", 0, 0);
+  }
+
 }

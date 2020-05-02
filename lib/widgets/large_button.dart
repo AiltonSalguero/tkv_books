@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 
 class LargeButton extends StatelessWidget {
   final String nombre;
-  @required
-  final bool primario;
-  final Function navegarA;
-  LargeButton({this.nombre, this.primario, this.navegarA});      
+  @required final bool primario;
+  final Function accion;
+  LargeButton({this.nombre, this.primario, this.accion});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -31,7 +30,7 @@ class LargeButton extends StatelessWidget {
               ),
             ),
           ),
-          onPressed: navegarA,
+          onPressed: accion,
         ),
       ),
     );

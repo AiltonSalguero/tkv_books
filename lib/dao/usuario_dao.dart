@@ -2,9 +2,9 @@
   Clase con funciones de get, post, put y delete para
   la clase Usuario
 */
-import 'package:flutter/widgets.dart';
+
+import 'package:flutter/material.dart';
 import 'package:tkv_books/dao/dao.dart';
-import 'package:tkv_books/dialogs/eliminar_libro_dialog.dart';
 import 'package:tkv_books/model/usuario.dart';
 
 class UsuarioDao {
@@ -34,18 +34,13 @@ class UsuarioDao {
         nickname +
         "&contrasenia=" +
         contrasenia;
-    try {
-      var decodedData = await Dao.jsonDecodedHttpGet(apiUrl);
-      bool existe;
-      ListaUsuarios.fromJson(decodedData).lista.length != 0
-          ? existe = true
-          : existe = false;
-      return existe;
-    } catch (e) {
-      print(e);
-      alertaDialog(
-          context, "Sin internet", "No esta conectado a internet.", "", "Ok");
-    }
+
+    var decodedData = await Dao.jsonDecodedHttpGet(apiUrl);
+    bool existe;
+    ListaUsuarios.fromJson(decodedData).lista.length != 0
+        ? existe = true
+        : existe = false;
+    return existe;
   }
 
   static Future<bool> existeUsuarioByNickname(String nickname) async {

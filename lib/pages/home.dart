@@ -44,12 +44,12 @@ class _HomePageState extends State<HomePage> {
               Image.asset("images/logo_sin_nubes_v2.jpg"),
               LargeButton(
                 nombre: "Login",
-                navegarA: _irALogin,
+                accion: _irALogin,
                 primario: true,
               ),
               LargeButton(
                 nombre: "Registro",
-                navegarA: _irAregistro,
+                accion: _irAregistro,
                 primario: false,
               ),
               Text(

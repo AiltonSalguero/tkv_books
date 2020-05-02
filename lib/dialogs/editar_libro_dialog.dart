@@ -5,7 +5,8 @@
 */
 import 'package:flutter/material.dart';
 import 'package:tkv_books/dao/sesion.dart';
-import 'package:tkv_books/util/confirmAction.dart';
+
+enum ConfirmAction { CANCEL, ACCEPT }
 
 Future<ConfirmAction> editarLibroDialog(BuildContext context) {
   final _formKey = GlobalKey<FormState>();

@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:tkv_books/dao/libro_dao.dart';
 import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dao/usuario_dao.dart';
 import 'package:tkv_books/dialogs/agregar_libro_dialog.dart';
-import 'package:tkv_books/dialogs/eliminar_libro_dialog.dart';
+import 'package:tkv_books/dialogs/simple_dialog.dart';
 import 'package:tkv_books/model/libro.dart';
-import 'package:tkv_books/model/usuario.dart';
-import 'package:tkv_books/util/confirmAction.dart';
 import 'package:tkv_books/util/screen.dart';
 import 'package:tkv_books/util/temaPersonlizado.dart';
 import 'package:tkv_books/util/utilFunctions.dart';
 import 'package:tkv_books/widgets/book_item.dart';
-import 'package:tkv_books/widgets/botonPersonalizado.dart';
 import 'package:tkv_books/widgets/experience_bar.dart';
 import 'package:tkv_books/widgets/labelPerzonalizado.dart';
 import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
@@ -70,30 +66,29 @@ class _PerfilPageState extends State<PerfilPage> {
     });
   }
 
-  Future<bool> _abrirCerrarSesionDialog() {
+  Future<bool> _cerrarSesionDialog() {
     print("_abrirCerrarSesionDialog");
-    alertaDialog(context, "Cerrar sesión", "Quieres salir de tu cuenta?", "No",
-                "Si")
-            .then(
-          (value) {
-            if (value == ConfirmAction.ACCEPT) {
-              Sesion.usuarioLogeado = Usuario("", "", "", "");
-              Sesion.librosDelUsuario.lista = List<Libro>();
-              Sesion.libroLeyendoPorUsuario = Libro("", "", 0, 0);
-              _irAhome();
-              return true;
-            }
-            return false;
-          },
-        ) ??
-        false;
+    return SimpleDialogTkv(
+            title: "Cerrar sesión",
+            content: "Quieres salir de tu cuenta?",
+            rightText: "Si",
+            leftText: "No")
+        .build(context)
+        .then(
+      (value) {
+        if (value == ConfirmAction.ACCEPT) {
+          Sesion.reiniciarDatos();
+          _irAhome();
+        }
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     print("build");
     return WillPopScope(
-      onWillPop: _abrirCerrarSesionDialog,
+      onWillPop: _cerrarSesionDialog,
       child: PageBackground(
         topButton: TopButton(
           nombre: "Ver todos",
@@ -135,7 +130,7 @@ class _PerfilPageState extends State<PerfilPage> {
           child: Icon(
             Icons.add,
           ),
-          onPressed: () => _abrirAgregarLibroDialog(),
+          onPressed: () => _agregarLibroDialog(),
         ),
       ),
     );
@@ -232,8 +227,12 @@ class _PerfilPageState extends State<PerfilPage> {
 
   _abrirEliminarLibroDialog(Libro libro) {
     print("_abrirEliminarLibroDialog");
-    alertaDialog(context, "Eliminar libro?",
-            "Al eliminarlo se disminuirá el puntaje ganado.", "No", "Si")
+    SimpleDialogTkv(
+            title: "¿Eliminar libro?",
+            content: "Al eliminarlo se disminuirá el puntaje ganado.",
+            leftText: "No",
+            rightText: "Si")
+        .build(context)
         .then(
       (value) {
         if (value == ConfirmAction.ACCEPT) {
@@ -255,7 +254,7 @@ class _PerfilPageState extends State<PerfilPage> {
     );
   }
 
-  _abrirAgregarLibroDialog() {
+  _agregarLibroDialog() {
     print("_abrirAgregarLibroDialog");
     if (Sesion.librosDelUsuario.lista.length < 4 ||
         Sesion.usuarioLogeado.premium == 1) {
@@ -278,16 +277,17 @@ class _PerfilPageState extends State<PerfilPage> {
         },
       );
     } else {
-      alertaDialog(
-              context,
-              "Limite superado",
-              "Adquiera la versión premium por 5 soles para agregar más libros.",
-              "Okay :(",
-              "Comprar rai nau")
+      SimpleDialogTkv(
+              title: "Limite superado",
+              content:
+                  "Adquiera la versión premium por 5 soles para agregar más libros",
+              leftText: ":(",
+              rightText: "Comprar rai nau")
+          .build(context)
           .then((val) {
         if (val == ConfirmAction.ACCEPT) {
           FlutterOpenWhatsapp.sendSingleMessage("51960762446",
-              "Buenas, deseo adquirir la version premium de Trikavengers.");
+              "Buenas :D, deseo adquirir la version premium de Trikavengers.");
         }
       });
     }

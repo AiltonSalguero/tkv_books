@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dao/usuario_dao.dart';
-import 'package:tkv_books/dialogs/error_dialog.dart';
 import 'package:tkv_books/model/usuario.dart';
 import 'package:tkv_books/util/screen.dart';
 import 'package:tkv_books/widgets/inputPersonalizado.dart';
@@ -52,7 +51,7 @@ class _RegistroPageState extends State<RegistroPage> {
             inputSecundario("Contraseña", contrasenia),
             LargeButton(
               nombre: "Crear cuenta",
-              navegarA: _validarRegistro(),
+              accion: _validarRegistro(),
               primario: true,
             )
           ],
@@ -62,7 +61,7 @@ class _RegistroPageState extends State<RegistroPage> {
   }
 
   _validarRegistro() {
-    if (nombres.text == "")
+    /*if (nombres.text == "")
       return errorLoginDialog(context, "Campo incompleto", "Escriba un nombre");
     if (nombres.text.length > 10)
       return errorLoginDialog(context, "Nombre muy largo",
@@ -90,11 +89,11 @@ class _RegistroPageState extends State<RegistroPage> {
         return errorLoginDialog(context, "Contrasenia debil",
             "Escriba una contraseña con más de 6 caracteres");
     }
-
+*/
     UsuarioDao.existeUsuarioByNickname(nickname.text).then((yaExiste) {
       if (yaExiste) {
-        return errorLoginDialog(
-            context, "Nickname ya existe", "Escriba un nuevo nickname");
+        //return errorLoginDialog(
+          //  context, "Nickname ya existe", "Escriba un nuevo nickname");
       } else {
         usuarioNuevo = Usuario(
             nombres.text, apellidos.text, nickname.text, contrasenia.text);
