@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/util/screen.dart';
-import 'package:tkv_books/widgets/botonPersonalizado.dart';
+import 'package:tkv_books/widgets/large_button.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -38,14 +37,21 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             mainAxisSize: MainAxisSize.min,
-            //crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               SizedBox(
                 height: Screen.height * 0.05,
               ),
               Image.asset("images/logo_sin_nubes_v2.jpg"),
-              _loginButton(),
-              _registroButton(),
+              LargeButton(
+                nombre: "Login",
+                navegarA: _irALogin,
+                primario: true,
+              ),
+              LargeButton(
+                nombre: "Registro",
+                navegarA: _irAregistro,
+                primario: false,
+              ),
               Text(
                 "#SimiosJuntosFuertes",
                 style: TextStyle(
@@ -60,19 +66,11 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _loginButton() {
-    return botonPrincipal(_loginButtonAccion, "Login");
-  }
-
-  _loginButtonAccion() {
-    Navigator.of(context).pushNamed('/login');
-  }
-
-  Widget _registroButton() {
-    return botonSecundario(_registerButtonAccion, "Registro");
-  }
-
-  _registerButtonAccion() {
+  _irAregistro() {
     Navigator.of(context).pushNamed('/registro');
+  }
+
+  _irALogin() {
+    Navigator.of(context).pushNamed('/login');
   }
 }

@@ -7,6 +7,7 @@ import 'package:tkv_books/util/screen.dart';
 import 'package:tkv_books/widgets/botonPersonalizado.dart';
 import 'package:tkv_books/widgets/inputPersonalizado.dart';
 import 'package:tkv_books/widgets/labelPerzonalizado.dart';
+import 'package:tkv_books/widgets/large_button.dart';
 import 'package:tkv_books/widgets/page_background.dart';
 
 class LoginPage extends StatefulWidget {
@@ -41,15 +42,15 @@ class _LoginPageState extends State<LoginPage> {
             titulo1Label("Login"),
             inputPrincipal("Nickname", nickname),
             inputSecundario("Contraseña", contrasenia),
-            _ingresarButton(),
+            LargeButton(
+              nombre: "Ingresar",
+              navegarA: _validarUsuario,
+              primario: true,
+            )
           ],
         ),
       ),
     );
-  }
-
-  Widget _ingresarButton() {
-    return botonPrincipal(_validarUsuario, "Ingresar");
   }
 
   _validarUsuario() {

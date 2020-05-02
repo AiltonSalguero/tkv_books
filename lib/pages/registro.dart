@@ -4,9 +4,9 @@ import 'package:tkv_books/dao/usuario_dao.dart';
 import 'package:tkv_books/dialogs/error_dialog.dart';
 import 'package:tkv_books/model/usuario.dart';
 import 'package:tkv_books/util/screen.dart';
-import 'package:tkv_books/widgets/botonPersonalizado.dart';
 import 'package:tkv_books/widgets/inputPersonalizado.dart';
 import 'package:tkv_books/widgets/labelPerzonalizado.dart';
+import 'package:tkv_books/widgets/large_button.dart';
 import 'package:tkv_books/widgets/page_background.dart';
 
 class RegistroPage extends StatefulWidget {
@@ -50,15 +50,15 @@ class _RegistroPageState extends State<RegistroPage> {
             inputPrincipal("Apellido", apellidos),
             inputPrincipal("Nickname", nickname),
             inputSecundario("Contraseña", contrasenia),
-            _registrarButton(),
+            LargeButton(
+              nombre: "Crear cuenta",
+              navegarA: _validarRegistro(),
+              primario: true,
+            )
           ],
         ),
       ),
     );
-  }
-
-  Widget _registrarButton() {
-    return botonPrincipal(_validarRegistro, "Crear cuenta");
   }
 
   _validarRegistro() {

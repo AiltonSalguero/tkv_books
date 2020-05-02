@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/model/libro.dart';
 import 'package:tkv_books/util/screen.dart';
 import 'package:tkv_books/util/utilFunctions.dart';
 
 class BookItem extends StatelessWidget {
-  Libro libro;
-  double boxHeight;
-  Widget title;
-  Widget leftButton;
-  Widget rightButton;
+  final Libro libro;
+  final double boxHeight;
+  final Widget title;
+  final Widget leftButton;
+  final Widget rightButton;
   BookItem(
       {Key key,
       this.libro,
@@ -29,9 +28,6 @@ class BookItem extends StatelessWidget {
     String paginas = "${libro.paginasLeidas} / ${libro.paginasTotales}";
 
     Color colorBarra = colorProgressBar(porcentaje);
-
-    bool leyendo =
-        libro.codLibro == Sesion.usuarioLogeado.codLibroLeyendo ? true : false;
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: 4.0,
@@ -65,7 +61,7 @@ class BookItem extends StatelessWidget {
                 ),
                 child: LinearPercentIndicator(
                   backgroundColor: Color(0xFFB7B7B7),
-                  width: Screen.width * 0.86,
+                  width: Screen.width * 0.84,
                   animation: true,
                   lineHeight: 28.0,
                   animationDuration: 2000,
@@ -85,20 +81,23 @@ class BookItem extends StatelessWidget {
               alignment: Alignment.topLeft,
               child: Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 16.0,
+                  horizontal: Screen.width * 0.95 * 0.05,
+                  vertical: Screen.height * 0.12 * 0.1,
                 ),
                 child: title,
               ),
             ),
             Align(
-              alignment: Alignment.topRight,
+              alignment: Alignment(
+                0.6,
+                -1.5,
+              ),
               child: leftButton,
             ),
             Align(
               alignment: Alignment(
-                0.6,
-                -1,
+                1,
+                -1.5,
               ),
               child: rightButton,
             ),

@@ -1,8 +1,3 @@
-/*
-
-
-  si es su perfil le sale el floating button de aniadir curso
-*/
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:tkv_books/dao/libro_dao.dart';
@@ -16,10 +11,19 @@ import 'package:tkv_books/util/confirmAction.dart';
 import 'package:tkv_books/util/screen.dart';
 import 'package:tkv_books/util/temaPersonlizado.dart';
 import 'package:tkv_books/util/utilFunctions.dart';
+import 'package:tkv_books/widgets/book_item.dart';
 import 'package:tkv_books/widgets/botonPersonalizado.dart';
+import 'package:tkv_books/widgets/experience_bar.dart';
 import 'package:tkv_books/widgets/labelPerzonalizado.dart';
 import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
 import 'package:tkv_books/widgets/page_background.dart';
+import 'package:tkv_books/widgets/top_button.dart';
+
+/*
+
+
+  si es su perfil le sale el floating button de aniadir curso
+*/
 
 class PerfilPage extends StatefulWidget {
   @override
@@ -88,12 +92,14 @@ class _PerfilPageState extends State<PerfilPage> {
   @override
   Widget build(BuildContext context) {
     print("build");
-
     return WillPopScope(
       onWillPop: _abrirCerrarSesionDialog,
       child: PageBackground(
+        topButton: TopButton(
+          nombre: "Ver todos",
+          navegarA: _irAlistaTotal,
+        ),
         header: Stack(
-          //fit: StackFit.passthrough,
           children: <Widget>[
             Image.asset(
               "images/banner_nubes.jpg",
@@ -101,10 +107,14 @@ class _PerfilPageState extends State<PerfilPage> {
               height: Screen.height * 0.35, // Responsive
               width: double.infinity,
             ),
-            botonTercero("Ver todos", _irAlistaTotal),
             _buildEncabezado(),
-            _buildExperiencia(
-                Sesion.usuarioLogeado.puntaje, Sesion.usuarioLogeado.level),
+            Align(
+              alignment: Alignment(0, -0.505),
+              child: ExperienceBar(
+                puntaje: Sesion.usuarioLogeado.puntaje,
+                level: Sesion.usuarioLogeado.level,
+              ),
+            ),
           ],
         ),
         content: Column(
@@ -126,33 +136,6 @@ class _PerfilPageState extends State<PerfilPage> {
             Icons.add,
           ),
           onPressed: () => _abrirAgregarLibroDialog(),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildExperiencia(int puntaje, int level) {
-    print("_buildExperiencia");
-    int puntajeDelNivel = puntaje - calcularExperienciaRequeridaTotal(level);
-    double porcentajeExperiencia = porcentajeDouble(
-        puntajeDelNivel, calcularExperienciaRequerida(level + 1));
-    String expRequerida = calcularExperienciaRequerida(level + 1).toString();
-    String progresoLevel = "${puntajeDelNivel.toString()} / $expRequerida";
-    return Align(
-      alignment: Alignment(0, -0.55),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: Screen.width * 0.15),
-        child: LinearPercentIndicator(
-          width: Screen.width * 0.7,
-          lineHeight: 8.0,
-          percent: porcentajeExperiencia,
-          progressColor: ColoresTkv.amarillo,
-          center: Text(
-            progresoLevel,
-            style: TextStyle(
-              fontSize: 8.0,
-            ),
-          ),
         ),
       ),
     );
@@ -182,136 +165,59 @@ class _PerfilPageState extends State<PerfilPage> {
     print("_buildListaLibros");
     return Container(
       height: Screen.height * 0.50,
+      width: Screen.width * 0.98,
       child: ListView.builder(
         physics: AlwaysScrollableScrollPhysics(),
         shrinkWrap: true,
         itemCount: Sesion.librosDelUsuario.lista.length,
         itemBuilder: (BuildContext content, int index) {
-          return _buildLibroListItem(
-            Sesion.librosDelUsuario.lista[index],
+          bool leyendo = Sesion.librosDelUsuario.lista[index].codLibro ==
+                  Sesion.usuarioLogeado.codLibroLeyendo
+              ? true
+              : false;
+          return BookItem(
+            libro: Sesion.librosDelUsuario.lista[index],
+            boxHeight: 85,
+            title: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  height: 20,
+                  width: Screen.width * 0.6,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: titulo3Label(
+                        Sesion.librosDelUsuario.lista[index].nombre),
+                  ),
+                ),
+                Container(
+                  height: 20,
+                  width: Screen.width * 0.6,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: subTitulo3Label(
+                        Sesion.librosDelUsuario.lista[index].autor),
+                  ),
+                ),
+              ],
+            ),
+            rightButton: FlatButton(
+              child: Icon(
+                Icons.delete,
+              ),
+              onPressed: () => _abrirEliminarLibroDialog(
+                  Sesion.librosDelUsuario.lista[index]),
+            ),
+            leftButton: FlatButton(
+              child: leyendo
+                  ? Icon(Icons.import_contacts)
+                  : Icon(Icons.library_books),
+              onPressed: () => _editarLibroLeyendoPorUsuario(
+                  Sesion.librosDelUsuario.lista[index]),
+            ),
           );
         },
-      ),
-    );
-  }
-
-  Widget _buildLibroListItem(Libro libro) {
-    print("_buildLibroListItem");
-    String porcentajeTexto =
-        porcentajeString(libro.paginasLeidas, libro.paginasTotales);
-    double porcentaje =
-        porcentajeDouble(libro.paginasLeidas, libro.paginasTotales);
-    String paginas = "${libro.paginasLeidas} / ${libro.paginasTotales}";
-
-    Color colorBarra = colorProgressBar(porcentaje);
-
-    bool leyendo = false;
-    libro.codLibro == Sesion.usuarioLogeado.codLibroLeyendo
-        ? leyendo = true
-        : leyendo = false;
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: 4.0,
-        vertical: 4.0,
-      ),
-      child: Container(
-        height: 90,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(
-            Radius.circular(32.0),
-          ),
-          border: Border.all(
-            color: Colors.black,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey,
-              blurRadius: 16.0,
-            ),
-          ],
-          color: Color(0xfffafafa),
-        ),
-        child: Stack(
-          children: <Widget>[
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: Screen.width * 0.05,
-                  vertical: 8.0,
-                ),
-                child: LinearPercentIndicator(
-                  backgroundColor: Color(0xFFB7B7B7),
-                  width: Screen.width * 0.86,
-                  animation: true,
-                  lineHeight: 28.0,
-                  animationDuration: 2000,
-                  percent: porcentaje,
-                  center: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(porcentajeTexto),
-                      Text(paginas),
-                    ],
-                  ),
-                  progressColor: colorBarra,
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 16.0,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      height: 20,
-                      width: Screen.width * 0.6,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: titulo3Label(libro.nombre),
-                      ),
-                    ),
-                    Container(
-                      height: 20,
-                      width: Screen.width * 0.6,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: subTitulo3Label(libro.autor),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.topRight,
-              child: FlatButton(
-                child: Icon(
-                  Icons.delete,
-                ),
-                onPressed: () => _abrirEliminarLibroDialog(libro),
-              ),
-            ),
-            Align(
-              alignment: Alignment(
-                0.6,
-                -1,
-              ),
-              child: FlatButton(
-                child: leyendo
-                    ? Icon(Icons.import_contacts)
-                    : Icon(Icons.library_books),
-                onPressed: () => _editarLibroLeyendoPorUsuario(libro),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

@@ -5,8 +5,10 @@ class PageBackground extends StatelessWidget {
   Widget header;
   Widget content;
   Widget floatingButton;
+  Widget topButton;
 
-  PageBackground({Key key, this.header, this.content, this.floatingButton})
+  PageBackground(
+      {Key key, this.header, this.content, this.floatingButton, this.topButton})
       : super(key: key);
 
   @override
@@ -16,6 +18,7 @@ class PageBackground extends StatelessWidget {
         fit: StackFit.passthrough,
         children: <Widget>[
           header,
+          topButton == null ? Text("") : topButton,
           Container(
             height: double.infinity,
             width: double.infinity,
