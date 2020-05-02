@@ -14,7 +14,6 @@ class PageBackground extends StatelessWidget {
     return Scaffold(
       body: Stack(
         fit: StackFit.passthrough,
-        alignment: Alignment.topLeft,
         children: <Widget>[
           header,
           Container(

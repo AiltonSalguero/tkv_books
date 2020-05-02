@@ -17,6 +17,7 @@ import 'package:tkv_books/util/temaPersonlizado.dart';
 import 'package:tkv_books/util/utilFunctions.dart';
 import 'package:tkv_books/widgets/labelPerzonalizado.dart';
 import 'package:tkv_books/widgets/botonPersonalizado.dart';
+import 'package:tkv_books/widgets/page_background.dart';
 
 class ListaTotalPage extends StatefulWidget {
   @override
@@ -49,10 +50,8 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
   @override
   Widget build(BuildContext context) {
     print("lista_libros");
-    return Scaffold(
-      resizeToAvoidBottomPadding: false,
-      body: Stack(
-        fit: StackFit.passthrough,
+    return PageBackground(
+      header: Stack(
         children: <Widget>[
           Image.asset(
             "images/banner_nubes.jpg",
@@ -72,47 +71,15 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
           hayLibroLeyendosePorUsuario
               ? _buildLibroLeyendosePorUsuario(Sesion.libroLeyendoPorUsuario)
               : Text(""),
-          Container(
-            height: double.infinity,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(32.0),
-                topLeft: Radius.circular(32.0),
-              ),
-              border: Border.all(
-                color: Colors.black,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey,
-                  blurRadius: 32.0,
-                ),
-              ],
-              color: Color(0xfffafafa),
-            ),
-            margin: EdgeInsets.only(
-              top: Screen.height * 0.3, // Responsive 266
-            ),
-            child: Padding(
-              padding: EdgeInsets.only(
-                top: 16.0,
-              ),
-              child: Column(
-                children: <Widget>[
-                  titulo1Label("Biblioteca global"),
-                  hayLibrosLeyendose
-                      ? _buildGridLibros()
-                      : Text("No hay libros")
-                ],
-              ),
-            ),
-          ),
         ],
       ),
-      floatingActionButton:
-          //usuarioPerfil.codUsuario == ApiDao.usuarioLogeado.codUsuario?
-          FloatingActionButton(
+      content: Column(
+        children: <Widget>[
+          titulo1Label("Biblioteca global"),
+          hayLibrosLeyendose ? _buildGridLibros() : Text("No hay libros")
+        ],
+      ),
+      floatingButton: FloatingActionButton(
         shape: CircleBorder(
           side: BorderSide(
             color: Colors.black,
@@ -124,7 +91,6 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
         ),
         onPressed: () => _actualizarListaLibros(),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
@@ -418,9 +384,6 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
       errorLoginDialog(context, "Subiste de nivel!",
           "Ahora eres Lv. ${Sesion.usuarioLogeado.level}");
     }
-    UsuarioDao.putUsuarioSetPuntajeLevel(Sesion.usuarioLogeado).then((val) {
-      setState(() {});
-    });
   }
 
   _irAmiPerfil() {
