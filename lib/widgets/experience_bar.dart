@@ -17,11 +17,11 @@ class ExperienceBar extends StatelessWidget {
     String progresoLevel = "${puntajeDelNivel.toString()} / $expRequerida";
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: Screen.width * 0.15,
+        horizontal: Screen.width * 0.1,
       ),
       child: LinearPercentIndicator(
-        width: Screen.width * 0.7,
-        lineHeight: 8.0,
+        width: Screen.width * 0.8,
+        lineHeight: 10.0,
         percent: porcentajeExperiencia,
         progressColor: ColoresTkv.amarillo,
         center: Text(

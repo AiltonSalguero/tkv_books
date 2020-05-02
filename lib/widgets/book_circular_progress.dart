@@ -3,9 +3,9 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:tkv_books/model/libro.dart';
 import 'package:tkv_books/util/utilFunctions.dart';
 
-class BookCircularProgress extends StatelessWidget {
+class BookCircularProgressTkv extends StatelessWidget {
   final Libro libro;
-  BookCircularProgress({Key key, this.libro}) : super(key: key);
+  BookCircularProgressTkv({Key key, this.libro}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     String porcentajeTexto =

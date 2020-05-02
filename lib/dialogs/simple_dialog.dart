@@ -9,7 +9,8 @@ class SimpleDialogTkv {
   @required
   final String rightText;
 
-  SimpleDialogTkv({this.title, this.content, this.leftText, this.rightText});
+  const SimpleDialogTkv(
+      {this.title, this.content, this.leftText, this.rightText});
 
   build(BuildContext context) {
     return showDialog(
@@ -31,12 +32,6 @@ class SimpleDialogTkv {
           ),
           content: Text(content),
           actions: <Widget>[
-            FlatButton(
-              child: Text(rightText),
-              onPressed: () {
-                Navigator.of(context).pop(ConfirmAction.ACCEPT);
-              },
-            ),
             leftText != null
                 ? FlatButton(
                     child: Text(leftText),
@@ -44,7 +39,13 @@ class SimpleDialogTkv {
                       Navigator.of(context).pop(ConfirmAction.CANCEL);
                     },
                   )
-                : null
+                : null,
+            FlatButton(
+              child: Text(rightText),
+              onPressed: () {
+                Navigator.of(context).pop(ConfirmAction.ACCEPT);
+              },
+            ),
           ],
         );
       },

@@ -2,13 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:tkv_books/util/screen.dart';
 
 class PageBackground extends StatelessWidget {
-  Widget header;
-  Widget content;
-  Widget floatingButton;
-  Widget topButton;
+  final String backgroundImagePath;
+  final Widget header;
+  final Widget content;
+  final Widget floatingButton;
+  final Widget topButton;
 
   PageBackground(
-      {Key key, this.header, this.content, this.floatingButton, this.topButton})
+      {Key key,
+      this.backgroundImagePath,
+      this.header,
+      this.content,
+      this.floatingButton,
+      this.topButton})
       : super(key: key);
 
   @override
@@ -17,7 +23,13 @@ class PageBackground extends StatelessWidget {
       body: Stack(
         fit: StackFit.passthrough,
         children: <Widget>[
-          header,
+          Image.asset(
+            backgroundImagePath,
+            fit: BoxFit.cover,
+            height: Screen.height * 0.35, // Responsive
+            width: double.infinity,
+          ),
+          header == null ? Text("") : header,
           topButton == null ? Text("") : topButton,
           Container(
             height: double.infinity,

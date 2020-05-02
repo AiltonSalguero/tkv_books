@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dao/usuario_dao.dart';
+import 'package:tkv_books/dialogs/tkv_dialogs.dart';
 import 'package:tkv_books/model/usuario.dart';
-import 'package:tkv_books/util/screen.dart';
 import 'package:tkv_books/widgets/inputPersonalizado.dart';
 import 'package:tkv_books/widgets/labelPerzonalizado.dart';
 import 'package:tkv_books/widgets/large_button.dart';
@@ -32,13 +32,9 @@ class _RegistroPageState extends State<RegistroPage> {
 
   @override
   Widget build(BuildContext context) {
+    print("registro");
     return PageBackground(
-      header: Image.asset(
-        "images/logo.jpg",
-        fit: BoxFit.cover,
-        height: Screen.height * 0.35, // Responsive
-        width: double.infinity,
-      ),
+      backgroundImagePath: "images/logo.jpg",
       content: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
@@ -51,7 +47,7 @@ class _RegistroPageState extends State<RegistroPage> {
             inputSecundario("Contraseña", contrasenia),
             LargeButton(
               nombre: "Crear cuenta",
-              accion: _validarRegistro(),
+              accion: _validarRegistro,
               primario: true,
             )
           ],
@@ -61,54 +57,50 @@ class _RegistroPageState extends State<RegistroPage> {
   }
 
   _validarRegistro() {
-    /*if (nombres.text == "")
-      return errorLoginDialog(context, "Campo incompleto", "Escriba un nombre");
-    if (nombres.text.length > 10)
-      return errorLoginDialog(context, "Nombre muy largo",
-          "Escriba un nombre con menos de 10 caracteres");
-    if (apellidos.text == "")
-      return errorLoginDialog(
-          context, "Campo incompleto", "Escriba un apellido");
-    if (apellidos.text.length > 10)
-      return errorLoginDialog(context, "Apellido muy largo",
-          "Escriba un apellido con menos de 10 caracteres");
-    if (nickname.text == "")
-      return errorLoginDialog(
-          context, "Campo incompleto", "Escriba un nickname");
-    if (nickname.text.length > 12)
-      return errorLoginDialog(context, "Nickname muy largo",
-          "Escriba un nickname con menos de 12 caracteres");
-    if (nickname.text.length < 4)
-      return errorLoginDialog(context, "Nickname muy corto",
-          "Escriba un nickname con más de 3 caracteres");
-    if (contrasenia.text == "") {
-      return errorLoginDialog(
-          context, "Campo incompleto", "Escriba una contraseña");
-    } else {
-      if (contrasenia.text.length < 6)
-        return errorLoginDialog(context, "Contrasenia debil",
-            "Escriba una contraseña con más de 6 caracteres");
-    }
-*/
-    UsuarioDao.existeUsuarioByNickname(nickname.text).then((yaExiste) {
-      if (yaExiste) {
-        //return errorLoginDialog(
-          //  context, "Nickname ya existe", "Escriba un nuevo nickname");
-      } else {
-        usuarioNuevo = Usuario(
-            nombres.text, apellidos.text, nickname.text, contrasenia.text);
-        // validar datos
-        // validad nickname no repetido ni con espacions
-        // validar contrasenia mayor a 6 caracteres
-        // validar que todos los campos esten llenos
+    if (nombres.text == "")
+      TkvDialogs.noHayNombreDialog(context);
+    else if (nombres.text.length > 10)
+      TkvDialogs.nombreLargoDialog(context);
+    else if (apellidos.text == "")
+      TkvDialogs.noHayApellido(context);
+    else if (apellidos.text.length > 10)
+      TkvDialogs.apellidoLargoDialog(context);
+    else if (nickname.text == "")
+      TkvDialogs.noHayNickname(context);
+    else if (nickname.text.length > 12)
+      TkvDialogs.nicknameLargoDialog(context);
+    else if (nickname.text.length < 4)
+      TkvDialogs.nicknameCortoDialog(context);
+    else if (contrasenia.text == "")
+      TkvDialogs.noHayContraseniaDialog(context);
+    else if (contrasenia.text.length < 6)
+      TkvDialogs.contraseniaCortaDialog(context);
 
-        print(usuarioNuevo.toJson());
-        UsuarioDao.postUsuario(usuarioNuevo).then((value) {
-          Sesion.usuarioLogeado = usuarioNuevo;
-          Sesion.vieneDeRegistro = true;
-          Navigator.of(context).pushNamed('/perfil');
-        });
-      }
-    });
+    UsuarioDao.existeUsuarioByNickname(nickname.text).then(
+      (yaExiste) {
+        if (yaExiste) {
+          TkvDialogs.nicknameYaExisteDialog(context);
+        } else {
+          _registrarUsuario();
+        }
+      },
+    );
+  }
+
+  _registrarUsuario() {
+    usuarioNuevo =
+        Usuario(nombres.text, apellidos.text, nickname.text, contrasenia.text);
+    // validad nickname no repetido ni con espacions
+    UsuarioDao.postUsuario(usuarioNuevo).then(
+      (value) {
+        Sesion.usuarioLogeado = usuarioNuevo;
+        Sesion.vieneDeRegistro = true;
+        _irAperfil();
+      },
+    );
+  }
+
+  _irAperfil() {
+    Navigator.of(context).pushNamed('/perfil');
   }
 }

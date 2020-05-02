@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class TopButton extends StatelessWidget {
-  String nombre;
-  Function navegarA;
-  TopButton({Key key, this.nombre, this.navegarA}) : super(key: key);
+class TopButtonTkv extends StatelessWidget {
+  final String nombre;
+  final Function navegarA;
+  TopButtonTkv({this.nombre, this.navegarA});
 
   @override
   Widget build(BuildContext context) {

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dao/usuario_dao.dart';
 import 'package:tkv_books/dialogs/simple_dialog.dart';
-import 'package:tkv_books/util/screen.dart';
 import 'package:tkv_books/widgets/inputPersonalizado.dart';
 import 'package:tkv_books/widgets/labelPerzonalizado.dart';
 import 'package:tkv_books/widgets/large_button.dart';
@@ -25,13 +24,9 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    print("login");
     return PageBackground(
-      header: Image.asset(
-        "images/logo.jpg",
-        fit: BoxFit.cover,
-        height: Screen.height * 0.35, // Responsive
-        width: double.infinity,
-      ),
+      backgroundImagePath: "images/logo.jpg",
       content: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
@@ -44,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
               nombre: "Ingresar",
               accion: _validarUsuario,
               primario: true,
-            )
+            ),
           ],
         ),
       ),
