@@ -33,21 +33,16 @@ class _LoginPageState extends State<LoginPage> {
         height: Screen.height * 0.35, // Responsive
         width: double.infinity,
       ),
-      content: Padding(
-        padding: const EdgeInsets.only(
-          top: 32.0,
-        ),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Column(
-            //crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              titulo1Label("Login"),
-              inputPrincipal("Nickname", nickname),
-              inputSecundario("Contraseña", contrasenia),
-              _ingresarButton(),
-            ],
-          ),
+      content: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          //crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            titulo1Label("Login"),
+            inputPrincipal("Nickname", nickname),
+            inputSecundario("Contraseña", contrasenia),
+            _ingresarButton(),
+          ],
         ),
       ),
     );

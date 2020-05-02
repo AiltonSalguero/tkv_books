@@ -4,8 +4,10 @@ import 'package:tkv_books/util/screen.dart';
 class PageBackground extends StatelessWidget {
   Widget header;
   Widget content;
+  Widget floatingButton;
 
-  PageBackground({Key key, this.header, this.content}) : super(key: key);
+  PageBackground({Key key, this.header, this.content, this.floatingButton})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +19,7 @@ class PageBackground extends StatelessWidget {
           header,
           Container(
             height: double.infinity,
+            width: double.infinity,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
                 topRight: Radius.circular(32.0),
@@ -36,10 +39,17 @@ class PageBackground extends StatelessWidget {
             margin: EdgeInsets.only(
               top: Screen.height * 0.3, // Responsive 266
             ),
-            child: content,
+            child: Padding(
+              padding: EdgeInsets.only(
+                top: 16.0,
+              ),
+              child: content,
+            ),
           ),
         ],
       ),
+      floatingActionButton: floatingButton,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

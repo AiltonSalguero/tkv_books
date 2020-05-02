@@ -7,6 +7,7 @@ import 'package:tkv_books/util/screen.dart';
 import 'package:tkv_books/widgets/botonPersonalizado.dart';
 import 'package:tkv_books/widgets/inputPersonalizado.dart';
 import 'package:tkv_books/widgets/labelPerzonalizado.dart';
+import 'package:tkv_books/widgets/page_background.dart';
 
 class RegistroPage extends StatefulWidget {
   @override
@@ -32,60 +33,26 @@ class _RegistroPageState extends State<RegistroPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      //resizeToAvoidBottomPadding: false,
-      body: Stack(
-        fit: StackFit.passthrough,
-        alignment: Alignment.topLeft,
-        children: <Widget>[
-          Image.asset(
-            "images/logo.jpg",
-            fit: BoxFit.cover,
-            height: Screen.height * 0.35, // Responsive
-            width: double.infinity,
-          ),
-          Container(
-            height: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(32.0),
-                topLeft: Radius.circular(32.0),
-              ),
-              border: Border.all(
-                color: Colors.black,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey,
-                  blurRadius: 32.0,
-                ),
-              ],
-              color: Color(0xfffafafa),
-            ),
-            margin: EdgeInsets.only(
-              top: Screen.height * 0.3, // Responsive 266
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(
-                top: 32.0,
-              ),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Column(
-                  //crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    titulo1Label("Registro"),
-                    inputPrincipal("Nombre", nombres),
-                    inputPrincipal("Apellido", apellidos),
-                    inputPrincipal("Nickname", nickname),
-                    inputSecundario("Contraseña", contrasenia),
-                    _registrarButton(),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
+    return PageBackground(
+      header: Image.asset(
+        "images/logo.jpg",
+        fit: BoxFit.cover,
+        height: Screen.height * 0.35, // Responsive
+        width: double.infinity,
+      ),
+      content: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          //crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            titulo1Label("Registro"),
+            inputPrincipal("Nombre", nombres),
+            inputPrincipal("Apellido", apellidos),
+            inputPrincipal("Nickname", nickname),
+            inputSecundario("Contraseña", contrasenia),
+            _registrarButton(),
+          ],
+        ),
       ),
     );
   }

@@ -19,6 +19,7 @@ import 'package:tkv_books/util/utilFunctions.dart';
 import 'package:tkv_books/widgets/botonPersonalizado.dart';
 import 'package:tkv_books/widgets/labelPerzonalizado.dart';
 import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
+import 'package:tkv_books/widgets/page_background.dart';
 
 class PerfilPage extends StatefulWidget {
   @override
@@ -73,7 +74,7 @@ class _PerfilPageState extends State<PerfilPage> {
           (value) {
             if (value == ConfirmAction.ACCEPT) {
               Sesion.usuarioLogeado = Usuario("", "", "", "");
-              Sesion.librosDelUsuario.lista = [];
+              Sesion.librosDelUsuario.lista = List<Libro>();
               Sesion.libroLeyendoPorUsuario = Libro("", "", 0, 0);
               _irAhome();
               return true;
@@ -90,11 +91,9 @@ class _PerfilPageState extends State<PerfilPage> {
 
     return WillPopScope(
       onWillPop: _abrirCerrarSesionDialog,
-      child: Scaffold(
-        resizeToAvoidBottomPadding: false,
-        body: Stack(
-          fit: StackFit.passthrough,
-          alignment: Alignment.topLeft,
+      child: PageBackground(
+        header: Stack(
+          //fit: StackFit.passthrough,
           children: <Widget>[
             Image.asset(
               "images/banner_nubes.jpg",
@@ -106,47 +105,17 @@ class _PerfilPageState extends State<PerfilPage> {
             _buildEncabezado(),
             _buildExperiencia(
                 Sesion.usuarioLogeado.puntaje, Sesion.usuarioLogeado.level),
-            Container(
-              height: double.infinity,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(32.0),
-                  topLeft: Radius.circular(32.0),
-                ),
-                border: Border.all(
-                  color: Colors.black,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey,
-                    blurRadius: 24.0,
-                  ),
-                ],
-                color: Color(0xfffafafa),
-              ),
-              margin: EdgeInsets.only(
-                top: Screen.height * 0.3, // Responsive 266
-              ),
-              child: Padding(
-                padding: EdgeInsets.only(
-                  top: 16.0,
-                ),
-                child: Column(
-                  children: <Widget>[
-                    titulo1Label("Biblioteca"),
-                    Sesion.librosDelUsuario.lista.isNotEmpty
-                        ? _buildListaLibros()
-                        : Text("Aún no tienes libros agregados"),
-                  ],
-                ),
-              ),
-            ),
           ],
         ),
-        floatingActionButton:
-            //usuarioPerfil.codUsuario == ApiDao.usuarioLogeado.codUsuario?
-            FloatingActionButton(
+        content: Column(
+          children: <Widget>[
+            titulo1Label("Biblioteca"),
+            Sesion.librosDelUsuario.lista.isNotEmpty
+                ? _buildListaLibros()
+                : Text("Aún no tienes libros agregados"),
+          ],
+        ),
+        floatingButton: FloatingActionButton(
           shape: CircleBorder(
             side: BorderSide(
               color: Colors.black,
@@ -158,10 +127,8 @@ class _PerfilPageState extends State<PerfilPage> {
           ),
           onPressed: () => _abrirAgregarLibroDialog(),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
     );
-    //      : null);
   }
 
   Widget _buildExperiencia(int puntaje, int level) {
@@ -375,11 +342,7 @@ class _PerfilPageState extends State<PerfilPage> {
 
           LibroDao.deleteLibro(libro.codLibro).then((val) {
             Sesion.librosDelUsuario.lista.remove(libro);
-            UsuarioDao.putUsuarioSetPuntajeLevel(Sesion.usuarioLogeado)
-                .then((val) {
-              //_actualizarListaLibros();
-              setState(() {});
-            });
+            setState(() {});
           });
         }
       },
@@ -401,20 +364,11 @@ class _PerfilPageState extends State<PerfilPage> {
 
             LibroDao.postLibro(Sesion.libroAgregado).then((val) {
               //Sesion.libroAgregado = null;
-              print("a0" + Sesion.librosDelUsuario.lista.length.toString());
               Sesion.librosDelUsuario.lista.add(Sesion.libroAgregado);
-              print("a" + Sesion.librosDelUsuario.lista.length.toString());
-              print("afds");
-              UsuarioDao.putUsuarioSetPuntajeLevel(Sesion.usuarioLogeado)
-                  .then((val) {
-                //_actualizarListaLibros();
-                setState(() {
-                  Sesion.libroAgregado.codLibro = 0;
-                });
-              });
+              Sesion.libroAgregado.codLibro = 0;
+              setState(() {});
             });
           }
-          print("b" + Sesion.librosDelUsuario.lista.length.toString());
         },
       );
     } else {

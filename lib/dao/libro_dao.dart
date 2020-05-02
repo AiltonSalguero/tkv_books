@@ -8,20 +8,20 @@ import 'package:tkv_books/model/libro.dart';
 class LibroDao {
   static Future<ListaLibros> getLibrosTotales() async {
     String apiUrl = Dao.apiUrl + "/librosTKV";
-    var decodedData = Dao.jsonDecodedHttpGet(apiUrl);
+    var decodedData = await Dao.jsonDecodedHttpGet(apiUrl);
     return ListaLibros.fromJson(decodedData);
   }
 
   static Future<Libro> getLibroByCod(int codLibro) async {
     String apiUrl = Dao.apiUrl + "/librosTKV?codLibro=" + codLibro.toString();
-    var decodedData = Dao.jsonDecodedHttpGet(apiUrl);
+    var decodedData = await Dao.jsonDecodedHttpGet(apiUrl);
     return ListaLibros.fromJson(decodedData).lista[0];
   }
 
   static Future<ListaLibros> getLibrosOfUsuario(int codUsuario) async {
     String apiUrl =
         Dao.apiUrl + "/librosTKV?codUsuario=" + codUsuario.toString();
-    var decodedData = Dao.jsonDecodedHttpGet(apiUrl);
+    var decodedData = await Dao.jsonDecodedHttpGet(apiUrl);
     return ListaLibros.fromJson(decodedData);
   }
 

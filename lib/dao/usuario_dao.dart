@@ -11,19 +11,19 @@ class UsuarioDao {
   static Future<Usuario> getUsuarioByCod(int codUsuario) async {
     String apiUrl =
         Dao.apiUrl + "/usuariosTKV?codUsuario=" + codUsuario.toString();
-    var decodedData = Dao.jsonDecodedHttpGet(apiUrl);
+    var decodedData = await Dao.jsonDecodedHttpGet(apiUrl);
     return ListaUsuarios.fromJson(decodedData).lista[0];
   }
 
   static Future<ListaUsuarios> getUsuariosRegistrados() async {
     String apiUrl = Dao.apiUrl + "/usuariosTKV";
-    var decodedData = Dao.jsonDecodedHttpGet(apiUrl);
+    var decodedData = await Dao.jsonDecodedHttpGet(apiUrl);
     return ListaUsuarios.fromJson(decodedData);
   }
 
   static Future<Usuario> getUsuarioByNickname(String nickname) async {
     String apiUrl = Dao.apiUrl + "/usuariosTKV?nickname=" + nickname;
-    var decodedData = Dao.jsonDecodedHttpGet(apiUrl);
+    var decodedData = await Dao.jsonDecodedHttpGet(apiUrl);
     return ListaUsuarios.fromJson(decodedData).lista[0];
   }
 
@@ -35,13 +35,14 @@ class UsuarioDao {
         "&contrasenia=" +
         contrasenia;
     try {
-      var decodedData = Dao.jsonDecodedHttpGet(apiUrl);
+      var decodedData = await Dao.jsonDecodedHttpGet(apiUrl);
       bool existe;
       ListaUsuarios.fromJson(decodedData).lista.length != 0
           ? existe = true
           : existe = false;
       return existe;
     } catch (e) {
+      print(e);
       alertaDialog(
           context, "Sin internet", "No esta conectado a internet.", "", "Ok");
     }
@@ -49,7 +50,7 @@ class UsuarioDao {
 
   static Future<bool> existeUsuarioByNickname(String nickname) async {
     String apiUrl = Dao.apiUrl + "/usuariosTKV?nickname=" + nickname;
-    var decodedData = Dao.jsonDecodedHttpGet(apiUrl);
+    var decodedData = await Dao.jsonDecodedHttpGet(apiUrl);
     bool existe;
     ListaUsuarios.fromJson(decodedData).lista.length != 0
         ? existe = true

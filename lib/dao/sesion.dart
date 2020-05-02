@@ -1,11 +1,11 @@
+import 'package:tkv_books/model/libro.dart';
+import 'package:tkv_books/model/usuario.dart';
+
 /*
   Clase donde se guardan los datos temporales traidos de la DB
 
   Por limpiar
 */
-
-import 'package:tkv_books/model/libro.dart';
-import 'package:tkv_books/model/usuario.dart';
 
 class Sesion {
   // con sqflutter se puede mantener la sesion iniciada

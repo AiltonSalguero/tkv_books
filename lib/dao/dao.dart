@@ -6,12 +6,12 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
   Clase que maneja las peticiones generales
 */
 class Dao {
-  static String apiKey = DotEnv().env['AWS_API_KEY'];
   static String apiUrl = DotEnv().env['AWS_API_URL'];
-  
-  static jsonDecodedHttpGet(String apiUrl) async {
+  static String apiKey = DotEnv().env['AWS_API_KEY'];
+
+  static jsonDecodedHttpGet(String url) async {
     var response = await http.get(
-      apiUrl,
+      url,
       headers: {
         'Content-type': 'application/json',
         'x-api-key': apiKey,
@@ -20,9 +20,9 @@ class Dao {
     return json.decode(response.body);
   }
 
-  static httpPost(String apiUrl, var objeto) {
+  static httpPost(String url, var objeto) {
     http.post(
-      apiUrl,
+      url,
       body: jsonEncode(objeto.toJson()),
       headers: {
         'Content-type': 'application/json',
@@ -32,9 +32,9 @@ class Dao {
     );
   }
 
-  static httpPut(String apiUrl) {
+  static httpPut(String url) {
     http.put(
-      apiUrl,
+      url,
       headers: {
         'Content-type': 'application/json',
         'x-api-key': apiKey,
@@ -43,9 +43,9 @@ class Dao {
     );
   }
 
-  static httpDelete(String apiUrl) {
-     http.delete(
-      apiUrl,
+  static httpDelete(String url) {
+    http.delete(
+      url,
       headers: {
         'Content-type': 'application/json',
         'x-api-key': apiKey,
