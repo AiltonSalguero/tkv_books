@@ -1,6 +1,7 @@
 package io.flutter.plugins;
 
 import io.flutter.plugin.common.PluginRegistry;
+import in.agnostech.flutter_aws_amplify_cognito.FlutterAwsAmplifyCognitoPlugin;
 import infozenplus.com.flutter_open_whatsapp.FlutterOpenWhatsappPlugin;
 
 /**
@@ -11,6 +12,7 @@ public final class GeneratedPluginRegistrant {
     if (alreadyRegisteredWith(registry)) {
       return;
     }
+    FlutterAwsAmplifyCognitoPlugin.registerWith(registry.registrarFor("in.agnostech.flutter_aws_amplify_cognito.FlutterAwsAmplifyCognitoPlugin"));
     FlutterOpenWhatsappPlugin.registerWith(registry.registrarFor("infozenplus.com.flutter_open_whatsapp.FlutterOpenWhatsappPlugin"));
   }
 

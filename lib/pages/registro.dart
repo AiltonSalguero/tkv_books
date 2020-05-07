@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_aws_amplify_cognito/flutter_aws_amplify_cognito.dart';
 import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dao/usuario_dao.dart';
 import 'package:tkv_books/dialogs/tkv_dialogs.dart';
@@ -41,6 +42,11 @@ class _RegistroPageState extends State<RegistroPage> {
           //crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             titulo1Label("Registro"),
+            LargeButton(
+              nombre: "Google",
+              accion: _googleSignIn,
+              primario: true,
+            ),
             inputPrincipal("Nombre", nombres),
             inputPrincipal("Apellido", apellidos),
             inputPrincipal("Nickname", nickname),
@@ -54,6 +60,37 @@ class _RegistroPageState extends State<RegistroPage> {
         ),
       ),
     );
+  }
+
+  _googleSignIn() {
+    FlutterAwsAmplifyCognito.federatedSignIn(IdentityProvider.GOOGLE, "token")
+        .then((FederatedSignInResult result) {
+      switch (result.userStatus) {
+        case UserStatus.GUEST:
+          print("1");
+          break;
+        case UserStatus.SIGNED_IN:
+          print("2");
+          break;
+        case UserStatus.SIGNED_OUT:
+          print("3");
+          break;
+        case UserStatus.SIGNED_OUT_FEDERATED_TOKENS_INVALID:
+          print("4");
+          break;
+        case UserStatus.SIGNED_OUT_USER_POOLS_TOKENS_INVALID:
+          print("5");
+          break;
+        case UserStatus.UNKNOWN:
+          print("6");
+          break;
+        case UserStatus.ERROR:
+          print("7");
+          break;
+      }
+    }).catchError((error) {
+      print(error);
+    });
   }
 
   _validarRegistro() {

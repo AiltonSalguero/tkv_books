@@ -23,12 +23,10 @@ dependencies:
     sdk: flutter
   http:
   flutter_dotenv:
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   percent_indicator:
   flutter_open_whatsapp:
+  flutter_aws_amplify_cognito: 
 
 dev_dependencies:
   flutter_test:

@@ -1,0 +1,10 @@
+{
+	"auth": {
+		"tkvbooksf90e5aa7": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [],
+			"customAuth": false
+		}
+	}
+}

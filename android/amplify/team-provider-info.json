@@ -1,0 +1,22 @@
+{
+    "tkv": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-tkvbooks-tkv-135459-authRole",
+            "UnauthRoleArn": "arn:aws:iam::203101557291:role/amplify-tkvbooks-tkv-135459-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::203101557291:role/amplify-tkvbooks-tkv-135459-authRole",
+            "Region": "us-west-2",
+            "DeploymentBucketName": "amplify-tkvbooks-tkv-135459-deployment",
+            "UnauthRoleName": "amplify-tkvbooks-tkv-135459-unauthRole",
+            "StackName": "amplify-tkvbooks-tkv-135459",
+            "StackId": "arn:aws:cloudformation:us-west-2:203101557291:stack/amplify-tkvbooks-tkv-135459/4469b7c0-9094-11ea-ba48-06cac24c53a2",
+            "AmplifyAppId": "d2csny78ro2val"
+        },
+        "categories": {
+            "auth": {
+                "tkvbooksf90e5aa7": {
+                    "hostedUIProviderCreds": "[]"
+                }
+            }
+        }
+    }
+}
