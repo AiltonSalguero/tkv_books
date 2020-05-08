@@ -64,7 +64,7 @@ class _RegistroPageState extends State<RegistroPage> {
   }
 
   _googleSignIn() {
-    FlutterAwsAmplifyCognito.federatedSignIn(IdentityProvider.GOOGLE, "token")
+    FlutterAwsAmplifyCognito.federatedSignIn(IdentityProvider.GOOGLE, "458398718170-jpuq6u832nrd4u25jvd495sfr3f62v92.apps.googleusercontent.com")
         .then((FederatedSignInResult result) {
       switch (result.userStatus) {
         case UserStatus.GUEST:
