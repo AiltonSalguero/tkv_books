@@ -1,12 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+class InputEmail extends StatelessWidget {
+  String texto;
+  TextEditingController controller;
+  InputEmail({this.texto, this.controller});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 100.0,
+      width: double.infinity,
+      child: Padding(
+        padding: EdgeInsets.all(
+          24.0,
+        ),
+        child: TextField(
+          keyboardType: TextInputType.emailAddress,
+          controller: controller,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.black,
+                width: 4.0,
+              ),
+              borderRadius: BorderRadius.all(
+                Radius.circular(
+                  28.0,
+                ),
+              ),
+            ),
+            filled: true,
+            hintStyle: TextStyle(
+              color: Colors.black,
+              fontSize: 16.0,
+            ),
+            hintText: texto,
+            fillColor: Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 Widget inputPrincipal(String texto, TextEditingController controller) {
   return Container(
     height: 100.0,
     width: double.infinity,
     child: Padding(
-      padding: const EdgeInsets.all(
+      padding: EdgeInsets.all(
         24.0,
       ),
       child: TextField(
@@ -15,7 +57,6 @@ Widget inputPrincipal(String texto, TextEditingController controller) {
             RegExp("[a-zA-Z]"),
           ),
         ],
-        textCapitalization: TextCapitalization.words,
         controller: controller,
         decoration: InputDecoration(
           border: OutlineInputBorder(
@@ -42,13 +83,13 @@ Widget inputPrincipal(String texto, TextEditingController controller) {
   );
 }
 
-Widget inputSecundario(String texto, TextEditingController controller) {
+Widget inputContrasenia(String texto, TextEditingController controller) {
   bool ocultarTexto = true;
   return Container(
     height: 100.0,
     width: double.infinity,
     child: Padding(
-      padding: const EdgeInsets.all(
+      padding: EdgeInsets.all(
         24.0,
       ),
       child: TextField(
@@ -87,7 +128,8 @@ Widget inputDialogText(
     ),
     child: TextFormField(
       inputFormatters: [
-        WhitelistingTextInputFormatter(RegExp(r'\p{Letter}|\d| ', unicode: true)),
+        WhitelistingTextInputFormatter(
+            RegExp(r'\p{Letter}|\d| ', unicode: true)),
       ],
       textCapitalization: texto == "Autor"
           ? TextCapitalization.words

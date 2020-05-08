@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_aws_amplify_cognito/flutter_aws_amplify_cognito.dart';
 import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dao/usuario_dao.dart';
 import 'package:tkv_books/dialogs/simple_dialog.dart';
@@ -34,10 +35,10 @@ class _LoginPageState extends State<LoginPage> {
           children: <Widget>[
             titulo1Label("Login"),
             inputPrincipal("Nickname", nickname),
-            inputSecundario("Contraseña", contrasenia),
+            inputContrasenia("Contraseña", contrasenia),
             LargeButton(
               nombre: "Ingresar",
-              accion: _validarUsuario,
+              accion: _loginCognito,
               primario: true,
             ),
           ],
@@ -74,7 +75,52 @@ class _LoginPageState extends State<LoginPage> {
     UsuarioDao.getUsuarioByNickname(nickname.text).then((user) {
       Sesion.usuarioLogeado = user;
       // ('/perfil/codUusario=1')
-      Navigator.of(context).pushReplacementNamed('/perfil');
+      _irAperfil();
+    });
+  }
+
+  _irAperfil() {
+    Navigator.of(context).pushReplacementNamed('/perfil');
+  }
+
+  _loginCognito() {
+    FlutterAwsAmplifyCognito.signIn(nickname.text, contrasenia.text)
+        .then((SignInResult result) {
+      switch (result.signInState) {
+        case SignInState.SMS_MFA:
+          print("1");
+          break;
+        case SignInState.PASSWORD_VERIFIER:
+          print("2");
+          break;
+        case SignInState.CUSTOM_CHALLENGE:
+          print("3");
+          break;
+        case SignInState.DEVICE_SRP_AUTH:
+          print("4");
+          break;
+        case SignInState.DEVICE_PASSWORD_VERIFIER:
+          print("5");
+          break;
+        case SignInState.ADMIN_NO_SRP_AUTH:
+          print("6");
+          break;
+        case SignInState.NEW_PASSWORD_REQUIRED:
+          print("7");
+          break;
+        case SignInState.DONE:
+          print("8");
+          _irAperfil();
+          break;
+        case SignInState.UNKNOWN:
+          print("9");
+          break;
+        case SignInState.ERROR:
+          print("1");
+          break;
+      }
+    }).catchError((error) {
+      print(error);
     });
   }
 

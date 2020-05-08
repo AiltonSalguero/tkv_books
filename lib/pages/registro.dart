@@ -3,7 +3,9 @@ import 'package:flutter_aws_amplify_cognito/flutter_aws_amplify_cognito.dart';
 import 'package:flutter_aws_amplify_cognito/sign_in/identity_provider.dart';
 import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dao/usuario_dao.dart';
+import 'package:tkv_books/dialogs/simple_dialog.dart';
 import 'package:tkv_books/dialogs/tkv_dialogs.dart';
+import 'package:tkv_books/dialogs/validar_codigo_dialog.dart';
 import 'package:tkv_books/model/usuario.dart';
 import 'package:tkv_books/widgets/inputPersonalizado.dart';
 import 'package:tkv_books/widgets/labelPerzonalizado.dart';
@@ -17,16 +19,16 @@ class RegistroPage extends StatefulWidget {
 
 class _RegistroPageState extends State<RegistroPage> {
   Usuario usuarioNuevo;
-  final nombres = TextEditingController();
-  final apellidos = TextEditingController();
+  final nombreCompleto = TextEditingController();
   final nickname = TextEditingController();
+  final email = TextEditingController();
   final contrasenia = TextEditingController();
 
   @override
   void dispose() {
     // Limpia los controlodadores
-    nombres.dispose();
-    apellidos.dispose();
+    nombreCompleto.dispose();
+    email.dispose();
     nickname.dispose();
     contrasenia.dispose();
     super.dispose();
@@ -34,6 +36,8 @@ class _RegistroPageState extends State<RegistroPage> {
 
   @override
   Widget build(BuildContext context) {
+    print("SFFRGREG");
+   
     print("registro");
     return PageBackground(
       backgroundImagePath: "images/logo.jpg",
@@ -43,15 +47,13 @@ class _RegistroPageState extends State<RegistroPage> {
           //crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             titulo1Label("Registro"),
-            LargeButton(
-              nombre: "Google",
-              accion: _googleSignIn,
-              primario: true,
-            ),
-            inputPrincipal("Nombre", nombres),
-            inputPrincipal("Apellido", apellidos),
+            inputPrincipal("Nombre completo", nombreCompleto),
             inputPrincipal("Nickname", nickname),
-            inputSecundario("Contraseña", contrasenia),
+            InputEmail(
+              texto: "Email",
+              controller: email,
+            ),
+            inputContrasenia("Contraseña", contrasenia),
             LargeButton(
               nombre: "Crear cuenta",
               accion: _validarRegistro,
@@ -63,45 +65,16 @@ class _RegistroPageState extends State<RegistroPage> {
     );
   }
 
-  _googleSignIn() {
-    FlutterAwsAmplifyCognito.federatedSignIn(IdentityProvider.GOOGLE, "458398718170-jpuq6u832nrd4u25jvd495sfr3f62v92.apps.googleusercontent.com")
-        .then((FederatedSignInResult result) {
-      switch (result.userStatus) {
-        case UserStatus.GUEST:
-          print("1");
-          break;
-        case UserStatus.SIGNED_IN:
-          print("2");
-          break;
-        case UserStatus.SIGNED_OUT:
-          print("3");
-          break;
-        case UserStatus.SIGNED_OUT_FEDERATED_TOKENS_INVALID:
-          print("4");
-          break;
-        case UserStatus.SIGNED_OUT_USER_POOLS_TOKENS_INVALID:
-          print("5");
-          break;
-        case UserStatus.UNKNOWN:
-          print("6");
-          break;
-        case UserStatus.ERROR:
-          print("7");
-          break;
-      }
-    }).catchError((error) {
-      print(error);
-    });
-  }
-
   _validarRegistro() {
-    if (nombres.text == "")
+    if (nombreCompleto.text == "")
       TkvDialogs.noHayNombreDialog(context);
-    else if (nombres.text.length > 10)
+    else if (nombreCompleto.text.length > 10)
       TkvDialogs.nombreLargoDialog(context);
-    else if (apellidos.text == "")
+    else if (nombreCompleto.text == "")
+
+      // TODO elimar apellido y agregar email
       TkvDialogs.noHayApellido(context);
-    else if (apellidos.text.length > 10)
+    else if (nombreCompleto.text.length > 10)
       TkvDialogs.apellidoLargoDialog(context);
     else if (nickname.text == "")
       TkvDialogs.noHayNickname(context);
@@ -111,9 +84,31 @@ class _RegistroPageState extends State<RegistroPage> {
       TkvDialogs.nicknameCortoDialog(context);
     else if (contrasenia.text == "")
       TkvDialogs.noHayContraseniaDialog(context);
-    else if (contrasenia.text.length < 6)
+    else if (contrasenia.text.length < 8)
       TkvDialogs.contraseniaCortaDialog(context);
 
+    Map<String, String> userAttributes = Map<String, String>();
+    userAttributes['email'] = email.text;
+    Sesion.usuarioLogeado.nickname = nickname.text;
+    validarCodigoDialog(context);
+    /*
+    FlutterAwsAmplifyCognito.signUp(
+            nickname.text, contrasenia.text, userAttributes)
+        .then((SignUpResult result) {
+      if (!result.confirmationState) {
+        final UserCodeDeliveryDetails details = result.userCodeDeliveryDetails;
+        print(details.destination);
+        
+        // TODO mostrar dialog para que ingrese codigo
+      } else {
+        print('Sign Up Done!');
+      }
+    }).catchError((error) {
+      print(error);
+    });
+
+    */
+    /*
     UsuarioDao.existeUsuarioByNickname(nickname.text).then(
       (yaExiste) {
         if (yaExiste) {
@@ -123,11 +118,12 @@ class _RegistroPageState extends State<RegistroPage> {
         }
       },
     );
+    */
   }
 
   _registrarUsuario() {
-    usuarioNuevo =
-        Usuario(nombres.text, apellidos.text, nickname.text, contrasenia.text);
+    usuarioNuevo = Usuario(
+        nombreCompleto.text, nickname.text, email.text, contrasenia.text);
     // validad nickname no repetido ni con espacions
     UsuarioDao.postUsuario(usuarioNuevo).then(
       (value) {

@@ -41,9 +41,9 @@ class Libro {
 }
 
 class ListaLibros {
-  List<Libro> lista = List<Libro>();
+  List<Libro> lista = [];
 
-  ListaLibros({this.lista});
+  ListaLibros();
 
   ListaLibros.fromJson(List<dynamic> json) {
     if (json != null) {

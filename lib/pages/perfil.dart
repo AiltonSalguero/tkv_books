@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_aws_amplify_cognito/flutter_aws_amplify_cognito.dart';
 import 'package:tkv_books/dao/libro_dao.dart';
 import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dao/usuario_dao.dart';
@@ -29,6 +30,15 @@ class _PerfilPageState extends State<PerfilPage> {
   @override
   void initState() {
     print("initState");
+    FlutterAwsAmplifyCognito.getTokens()
+    .then((Tokens tokens) {
+      print('Access Token: ${tokens.accessToken}');
+      print('ID Token: ${tokens.idToken}');
+      print('Refresh Token: ${tokens.refreshToken}');
+    }).catchError((error) {
+        print(error);
+    });
+    
     if (!Sesion.vieneDeRegistro) {
       UsuarioDao.getUsuarioByNickname(Sesion.usuarioLogeado.nickname)
           .then((user) {
@@ -135,9 +145,7 @@ class _PerfilPageState extends State<PerfilPage> {
             height: 50,
           ),
           titulo1Label(Sesion.usuarioLogeado.nickname),
-          subTitulo2Label(Sesion.usuarioLogeado.nombres +
-              " " +
-              Sesion.usuarioLogeado.apellidos),
+          subTitulo2Label(Sesion.usuarioLogeado.nombreCompleto),
           titulo2Label("Lv. " + Sesion.usuarioLogeado.level.toString()),
         ],
       ),

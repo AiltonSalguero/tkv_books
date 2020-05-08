@@ -1,15 +1,15 @@
 class Usuario {
   int codUsuario;
-  String nombres;
-  String apellidos;
+  String nombreCompleto;
   String nickname;
+  String email;
   String contrasenia;
   int codLibroLeyendo;
   int level;
   int puntaje;
   int premium;
   // cod usuario generado
-  Usuario(this.nombres, this.apellidos, this.nickname, this.contrasenia) {
+  Usuario(this.nombreCompleto, this.nickname, this.email, this.contrasenia) {
     this.codUsuario = 0;
     this.codLibroLeyendo = 0;
     this.level = 1;
@@ -19,9 +19,9 @@ class Usuario {
 
   Usuario.fromJson(Map<String, dynamic> json) {
     codUsuario = json['codUsuario'];
-    nombres = json['nombres'];
-    apellidos = json['apellidos'];
+    nombreCompleto = json['nombreCompleto'];
     nickname = json['nickname'];
+    email = json['email'];
     contrasenia = json['contrasenia'];
     codLibroLeyendo = json['codLibroLeyendo'];
     level = json['level'];
@@ -33,8 +33,8 @@ class Usuario {
     // Data a Json
     final data = Map<String, dynamic>();
     data['codUsuario'] = this.codUsuario;
-    data['nombres'] = this.nombres;
-    data['apellidos'] = this.apellidos;
+    data['nombreCompleto'] = this.nombreCompleto;
+    data['email'] = this.email;
     data['nickname'] = this.nickname;
     data['contrasenia'] = this.contrasenia;
     data['codLibroLeyendo'] = this.codLibroLeyendo;
@@ -46,9 +46,9 @@ class Usuario {
 }
 
 class ListaUsuarios {
-  List<Usuario> lista = List<Usuario>();
+  List<Usuario> lista = [];
 
-  ListaUsuarios({this.lista});
+  ListaUsuarios();
 
   ListaUsuarios.fromJson(List<dynamic> json) {
     if (json != null) {

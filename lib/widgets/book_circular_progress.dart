@@ -5,7 +5,7 @@ import 'package:tkv_books/util/utilFunctions.dart';
 
 class BookCircularProgressTkv extends StatelessWidget {
   final Libro libro;
-  BookCircularProgressTkv({Key key, this.libro}) : super(key: key);
+  BookCircularProgressTkv({this.libro});
   @override
   Widget build(BuildContext context) {
     String porcentajeTexto =
