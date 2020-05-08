@@ -1,19 +1,19 @@
 {
     "tkv": {
         "awscloudformation": {
-            "AuthRoleName": "amplify-tkvbooks-tkv-135459-authRole",
-            "UnauthRoleArn": "arn:aws:iam::203101557291:role/amplify-tkvbooks-tkv-135459-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::203101557291:role/amplify-tkvbooks-tkv-135459-authRole",
+            "AuthRoleName": "amplify-tkvbooks-tkv-153517-authRole",
+            "UnauthRoleArn": "arn:aws:iam::203101557291:role/amplify-tkvbooks-tkv-153517-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::203101557291:role/amplify-tkvbooks-tkv-153517-authRole",
             "Region": "us-west-2",
-            "DeploymentBucketName": "amplify-tkvbooks-tkv-135459-deployment",
-            "UnauthRoleName": "amplify-tkvbooks-tkv-135459-unauthRole",
-            "StackName": "amplify-tkvbooks-tkv-135459",
-            "StackId": "arn:aws:cloudformation:us-west-2:203101557291:stack/amplify-tkvbooks-tkv-135459/4469b7c0-9094-11ea-ba48-06cac24c53a2",
-            "AmplifyAppId": "d2csny78ro2val"
+            "DeploymentBucketName": "amplify-tkvbooks-tkv-153517-deployment",
+            "UnauthRoleName": "amplify-tkvbooks-tkv-153517-unauthRole",
+            "StackName": "amplify-tkvbooks-tkv-153517",
+            "StackId": "arn:aws:cloudformation:us-west-2:203101557291:stack/amplify-tkvbooks-tkv-153517/47d032f0-90a2-11ea-9bd9-06343619a258",
+            "AmplifyAppId": "dnnw88jge7o25"
         },
         "categories": {
             "auth": {
-                "tkvbooksf90e5aa7": {
+                "tkvbooks112207c3": {
                     "hostedUIProviderCreds": "[]"
                 }
             }
