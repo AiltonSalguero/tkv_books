@@ -3,9 +3,9 @@ import 'package:flutter_aws_amplify_cognito/flutter_aws_amplify_cognito.dart';
 import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dao/usuario_dao.dart';
 import 'package:tkv_books/dialogs/simple_dialog.dart';
-import 'package:tkv_books/widgets/inputPersonalizado.dart';
-import 'package:tkv_books/widgets/labelPerzonalizado.dart';
-import 'package:tkv_books/widgets/large_button.dart';
+import 'package:tkv_books/widgets/buttons/large_button.dart';
+import 'package:tkv_books/widgets/inputs/inputPersonalizado.dart';
+import 'package:tkv_books/widgets/labels/labelPerzonalizado.dart';
 import 'package:tkv_books/widgets/page_background.dart';
 
 class LoginPage extends StatefulWidget {

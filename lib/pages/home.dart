@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_aws_amplify_cognito/flutter_aws_amplify_cognito.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:tkv_books/util/screen.dart';
-import 'package:tkv_books/widgets/large_button.dart';
+import 'package:tkv_books/widgets/buttons/large_button.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -21,7 +21,7 @@ class _HomePageState extends State<HomePage> {
     print("home");
 
     main();
-     FlutterAwsAmplifyCognito.initialize().then((UserStatus status) {
+    FlutterAwsAmplifyCognito.initialize().then((UserStatus status) {
       switch (status) {
         case UserStatus.GUEST:
           break;

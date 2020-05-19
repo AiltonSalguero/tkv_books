@@ -6,8 +6,8 @@ import 'package:tkv_books/dialogs/simple_dialog.dart';
 import 'package:tkv_books/model/libro.dart';
 import 'package:tkv_books/util/screen.dart';
 import 'package:tkv_books/util/utilFunctions.dart';
-import 'package:tkv_books/widgets/book_linear_progress.dart';
-import 'package:tkv_books/widgets/labelPerzonalizado.dart';
+import 'package:tkv_books/widgets/labels/labelPerzonalizado.dart';
+import 'package:tkv_books/widgets/progress/book_linear_progress.dart';
 
 class LibraryLinearProgressTkv extends StatefulWidget {
   final ListaLibros libreria;

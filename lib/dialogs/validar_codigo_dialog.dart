@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_aws_amplify_cognito/flutter_aws_amplify_cognito.dart';
 import 'package:tkv_books/cognito/registro_cognito.dart';
 import 'package:tkv_books/dao/sesion.dart';
-import 'package:tkv_books/dao/usuario_dao.dart';
-import 'package:tkv_books/widgets/inputPersonalizado.dart';
+import 'package:tkv_books/widgets/inputs/inputPersonalizado.dart';
 
 /*
 

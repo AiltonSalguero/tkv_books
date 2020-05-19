@@ -6,13 +6,13 @@ import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dialogs/agregar_libro_dialog.dart';
 import 'package:tkv_books/dialogs/simple_dialog.dart';
 import 'package:tkv_books/util/utilFunctions.dart';
-import 'package:tkv_books/widgets/center_floating_button.dart';
-import 'package:tkv_books/widgets/experience_bar.dart';
-import 'package:tkv_books/widgets/labelPerzonalizado.dart';
+import 'package:tkv_books/widgets/buttons/center_floating_button.dart';
+import 'package:tkv_books/widgets/buttons/top_button.dart';
 import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
-import 'package:tkv_books/widgets/library_linear_progress.dart';
+import 'package:tkv_books/widgets/labels/labelPerzonalizado.dart';
 import 'package:tkv_books/widgets/page_background.dart';
-import 'package:tkv_books/widgets/top_button.dart';
+import 'package:tkv_books/widgets/progress/experience_bar.dart';
+import 'package:tkv_books/widgets/progress/library_linear_progress.dart';
 
 /*
 
