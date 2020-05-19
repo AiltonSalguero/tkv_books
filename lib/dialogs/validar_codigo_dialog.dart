@@ -1,53 +1,19 @@
-/*
-  
-
-  Por limpiar
-*/
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_aws_amplify_cognito/flutter_aws_amplify_cognito.dart';
+import 'package:tkv_books/cognito/registro_cognito.dart';
 import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dao/usuario_dao.dart';
 import 'package:tkv_books/widgets/inputPersonalizado.dart';
 
+/*
+
+
+  Por limpiar
+*/
 Future<void> validarCodigoDialog(BuildContext context) {
   final _formKey = GlobalKey<FormState>();
-
   final _codigo = TextEditingController();
-
-  _cerrarDialog() {
-    Navigator.pop(context);
-  }
-
-  _irAPerfil() {
-    Navigator.of(context).pushNamed('/perfil');
-  }
-
-  _validarCodigo() {
-     //_cerrarDialog();
-        _irAPerfil();
-    /*FlutterAwsAmplifyCognito.confirmSignUp(
-            Sesion.usuarioLogeado.nickname, _codigo.text)
-        .then((SignUpResult result) {
-      if (!result.confirmationState) {
-        final UserCodeDeliveryDetails details = result.userCodeDeliveryDetails;
-        print(details.destination);
-      } else {
-        _cerrarDialog();
-        _irAPerfil();
-      }
-    }).catchError((error) {
-      print(error);
-    });*/
-  }
-
-  _reenviarCodigo() {
-    FlutterAwsAmplifyCognito.resendSignUp(Sesion.usuarioLogeado.nickname)
-        .then((SignUpResult result) {})
-        .catchError((error) {
-      print(error);
-    });
-  }
 
   return showDialog(
     context: context,
@@ -75,7 +41,7 @@ Future<void> validarCodigoDialog(BuildContext context) {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                inputDialogText("Nombre", _codigo, "Ingrese un nombre"),
+                inputDialogText("Código", _codigo, "Ingrese el código"),
               ],
             ),
           ),
@@ -85,16 +51,43 @@ Future<void> validarCodigoDialog(BuildContext context) {
             child: Text(
               "Reenviar",
             ),
-            onPressed: _reenviarCodigo,
+            onPressed:
+                RegistroCognito.reenviarCodigo(Sesion.usuarioRegistro.nickname),
           ),
           FlatButton(
             child: Text(
               "OK",
             ),
-            onPressed: _validarCodigo,
+            onPressed: _validarCodigo(context),
           )
         ],
       );
     },
   );
+}
+
+_cerrarDialog(BuildContext context) {
+  Navigator.pop(context);
+}
+
+_irAPerfil(BuildContext context) {
+  Navigator.of(context).pushNamed('/perfil');
+}
+
+_validarCodigo(BuildContext context) {
+  //_cerrarDialog();
+  _irAPerfil(context);
+  /*FlutterAwsAmplifyCognito.confirmSignUp(
+            Sesion.usuarioLogeado.nickname, _codigo.text)
+        .then((SignUpResult result) {
+      if (!result.confirmationState) {
+        final UserCodeDeliveryDetails details = result.userCodeDeliveryDetails;
+        print(details.destination);
+      } else {
+        _cerrarDialog();
+        _irAPerfil();
+      }
+    }).catchError((error) {
+      print(error);
+    });*/
 }

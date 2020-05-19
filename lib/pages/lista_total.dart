@@ -7,7 +7,7 @@
 import 'package:flutter/material.dart';
 import 'package:tkv_books/dao/libro_dao.dart';
 import 'package:tkv_books/dao/sesion.dart';
-import 'package:tkv_books/dialogs/tkv_dialogs.dart';
+import 'package:tkv_books/dialogs/simple_dialog.dart';
 import 'package:tkv_books/util/screen.dart';
 import 'package:tkv_books/util/temaPersonlizado.dart';
 import 'package:tkv_books/util/utilFunctions.dart';
@@ -167,7 +167,11 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
       LibroDao.putLibroSetPaginasLeidas(Sesion.libroLeyendoPorUsuario);
       if (levelAntiguo < calcularLevelUsuario(Sesion.usuarioLogeado.puntaje)) {
         // Mostrar mensaje de subida de leve
-        TkvDialogs.levelUpDialog(context);
+        SimpleDialogTkv(
+          title: "Subiste de nivel!",
+          content: "Ahora eres Lv. ${Sesion.usuarioLogeado.level}",
+          rightText: ":D",
+        ).build(context);
       }
       setState(() {});
     }

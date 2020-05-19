@@ -10,7 +10,10 @@ import 'package:tkv_books/model/usuario.dart';
 class Sesion {
   // con sqflutter se puede mantener la sesion iniciada
 
-  // Usuario
+  // Registro
+  static Usuario usuarioRegistro = Usuario("", "", "", "");
+
+  // Usuario Logeado
   static Usuario usuarioLogeado = Usuario("", "", "", "");
   static bool vieneDeRegistro = false;
   static ListaLibros librosDelUsuario = ListaLibros();
@@ -34,5 +37,4 @@ class Sesion {
     Sesion.librosDelUsuario = ListaLibros();
     Sesion.libroLeyendoPorUsuario = Libro("", "", 0, 0);
   }
-
 }

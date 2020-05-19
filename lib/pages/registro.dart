@@ -4,7 +4,6 @@ import 'package:flutter_aws_amplify_cognito/sign_in/identity_provider.dart';
 import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dao/usuario_dao.dart';
 import 'package:tkv_books/dialogs/simple_dialog.dart';
-import 'package:tkv_books/dialogs/tkv_dialogs.dart';
 import 'package:tkv_books/dialogs/validar_codigo_dialog.dart';
 import 'package:tkv_books/model/usuario.dart';
 import 'package:tkv_books/widgets/inputPersonalizado.dart';
@@ -36,21 +35,18 @@ class _RegistroPageState extends State<RegistroPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("SFFRGREG");
-   
     print("registro");
     return PageBackground(
       backgroundImagePath: "images/logo.jpg",
       content: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
-          //crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             titulo1Label("Registro"),
             inputPrincipal("Nombre completo", nombreCompleto),
             inputPrincipal("Nickname", nickname),
             InputEmail(
-              texto: "Email",
+              texto: "Correo electrónico",
               controller: email,
             ),
             inputContrasenia("Contraseña", contrasenia),
@@ -65,30 +61,56 @@ class _RegistroPageState extends State<RegistroPage> {
     );
   }
 
+  _validarCampos() {
+    String tituloDialog;
+    String contenidoDialog;
+    bool errorCampos = false;
+    if (nickname.text.isEmpty ||
+        email.text.isEmpty ||
+        contrasenia.text.isEmpty ||
+        nombreCompleto.text.isEmpty) {
+      errorCampos = true;
+      tituloDialog = "Campo incompleto";
+      if (nickname.text.isEmpty) contenidoDialog = "Escriba un nickname";
+      if (email.text.isEmpty) contenidoDialog = "Escriba un email";
+      if (nombreCompleto.text.isEmpty) contenidoDialog = "Escriba un nombre";
+      if (contrasenia.text.isEmpty) contenidoDialog = "Escriba una contrasenia";
+    }
+    if (nickname.text.length > 12 || nombreCompleto.text.length > 12) {
+      errorCampos = true;
+      tituloDialog = "Campo muy largo";
+      if (nickname.text.length > 12)
+        contenidoDialog = "Escriba un nickname más corto";
+      if (nombreCompleto.text.length > 12)
+        contenidoDialog = "Escriba un nombre más corto";
+    }
+
+    if (nickname.text.length < 4 || contrasenia.text.length < 8) {
+      errorCampos = true;
+      tituloDialog = "Campo muy corto";
+      if (nickname.text.length < 4)
+        contenidoDialog = "Escriba un nickname más largo";
+      if (contrasenia.text.length < 8)
+        contenidoDialog = "Escriba una contraseña más larga";
+    }
+
+    if (errorCampos) {
+      SimpleDialogTkv(
+        title: tituloDialog,
+        content: contenidoDialog,
+        rightText: "Ok",
+      ).build(context);
+    }
+  }
+
   _validarRegistro() {
-    if (nombreCompleto.text == "")
-      TkvDialogs.noHayNombreDialog(context);
-    else if (nombreCompleto.text.length > 10)
-      TkvDialogs.nombreLargoDialog(context);
-    else if (nombreCompleto.text == "")
-
-      // TODO elimar apellido y agregar email
-      TkvDialogs.noHayApellido(context);
-    else if (nombreCompleto.text.length > 10)
-      TkvDialogs.apellidoLargoDialog(context);
-    else if (nickname.text == "")
-      TkvDialogs.noHayNickname(context);
-    else if (nickname.text.length > 12)
-      TkvDialogs.nicknameLargoDialog(context);
-    else if (nickname.text.length < 4)
-      TkvDialogs.nicknameCortoDialog(context);
-    else if (contrasenia.text == "")
-      TkvDialogs.noHayContraseniaDialog(context);
-    else if (contrasenia.text.length < 8)
-      TkvDialogs.contraseniaCortaDialog(context);
-
-    Map<String, String> userAttributes = Map<String, String>();
+    _validarCampos();
+    // Cuando no sale el error dialog
+    Map<String, dynamic> userAttributes = Map<String, dynamic>();
     userAttributes['email'] = email.text;
+    userAttributes['level'] = 1;
+    userAttributes['puntaje'] = 0;
+    userAttributes['nombreCompleto'] = "Julio Roman";
     Sesion.usuarioLogeado.nickname = nickname.text;
     validarCodigoDialog(context);
     /*
@@ -112,7 +134,7 @@ class _RegistroPageState extends State<RegistroPage> {
     UsuarioDao.existeUsuarioByNickname(nickname.text).then(
       (yaExiste) {
         if (yaExiste) {
-          TkvDialogs.nicknameYaExisteDialog(context);
+          ErrorDialogs.nicknameYaExisteDialog(context);
         } else {
           _registrarUsuario();
         }
@@ -122,7 +144,7 @@ class _RegistroPageState extends State<RegistroPage> {
   }
 
   _registrarUsuario() {
-    usuarioNuevo = Usuario(
+    Sesion.usuarioRegistro = Usuario(
         nombreCompleto.text, nickname.text, email.text, contrasenia.text);
     // validad nickname no repetido ni con espacions
     UsuarioDao.postUsuario(usuarioNuevo).then(

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_aws_amplify_cognito/flutter_aws_amplify_cognito.dart';
+import 'package:tkv_books/dao/dao.dart';
 import 'package:tkv_books/dao/libro_dao.dart';
 import 'package:tkv_books/dao/sesion.dart';
-import 'package:tkv_books/dao/usuario_dao.dart';
 import 'package:tkv_books/dialogs/agregar_libro_dialog.dart';
 import 'package:tkv_books/dialogs/simple_dialog.dart';
-import 'package:tkv_books/dialogs/tkv_dialogs.dart';
 import 'package:tkv_books/util/utilFunctions.dart';
 import 'package:tkv_books/widgets/center_floating_button.dart';
 import 'package:tkv_books/widgets/experience_bar.dart';
@@ -30,25 +29,53 @@ class _PerfilPageState extends State<PerfilPage> {
   @override
   void initState() {
     print("initState");
-    FlutterAwsAmplifyCognito.getTokens()
-    .then((Tokens tokens) {
+    FlutterAwsAmplifyCognito.getTokens().then((Tokens tokens) {
+      Dao.cognitoToken = tokens.idToken;
+
       print('Access Token: ${tokens.accessToken}');
       print('ID Token: ${tokens.idToken}');
       print('Refresh Token: ${tokens.refreshToken}');
+      _getLibro().then((value) => print(value));
     }).catchError((error) {
-        print(error);
+      print(error);
     });
-    
-    if (!Sesion.vieneDeRegistro) {
-      UsuarioDao.getUsuarioByNickname(Sesion.usuarioLogeado.nickname)
-          .then((user) {
-        Sesion.usuarioLogeado.codUsuario = user.codUsuario;
 
-        Sesion.vieneDeRegistro = false;
-      });
-    }
-    _obtenerLibroLeyendosePorUsuario();
-    _actualizarListaLibros();
+    // if (!Sesion.vieneDeRegistro) {
+    // UsuarioDao.getUsuarioByNickname(Sesion.usuarioLogeado.nickname)
+    //   .then((user) {
+    //Sesion.usuarioLogeado.codUsuario = user.codUsuario;
+
+    //Sesion.vieneDeRegistro = false;
+    //});
+    //}
+    //_obtenerLibroLeyendosePorUsuario();
+    //_actualizarListaLibros();
+  }
+
+  Future<dynamic> _getLibro() async {
+    print(Dao.cognitoToken);
+    print(Dao.apiUrl + "libro");
+    _getUserAttributes();
+    return Dao.jsonDecodedHttpGet(Dao.apiUrl + "llibros");
+  }
+
+  _getUserAttributes() async {
+    FlutterAwsAmplifyCognito.getUserAttributes().then((userDetails) {
+      print('$userDetails');
+    }).catchError((error) {
+      print(error);
+    });
+    FlutterAwsAmplifyCognito.getUsername().then((username) {
+      print('username is $username');
+    }).catchError((error) {
+      print(error);
+    });
+
+    FlutterAwsAmplifyCognito.getIdentityId().then((identityId) {
+      print('Identity ID is $identityId');
+    }).catchError((error) {
+      print(error);
+    });
   }
 
   _obtenerLibroLeyendosePorUsuario() {
@@ -96,6 +123,7 @@ class _PerfilPageState extends State<PerfilPage> {
   @override
   Widget build(BuildContext context) {
     print("build");
+
     return WillPopScope(
       onWillPop: _cerrarSesionDialog,
       child: PageBackground(
@@ -128,7 +156,7 @@ class _PerfilPageState extends State<PerfilPage> {
         ),
         floatingButton: CenterFloatingButtonTkv(
           icon: Icons.add,
-          accion: _agregarLibroDialog,
+          accion: _getUserAttributes,
         ),
       ),
     );
@@ -154,6 +182,7 @@ class _PerfilPageState extends State<PerfilPage> {
 
   _agregarLibroDialog() {
     print("_abrirAgregarLibroDialog");
+    _getLibro().then((value) => print(value));
     if (Sesion.librosDelUsuario.lista.length < 4 ||
         Sesion.usuarioLogeado.premium == 1) {
       agregarLibroDialog(context).then(
@@ -174,7 +203,13 @@ class _PerfilPageState extends State<PerfilPage> {
         },
       );
     } else {
-      TkvDialogs.limiteSuperadoDialog(context).then((val) {
+      SimpleDialogTkv(
+        title: "Limite superado",
+        content:
+            "Adquiera la versión premium por 5 soles para agregar más libros",
+        leftText: ":(",
+        rightText: "Comprar rai nau",
+      ).build(context).limiteSuperadoDialog(context).then((val) {
         if (val == ConfirmAction.ACCEPT) {
           FlutterOpenWhatsapp.sendSingleMessage("51960762446",
               "Buenas :D, deseo adquirir la version premium de Trikavengers.");

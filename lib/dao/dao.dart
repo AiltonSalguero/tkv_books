@@ -7,14 +7,14 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 */
 class Dao {
   static String apiUrl = DotEnv().env['AWS_API_URL'];
-  static String apiKey = DotEnv().env['AWS_API_KEY'];
+  static String apiKey = "a";
+  static String cognitoToken;
 
   static jsonDecodedHttpGet(String url) async {
     var response = await http.get(
       url,
       headers: {
-        'Content-type': 'application/json',
-        'x-api-key': apiKey,
+        'Authorization': cognitoToken
       },
     );
     return json.decode(response.body);
@@ -25,9 +25,7 @@ class Dao {
       url,
       body: jsonEncode(objeto.toJson()),
       headers: {
-        'Content-type': 'application/json',
-        'x-api-key': apiKey,
-        'Accept': 'application/json'
+        'Authorization': cognitoToken
       },
     );
   }
@@ -36,9 +34,7 @@ class Dao {
     http.put(
       url,
       headers: {
-        'Content-type': 'application/json',
-        'x-api-key': apiKey,
-        'Accept': 'application/json'
+        'Authorization': cognitoToken
       },
     );
   }
@@ -47,8 +43,7 @@ class Dao {
     http.delete(
       url,
       headers: {
-        'Content-type': 'application/json',
-        'x-api-key': apiKey,
+        'Authorization': cognitoToken
       },
     );
   }

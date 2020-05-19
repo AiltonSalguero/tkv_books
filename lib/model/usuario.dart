@@ -1,7 +1,7 @@
 class Usuario {
   int codUsuario;
-  String nombreCompleto;
   String nickname;
+  String nombreCompleto;
   String email;
   String contrasenia;
   int codLibroLeyendo;
