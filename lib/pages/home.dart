@@ -1,52 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_aws_amplify_cognito/flutter_aws_amplify_cognito.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/util/screen.dart';
 import 'package:tkv_books/widgets/buttons/large_button.dart';
 
+/*
+  Vista de la pagina principal de la app
+*/
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  Future main() async {
-    DotEnv().load('config.env');
-    Screen.width = MediaQuery.of(context).size.width;
-    Screen.height = MediaQuery.of(context).size.height;
+  @override
+  void initState() {
+    // super.initState();
+    Sesion.iniciarDatos();
+
+    // Inicia cognito
+    FlutterAwsAmplifyCognito.initialize();
   }
 
   @override
   Widget build(BuildContext context) {
     print("home");
-
-    main();
-    FlutterAwsAmplifyCognito.initialize().then((UserStatus status) {
-      switch (status) {
-        case UserStatus.GUEST:
-          break;
-        case UserStatus.SIGNED_IN:
-          print("1");
-          break;
-        case UserStatus.SIGNED_OUT:
-          print("2");
-          break;
-        case UserStatus.SIGNED_OUT_FEDERATED_TOKENS_INVALID:
-          print("3");
-          break;
-        case UserStatus.SIGNED_OUT_USER_POOLS_TOKENS_INVALID:
-          print("4");
-          break;
-        case UserStatus.UNKNOWN:
-          print("5");
-          break;
-        case UserStatus.ERROR:
-          print("6");
-          break;
-      }
-    }).catchError((error) {
-      print(error);
-    });
+    Screen.width = MediaQuery.of(context).size.width;
+    Screen.height = MediaQuery.of(context).size.height;
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(

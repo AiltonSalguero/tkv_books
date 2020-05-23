@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class InputEmail extends StatelessWidget {
-  String texto;
+class RoundedInput extends StatelessWidget {
+  String nombre;
   TextEditingController controller;
-  InputEmail({this.texto, this.controller});
+  TextInputType tipoInput;
+  bool ocultarDatos;
+
+  RoundedInput(
+      {this.nombre, this.controller, this.tipoInput, this.ocultarDatos});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -15,7 +19,8 @@ class InputEmail extends StatelessWidget {
           24.0,
         ),
         child: TextField(
-          keyboardType: TextInputType.emailAddress,
+          obscureText: ocultarDatos,
+          keyboardType: tipoInput,
           controller: controller,
           decoration: InputDecoration(
             border: OutlineInputBorder(
@@ -34,7 +39,7 @@ class InputEmail extends StatelessWidget {
               color: Colors.black,
               fontSize: 16.0,
             ),
-            hintText: texto,
+            hintText: nombre,
             fillColor: Colors.white,
           ),
         ),

@@ -5,36 +5,56 @@ import 'package:tkv_books/model/usuario.dart';
   Clase donde se guardan los datos temporales traidos de la DB
 
   Por limpiar
+  // que se guarden los datos en estas variables estaticas?
+  // con cognito se puede mantener la sesion iniciada
 */
 
 class Sesion {
-  // con sqflutter se puede mantener la sesion iniciada
-
   // Registro
-  static Usuario usuarioRegistro = Usuario("", "", "", "");
+  static Usuario usuarioRegistro;
+  static String contraseniaRegistro;
 
   // Usuario Logeado
-  static Usuario usuarioLogeado = Usuario("", "", "", "");
-  static bool vieneDeRegistro = false;
-  static ListaLibros librosDelUsuario = ListaLibros();
-
-  static Libro libroLeyendoPorUsuario = Libro("", "", 0, 0);
+  static Usuario usuarioLogeado;
+  static bool vieneDeRegistro;
+  static ListaLibros librosDelUsuario;
+  static Libro libroLeyendoPorUsuario;
 
   // Dialog
-  static Libro libroAgregado = Libro("", "", 0, 0);
+  static Libro libroAgregado;
 
   // General
-  static ListaLibros librosLeyendoseTotales = ListaLibros();
+  static ListaLibros librosRegistrados;
+  static ListaUsuarios usuariosRegistrados;
 
   // Otros perfiles
-  static Usuario usuarioSeleccionado = Usuario("", "", "", "");
-  static ListaLibros librosDelUsuarioSeleccionado = ListaLibros();
+  static Usuario usuarioSeleccionado;
+  static ListaLibros librosDelUsuarioSeleccionado;
 
-  // que se guarden los datos en estas variables estaticas?
+  static iniciarDatos() {
+    // Registro
+    usuarioRegistro = Usuario("", "", "");
+    contraseniaRegistro = "";
+
+    // Usuario Logeado
+    usuarioLogeado = Usuario("", "", "");
+    vieneDeRegistro = false;
+    librosDelUsuario = ListaLibros();
+    libroLeyendoPorUsuario = Libro("", "", 0, 0);
+
+    // Dialog
+    libroAgregado = Libro("", "", 0, 0);
+
+    // General
+    librosRegistrados = ListaLibros();
+    usuariosRegistrados = ListaUsuarios();
+
+    // Otros perfiles
+    usuarioSeleccionado = Usuario("", "", "");
+    librosDelUsuarioSeleccionado = ListaLibros();
+  }
 
   static reiniciarDatos() {
-    Sesion.usuarioLogeado = Usuario("", "", "", "");
-    Sesion.librosDelUsuario = ListaLibros();
-    Sesion.libroLeyendoPorUsuario = Libro("", "", 0, 0);
+    iniciarDatos();
   }
 }

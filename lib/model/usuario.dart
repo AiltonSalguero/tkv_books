@@ -3,16 +3,15 @@ class Usuario {
   String nickname;
   String nombreCompleto;
   String email;
-  String contrasenia;
   int codLibroLeyendo;
-  int level;
+  int nivel;
   int puntaje;
   int premium;
   // cod usuario generado
-  Usuario(this.nombreCompleto, this.nickname, this.email, this.contrasenia) {
+  Usuario(this.nombreCompleto, this.nickname, this.email) {
     this.codUsuario = 0;
     this.codLibroLeyendo = 0;
-    this.level = 1;
+    this.nivel = 1;
     this.puntaje = 0;
     this.premium = 0;
   }
@@ -22,9 +21,8 @@ class Usuario {
     nombreCompleto = json['nombreCompleto'];
     nickname = json['nickname'];
     email = json['email'];
-    contrasenia = json['contrasenia'];
     codLibroLeyendo = json['codLibroLeyendo'];
-    level = json['level'];
+    nivel = json['level'];
     puntaje = json['puntaje'];
     premium = json['premium'];
   }
@@ -36,9 +34,8 @@ class Usuario {
     data['nombreCompleto'] = this.nombreCompleto;
     data['email'] = this.email;
     data['nickname'] = this.nickname;
-    data['contrasenia'] = this.contrasenia;
     data['codLibroLeyendo'] = this.codLibroLeyendo;
-    data['level'] = this.level;
+    data['level'] = this.nivel;
     data['puntaje'] = this.puntaje;
     data['premium'] = this.premium;
     return data;

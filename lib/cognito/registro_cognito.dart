@@ -1,4 +1,5 @@
 import 'package:flutter_aws_amplify_cognito/flutter_aws_amplify_cognito.dart';
+import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/model/usuario.dart';
 
 class RegistroCognito {
@@ -35,15 +36,8 @@ class RegistroCognito {
   registrarUsuario(Usuario usuario) {
     Map<String, dynamic> userAttributes = Map<String, dynamic>();
     userAttributes['email'] = usuario.email;
-    userAttributes['nickname'] = usuario.nickname;
-    userAttributes['nombreCompleto'] = usuario.nombreCompleto;
-    userAttributes['codLibroLeyendo'] = usuario.codLibroLeyendo;
-    userAttributes['level'] = usuario.level;
-    userAttributes['puntaje'] = usuario.puntaje;
-    userAttributes['premium'] = usuario.premium;
-
     FlutterAwsAmplifyCognito.signUp(
-            usuario.nickname, usuario.contrasenia, userAttributes)
+            usuario.nickname, Sesion.contraseniaRegistro, userAttributes)
         .then((SignUpResult result) {
       if (!result.confirmationState) {
         final UserCodeDeliveryDetails details = result.userCodeDeliveryDetails;
@@ -66,14 +60,6 @@ class RegistroCognito {
         print('Sign Up Done!');
       }
     }).catchError((error) {
-      print(error);
-    });
-  }
-
-  static reenviarCodigo(String nickname) {
-    FlutterAwsAmplifyCognito.resendSignUp(nickname)
-        .then((SignUpResult result) {})
-        .catchError((error) {
       print(error);
     });
   }

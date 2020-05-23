@@ -2,7 +2,6 @@
   Clase principal, donde se inicia la aplicacion
 */
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:tkv_books/pages/home.dart';
 import 'package:tkv_books/pages/lista_total.dart';
 import 'package:tkv_books/pages/login.dart';
@@ -17,10 +16,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Trikavengers',
       debugShowCheckedModeBanner: false,
-      locale: Locale('es'),
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
       routes: {
         '/': (context) => HomePage(),
         '/login': (context) => LoginPage(),
@@ -29,14 +24,6 @@ class MyApp extends StatelessWidget {
         '/lista_total': (context) => ListaTotalPage(),
       },
       initialRoute: '/',
-      localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      supportedLocales: [
-        const Locale('en'), // Inglés
-        const Locale('es'), // Español
-      ],
     );
   }
 }

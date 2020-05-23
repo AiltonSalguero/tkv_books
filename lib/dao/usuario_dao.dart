@@ -10,19 +10,19 @@ import 'package:tkv_books/model/usuario.dart';
 class UsuarioDao {
   static Future<Usuario> getUsuarioByCod(int codUsuario) async {
     String apiUrl =
-        Dao.apiUrl + "/usuariosTKV?codUsuario=" + codUsuario.toString();
+        Dao.apiUrl + "/usuarios?codUsuario=" + codUsuario.toString();
     var decodedData = await Dao.jsonDecodedHttpGet(apiUrl);
     return ListaUsuarios.fromJson(decodedData).lista[0];
   }
 
   static Future<ListaUsuarios> getUsuariosRegistrados() async {
-    String apiUrl = Dao.apiUrl + "/usuariosTKV";
+    String apiUrl = Dao.apiUrl + "/usuarios";
     var decodedData = await Dao.jsonDecodedHttpGet(apiUrl);
     return ListaUsuarios.fromJson(decodedData);
   }
 
   static Future<Usuario> getUsuarioByNickname(String nickname) async {
-    String apiUrl = Dao.apiUrl + "/usuariosTKV?nickname=" + nickname;
+    String apiUrl = Dao.apiUrl + "/usuarios?nickname=" + nickname;
     var decodedData = await Dao.jsonDecodedHttpGet(apiUrl);
     return ListaUsuarios.fromJson(decodedData).lista[0];
   }
@@ -30,7 +30,7 @@ class UsuarioDao {
   static Future<bool> existeUsuario(
       String nickname, String contrasenia, BuildContext context) async {
     String apiUrl = Dao.apiUrl +
-        "/usuariosTKV?nickname=" +
+        "/usuarios?nickname=" +
         nickname +
         "&contrasenia=" +
         contrasenia;
@@ -44,7 +44,7 @@ class UsuarioDao {
   }
 
   static Future<bool> existeUsuarioByNickname(String nickname) async {
-    String apiUrl = Dao.apiUrl + "/usuariosTKV?nickname=" + nickname;
+    String apiUrl = Dao.apiUrl + "/usuarios?nickname=" + nickname;
     var decodedData = await Dao.jsonDecodedHttpGet(apiUrl);
     bool existe;
     ListaUsuarios.fromJson(decodedData).lista.length != 0
@@ -54,13 +54,13 @@ class UsuarioDao {
   }
 
   static Future<Null> postUsuario(Usuario nuevoUsuario) async {
-    String apiUrl = Dao.apiUrl + "/usuariosTKV";
+    String apiUrl = Dao.apiUrl + "/usuarios";
     Dao.httpPost(apiUrl, nuevoUsuario);
   }
 
   static Future<Null> putUsuarioSetLibroLeyendo(Usuario usuario) async {
     String apiUrl = Dao.apiUrl +
-        "/usuariosTKV?codUsuario=" +
+        "/usuarios?codUsuario=" +
         usuario.codUsuario.toString() +
         "&codLibroLeyendo=" +
         usuario.codLibroLeyendo.toString();
@@ -69,12 +69,12 @@ class UsuarioDao {
 
   static Future<Null> putUsuarioSetPuntajeLevel(Usuario usuario) async {
     String apiUrl = Dao.apiUrl +
-        "/usuariosTKV?codUsuario=" +
+        "/usuarios?codUsuario=" +
         usuario.codUsuario.toString() +
         "&puntaje=" +
         usuario.puntaje.toString() +
         "&level=" +
-        usuario.level.toString();
+        usuario.nivel.toString();
     Dao.httpPut(apiUrl);
   }
 }

@@ -5,6 +5,8 @@ import 'package:tkv_books/dao/libro_dao.dart';
 import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dialogs/agregar_libro_dialog.dart';
 import 'package:tkv_books/dialogs/simple_dialog.dart';
+import 'package:tkv_books/model/libro.dart';
+import 'package:tkv_books/model/usuario.dart';
 import 'package:tkv_books/util/utilFunctions.dart';
 import 'package:tkv_books/widgets/buttons/center_floating_button.dart';
 import 'package:tkv_books/widgets/buttons/top_button.dart';
@@ -35,7 +37,6 @@ class _PerfilPageState extends State<PerfilPage> {
       print('Access Token: ${tokens.accessToken}');
       print('ID Token: ${tokens.idToken}');
       print('Refresh Token: ${tokens.refreshToken}');
-      _getLibro().then((value) => print(value));
     }).catchError((error) {
       print(error);
     });
@@ -52,30 +53,70 @@ class _PerfilPageState extends State<PerfilPage> {
     //_actualizarListaLibros();
   }
 
-  Future<dynamic> _getLibro() async {
-    print(Dao.cognitoToken);
-    print(Dao.apiUrl + "libro");
-    _getUserAttributes();
-    return Dao.jsonDecodedHttpGet(Dao.apiUrl + "llibros");
+  @override
+  Widget build(BuildContext context) {
+    print("build");
+
+    return WillPopScope(
+      onWillPop: _cerrarSesionDialog,
+      child: PageBackground(
+        backgroundImagePath: "images/banner_nubes.jpg",
+        topButton: TopButtonTkv(
+          nombre: "Ver todos",
+          navegarA: _irAlistaTotal,
+        ),
+        header: Stack(
+          children: <Widget>[
+            Align(
+              alignment: Alignment.topCenter,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(
+                    height: 50,
+                  ),
+                  titulo1Label(Sesion.usuarioLogeado.nickname),
+                  subTitulo2Label(Sesion.usuarioLogeado.nombreCompleto),
+                  titulo2Label("Lv. " + Sesion.usuarioLogeado.nivel.toString()),
+                ],
+              ),
+            ),
+            Align(
+              alignment: Alignment(0, -0.505),
+              child: ExperienceBar(
+                puntaje: Sesion.usuarioLogeado.puntaje,
+                level: Sesion.usuarioLogeado.nivel,
+              ),
+            ),
+          ],
+        ),
+        content: Column(
+          children: <Widget>[
+            titulo1Label("Biblioteca"),
+            Sesion.librosDelUsuario.lista.isNotEmpty
+                ? LibraryLinearProgressTkv(
+                    libreria: Sesion.librosDelUsuario,
+                  )
+                : Text("Aún no tienes libros agregados"),
+          ],
+        ),
+        floatingButton: CenterFloatingButtonTkv(
+          icon: Icons.add,
+          accion: _getDatosUsuario,
+        ),
+      ),
+    );
   }
 
-  _getUserAttributes() async {
-    FlutterAwsAmplifyCognito.getUserAttributes().then((userDetails) {
-      print('$userDetails');
-    }).catchError((error) {
-      print(error);
+  _getDatosUsuario() {
+    Dao.jsonDecodedHttpGet(Dao.apiUrl + "/usuarios").then((json) {
+      print(json);
+      print(ListaUsuarios.fromJson(json).lista.length);
     });
-    FlutterAwsAmplifyCognito.getUsername().then((username) {
-      print('username is $username');
-    }).catchError((error) {
-      print(error);
-    });
+  }
 
-    FlutterAwsAmplifyCognito.getIdentityId().then((identityId) {
-      print('Identity ID is $identityId');
-    }).catchError((error) {
-      print(error);
-    });
+  _getLibrosUsuario() async {
+    Dao.jsonDecodedHttpGet(Dao.apiUrl + "/libros");
   }
 
   _obtenerLibroLeyendosePorUsuario() {
@@ -120,69 +161,9 @@ class _PerfilPageState extends State<PerfilPage> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    print("build");
-
-    return WillPopScope(
-      onWillPop: _cerrarSesionDialog,
-      child: PageBackground(
-        backgroundImagePath: "images/banner_nubes.jpg",
-        topButton: TopButtonTkv(
-          nombre: "Ver todos",
-          navegarA: _irAlistaTotal,
-        ),
-        header: Stack(
-          children: <Widget>[
-            _buildEncabezado(),
-            Align(
-              alignment: Alignment(0, -0.505),
-              child: ExperienceBar(
-                puntaje: Sesion.usuarioLogeado.puntaje,
-                level: Sesion.usuarioLogeado.level,
-              ),
-            ),
-          ],
-        ),
-        content: Column(
-          children: <Widget>[
-            titulo1Label("Biblioteca"),
-            Sesion.librosDelUsuario.lista.isNotEmpty
-                ? LibraryLinearProgressTkv(
-                    libreria: Sesion.librosDelUsuario,
-                  )
-                : Text("Aún no tienes libros agregados"),
-          ],
-        ),
-        floatingButton: CenterFloatingButtonTkv(
-          icon: Icons.add,
-          accion: _getUserAttributes,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildEncabezado() {
-    print("_buildEncabezado");
-    return Align(
-      alignment: Alignment.topCenter,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          SizedBox(
-            height: 50,
-          ),
-          titulo1Label(Sesion.usuarioLogeado.nickname),
-          subTitulo2Label(Sesion.usuarioLogeado.nombreCompleto),
-          titulo2Label("Lv. " + Sesion.usuarioLogeado.level.toString()),
-        ],
-      ),
-    );
-  }
-
   _agregarLibroDialog() {
     print("_abrirAgregarLibroDialog");
-    _getLibro().then((value) => print(value));
+    _getLibrosUsuario().then((value) => print(value));
     if (Sesion.librosDelUsuario.lista.length < 4 ||
         Sesion.usuarioLogeado.premium == 1) {
       agregarLibroDialog(context).then(
@@ -190,7 +171,7 @@ class _PerfilPageState extends State<PerfilPage> {
           if (Sesion.libroAgregado.codLibro != 0) {
             // Si dio aceptar
             Sesion.usuarioLogeado.puntaje += Sesion.libroAgregado.paginasLeidas;
-            Sesion.usuarioLogeado.level =
+            Sesion.usuarioLogeado.nivel =
                 calcularLevelUsuario(Sesion.usuarioLogeado.puntaje);
 
             LibroDao.postLibro(Sesion.libroAgregado).then((val) {

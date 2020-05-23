@@ -99,7 +99,7 @@ class _LibraryLinearProgressTkvState extends State<LibraryLinearProgressTkv> {
       (value) {
         if (value == ConfirmAction.ACCEPT) {
           Sesion.usuarioLogeado.puntaje -= libro.paginasLeidas;
-          Sesion.usuarioLogeado.level =
+          Sesion.usuarioLogeado.nivel =
               calcularLevelUsuario(Sesion.usuarioLogeado.puntaje);
 
           if (libro.codLibro == Sesion.usuarioLogeado.codLibroLeyendo) {

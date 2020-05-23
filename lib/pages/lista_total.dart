@@ -42,7 +42,7 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
     LibroDao.getLibrosTotales().then((libros) {
       if (libros.lista.isNotEmpty) {
         hayLibrosLeyendose = true;
-        Sesion.librosLeyendoseTotales = libros;
+        Sesion.librosRegistrados = libros;
       }
       setState(() {});
     });
@@ -63,12 +63,12 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
             alignment: Alignment(0, -0.9),
             child: titulo1Label(Sesion.usuarioLogeado.nickname),
           ),
-          _buildLevel(Sesion.usuarioLogeado.level),
+          _buildLevel(Sesion.usuarioLogeado.nivel),
           Align(
             alignment: Alignment(-0.5, -0.72),
             child: ExperienceBar(
               puntaje: Sesion.usuarioLogeado.puntaje,
-              level: Sesion.usuarioLogeado.level,
+              level: Sesion.usuarioLogeado.nivel,
             ),
           ),
           hayLibroLeyendosePorUsuario
@@ -115,7 +115,7 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
           titulo1Label("Biblioteca global"),
           hayLibrosLeyendose
               ? LibraryCircularProgressTkv(
-                  libreria: Sesion.librosLeyendoseTotales,
+                  libreria: Sesion.librosRegistrados,
                 )
               : Text("No hay libros")
         ],
@@ -162,16 +162,16 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
   _aumentarPaginas() {
     if (_aumentoPaginasValido()) {
       Sesion.libroLeyendoPorUsuario.paginasLeidas++;
-      int levelAntiguo = Sesion.usuarioLogeado.level;
+      int levelAntiguo = Sesion.usuarioLogeado.nivel;
       Sesion.usuarioLogeado.puntaje++;
-      Sesion.usuarioLogeado.level =
+      Sesion.usuarioLogeado.nivel =
           calcularLevelUsuario(Sesion.usuarioLogeado.puntaje);
       LibroDao.putLibroSetPaginasLeidas(Sesion.libroLeyendoPorUsuario);
       if (levelAntiguo < calcularLevelUsuario(Sesion.usuarioLogeado.puntaje)) {
         // Mostrar mensaje de subida de leve
         SimpleDialogTkv(
           title: "Subiste de nivel!",
-          content: "Ahora eres Lv. ${Sesion.usuarioLogeado.level}",
+          content: "Ahora eres Lv. ${Sesion.usuarioLogeado.nivel}",
           rightText: ":D",
         ).build(context);
       }
@@ -183,7 +183,7 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
     if (_disminucionPaginasValido()) {
       Sesion.libroLeyendoPorUsuario.paginasLeidas--;
       Sesion.usuarioLogeado.puntaje--;
-      Sesion.usuarioLogeado.level =
+      Sesion.usuarioLogeado.nivel =
           calcularLevelUsuario(Sesion.usuarioLogeado.puntaje);
       LibroDao.putLibroSetPaginasLeidas(Sesion.libroLeyendoPorUsuario);
       setState(() {});
