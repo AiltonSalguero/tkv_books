@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_aws_amplify_cognito/flutter_aws_amplify_cognito.dart';
+import 'package:tkv_books/dao/dao.dart';
 import 'package:tkv_books/dao/sesion.dart';
-import 'package:tkv_books/dao/usuario_dao.dart';
 import 'package:tkv_books/dialogs/simple_dialog.dart';
-import 'package:tkv_books/model/usuario.dart';
 import 'package:tkv_books/widgets/buttons/large_button.dart';
 import 'package:tkv_books/widgets/inputs/inputPersonalizado.dart';
 import 'package:tkv_books/widgets/labels/labelPerzonalizado.dart';
@@ -117,13 +116,19 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   _iniciarSesion() {
-    Sesion.usuarioLogeado = Sesion.usuarioRegistro;
-    // desactivado momentaneamoente
-    //UsuarioDao.getUsuarioByCod(Sesion.usuarioRegistro.codUsuario)
-    //    .then((usuario) {
-    //  Sesion.usuarioLogeado = usuario;
-    //  _irAperfil();
-    //});
+    Sesion.usuarioLogeado.nickname = nicknameController.text;
+    FlutterAwsAmplifyCognito.getTokens().then((Tokens tokens) {
+      Dao.cognitoToken = tokens.idToken;
+
+      print('Access Token: ${tokens.accessToken}');
+      print('ID Token: ${tokens.idToken}');
+      print('Refresh Token: ${tokens.refreshToken}');
+     // Sesion.getDatosUsuarioLogeado();
+      Sesion.getLibroLeyendoUsuarioLogeado();
+      Sesion.getLibrosUsuarioLogeado();
+    }).catchError((error) {
+      print(error);
+    });
   }
 
   _validarDatos() {

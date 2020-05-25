@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 /*
+
   Clase que maneja las peticiones generales
 */
 class Dao {
@@ -10,13 +11,13 @@ class Dao {
   static String cognitoToken;
 
   static jsonDecodedHttpGet(String url) async {
+    print(url);
+    print(Dao.cognitoToken + "TOKEN");
     var response = await http.get(
       url,
-      headers: {
-        'Authorization': cognitoToken,
-        "Accept": "application/json",
-      },
+      headers: {"Authorization": Dao.cognitoToken},
     );
+
     print(json.decode(response.body));
     return json.decode(response.body);
   }
@@ -26,6 +27,8 @@ class Dao {
       url,
       body: jsonEncode(objeto.toJson()),
       headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
         'Authorization': cognitoToken,
       },
     );

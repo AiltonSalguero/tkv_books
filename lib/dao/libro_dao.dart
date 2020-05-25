@@ -7,32 +7,38 @@ import 'package:tkv_books/model/libro.dart';
 
 class LibroDao {
   static Future<ListaLibros> getLibrosTotales() async {
-    String apiUrl = Dao.apiUrl + "/libro";
+    String apiUrl = Dao.apiUrl + "/libros";
     var decodedData = await Dao.jsonDecodedHttpGet(apiUrl);
     return ListaLibros.fromJson(decodedData);
   }
 
   static Future<Libro> getLibroByCod(int codLibro) async {
-    String apiUrl = Dao.apiUrl + "/libro?codLibro=" + codLibro.toString();
+    String apiUrl = Dao.apiUrl + "/libros?codLibro=" + codLibro.toString();
     var decodedData = await Dao.jsonDecodedHttpGet(apiUrl);
     return ListaLibros.fromJson(decodedData).lista[0];
   }
 
   static Future<ListaLibros> getLibrosOfUsuario(int codUsuario) async {
-    String apiUrl =
-        Dao.apiUrl + "/libro?codUsuario=" + codUsuario.toString();
+    String apiUrl = Dao.apiUrl + "/libros?codUsuario=" + codUsuario.toString();
+    var decodedData = await Dao.jsonDecodedHttpGet(apiUrl);
+    return ListaLibros.fromJson(decodedData);
+  }
+
+  static Future<ListaLibros> getLibrosOfUsuarioByNickname(
+      String nickname) async {
+    String apiUrl = Dao.apiUrl + "/libros?nicknameUsuario=" + nickname;
     var decodedData = await Dao.jsonDecodedHttpGet(apiUrl);
     return ListaLibros.fromJson(decodedData);
   }
 
   static Future<Null> postLibro(Libro nuevoLibro) async {
-    String apiUrl = Dao.apiUrl + "/libro";
+    String apiUrl = Dao.apiUrl + "/libros";
     Dao.httpPost(apiUrl, nuevoLibro);
   }
 
   static Future<Null> putLibroSetPaginasLeidas(Libro actualizacionLibro) async {
     String apiUrl = Dao.apiUrl +
-        "/libro?codLibro=" +
+        "/libros?codLibro=" +
         actualizacionLibro.codLibro.toString() +
         "&paginasLeidas=" +
         actualizacionLibro.paginasLeidas.toString();
@@ -40,7 +46,7 @@ class LibroDao {
   }
 
   static Future<Null> deleteLibro(int codLibro) async {
-    String apiUrl = Dao.apiUrl + "/libro?codLibro=" + codLibro.toString();
+    String apiUrl = Dao.apiUrl + "/libros?codLibro=" + codLibro.toString();
     Dao.httpDelete(apiUrl);
   }
 }

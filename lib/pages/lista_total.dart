@@ -77,7 +77,7 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
                   child: Container(
                     width: Screen.width * 0.98,
                     child: BookLinearProgressTkv(
-                      libro: Sesion.libroLeyendoPorUsuario,
+                      libro: Sesion.libroLeyendoUsuarioLogeado,
                       title: Column(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -88,7 +88,7 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
                             child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: titulo3Label(
-                                  Sesion.libroLeyendoPorUsuario.nombre),
+                                  Sesion.libroLeyendoUsuarioLogeado.nombre),
                             ),
                           ),
                         ],
@@ -148,25 +148,25 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
   }
 
   bool _aumentoPaginasValido() {
-    int paginaActual = Sesion.libroLeyendoPorUsuario.paginasLeidas + 1;
-    return paginaActual > Sesion.libroLeyendoPorUsuario.paginasTotales
+    int paginaActual = Sesion.libroLeyendoUsuarioLogeado.paginasLeidas + 1;
+    return paginaActual > Sesion.libroLeyendoUsuarioLogeado.paginasTotales
         ? false
         : true;
   }
 
   bool _disminucionPaginasValido() {
-    int paginaActual = Sesion.libroLeyendoPorUsuario.paginasLeidas - 1;
+    int paginaActual = Sesion.libroLeyendoUsuarioLogeado.paginasLeidas - 1;
     return paginaActual == -1 ? false : true;
   }
 
   _aumentarPaginas() {
     if (_aumentoPaginasValido()) {
-      Sesion.libroLeyendoPorUsuario.paginasLeidas++;
+      Sesion.libroLeyendoUsuarioLogeado.paginasLeidas++;
       int levelAntiguo = Sesion.usuarioLogeado.nivel;
       Sesion.usuarioLogeado.puntaje++;
       Sesion.usuarioLogeado.nivel =
           calcularLevelUsuario(Sesion.usuarioLogeado.puntaje);
-      LibroDao.putLibroSetPaginasLeidas(Sesion.libroLeyendoPorUsuario);
+      LibroDao.putLibroSetPaginasLeidas(Sesion.libroLeyendoUsuarioLogeado);
       if (levelAntiguo < calcularLevelUsuario(Sesion.usuarioLogeado.puntaje)) {
         // Mostrar mensaje de subida de leve
         SimpleDialogTkv(
@@ -181,11 +181,11 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
 
   _disminuirPaginas() {
     if (_disminucionPaginasValido()) {
-      Sesion.libroLeyendoPorUsuario.paginasLeidas--;
+      Sesion.libroLeyendoUsuarioLogeado.paginasLeidas--;
       Sesion.usuarioLogeado.puntaje--;
       Sesion.usuarioLogeado.nivel =
           calcularLevelUsuario(Sesion.usuarioLogeado.puntaje);
-      LibroDao.putLibroSetPaginasLeidas(Sesion.libroLeyendoPorUsuario);
+      LibroDao.putLibroSetPaginasLeidas(Sesion.libroLeyendoUsuarioLogeado);
       setState(() {});
     }
   }

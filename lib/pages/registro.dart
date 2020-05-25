@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_aws_amplify_cognito/flutter_aws_amplify_cognito.dart';
-import 'package:flutter_aws_amplify_cognito/sign_in/identity_provider.dart';
 import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dao/usuario_dao.dart';
 import 'package:tkv_books/dialogs/simple_dialog.dart';
 import 'package:tkv_books/dialogs/validar_codigo_dialog.dart';
 import 'package:tkv_books/model/usuario.dart';
 import 'package:tkv_books/widgets/buttons/large_button.dart';
-import 'package:tkv_books/widgets/inputs/inputPersonalizado.dart';
+import 'package:tkv_books/widgets/inputs/rounded_input.dart';
 import 'package:tkv_books/widgets/labels/labelPerzonalizado.dart';
 import 'package:tkv_books/widgets/page_background.dart';
 
@@ -128,7 +127,10 @@ class _RegistroPageState extends State<RegistroPage> {
 
   _iniciarSesion() {
     FlutterAwsAmplifyCognito.signIn(nickname.text, contrasenia.text)
-        .then((result) {});
+        .then((result) {
+          print(result);
+      UsuarioDao.postUsuario(Sesion.usuarioRegistro);
+    });
   }
 
   _validarDatos() {

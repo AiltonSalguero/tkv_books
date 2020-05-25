@@ -46,7 +46,7 @@ class _LibraryLinearProgressTkvState extends State<LibraryLinearProgressTkv> {
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: titulo3Label(
-                        Sesion.librosDelUsuario.lista[index].nombre),
+                        Sesion.librosUsuarioLogeado.lista[index].nombre),
                   ),
                 ),
                 Container(
@@ -55,7 +55,7 @@ class _LibraryLinearProgressTkvState extends State<LibraryLinearProgressTkv> {
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: subTitulo3Label(
-                        Sesion.librosDelUsuario.lista[index].autor),
+                        Sesion.librosUsuarioLogeado.lista[index].autor),
                   ),
                 ),
               ],
@@ -65,14 +65,14 @@ class _LibraryLinearProgressTkvState extends State<LibraryLinearProgressTkv> {
                 Icons.delete,
               ),
               onPressed: () => _abrirEliminarLibroDialog(
-                  Sesion.librosDelUsuario.lista[index]),
+                  Sesion.librosUsuarioLogeado.lista[index]),
             ),
             leftButton: FlatButton(
               child: leyendo
                   ? Icon(Icons.import_contacts)
                   : Icon(Icons.library_books),
               onPressed: () => _editarLibroLeyendoPorUsuario(
-                  Sesion.librosDelUsuario.lista[index]),
+                  Sesion.librosUsuarioLogeado.lista[index]),
             ),
           );
         },
@@ -82,7 +82,7 @@ class _LibraryLinearProgressTkvState extends State<LibraryLinearProgressTkv> {
 
   _editarLibroLeyendoPorUsuario(Libro libro) {
     print("_editarLibroLeyendoPorUsuario");
-    Sesion.libroLeyendoPorUsuario = libro;
+    Sesion.libroLeyendoUsuarioLogeado = libro;
     Sesion.usuarioLogeado.codLibroLeyendo = libro.codLibro;
     UsuarioDao.putUsuarioSetLibroLeyendo(Sesion.usuarioLogeado)
         .then((val) => setState(() {}));
@@ -108,7 +108,7 @@ class _LibraryLinearProgressTkvState extends State<LibraryLinearProgressTkv> {
           }
           LibroDao.deleteLibro(libro.codLibro).then(
             (val) {
-              Sesion.librosDelUsuario.lista.remove(libro);
+              Sesion.librosUsuarioLogeado.lista.remove(libro);
               setState(() {});
             },
           );

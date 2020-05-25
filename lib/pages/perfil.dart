@@ -5,7 +5,6 @@ import 'package:tkv_books/dao/libro_dao.dart';
 import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dialogs/agregar_libro_dialog.dart';
 import 'package:tkv_books/dialogs/simple_dialog.dart';
-import 'package:tkv_books/model/libro.dart';
 import 'package:tkv_books/model/usuario.dart';
 import 'package:tkv_books/util/utilFunctions.dart';
 import 'package:tkv_books/widgets/buttons/center_floating_button.dart';
@@ -31,15 +30,7 @@ class _PerfilPageState extends State<PerfilPage> {
   @override
   void initState() {
     print("initState");
-    FlutterAwsAmplifyCognito.getTokens().then((Tokens tokens) {
-      Dao.cognitoToken = tokens.idToken;
-
-      print('Access Token: ${tokens.accessToken}');
-      print('ID Token: ${tokens.idToken}');
-      print('Refresh Token: ${tokens.refreshToken}');
-    }).catchError((error) {
-      print(error);
-    });
+    
 
     // if (!Sesion.vieneDeRegistro) {
     // UsuarioDao.getUsuarioByNickname(Sesion.usuarioLogeado.nickname)
@@ -93,40 +84,19 @@ class _PerfilPageState extends State<PerfilPage> {
         content: Column(
           children: <Widget>[
             titulo1Label("Biblioteca"),
-            Sesion.librosDelUsuario.lista.isNotEmpty
+            Sesion.librosUsuarioLogeado.lista.isNotEmpty
                 ? LibraryLinearProgressTkv(
-                    libreria: Sesion.librosDelUsuario,
+                    libreria: Sesion.librosUsuarioLogeado,
                   )
                 : Text("Aún no tienes libros agregados"),
           ],
         ),
         floatingButton: CenterFloatingButtonTkv(
           icon: Icons.add,
-          accion: _getDatosUsuario,
+          accion: Sesion.getDatosUsuarioLogeado(),
         ),
       ),
     );
-  }
-
-  _getDatosUsuario() {
-    Dao.jsonDecodedHttpGet(Dao.apiUrl + "/usuarios").then((json) {
-      print(json);
-      print(ListaUsuarios.fromJson(json).lista.length);
-    });
-  }
-
-  _getLibrosUsuario() async {
-    Dao.jsonDecodedHttpGet(Dao.apiUrl + "/libros");
-  }
-
-  _obtenerLibroLeyendosePorUsuario() {
-    if (Sesion.usuarioLogeado.codLibroLeyendo != 0) {
-      LibroDao.getLibroByCod(Sesion.usuarioLogeado.codLibroLeyendo).then(
-        (libro) {
-          Sesion.libroLeyendoPorUsuario = libro;
-        },
-      );
-    }
   }
 
   _actualizarListaLibros() {
@@ -136,9 +106,9 @@ class _PerfilPageState extends State<PerfilPage> {
         .then((libros) {
       if (libros.lista.isNotEmpty) {
         print(libros.lista.length.toString());
-        Sesion.librosDelUsuario = libros;
+        Sesion.librosUsuarioLogeado = libros;
       }
-      print(Sesion.librosDelUsuario.toJson());
+      print(Sesion.librosUsuarioLogeado.toJson());
       setState(() {});
     });
   }
@@ -163,8 +133,7 @@ class _PerfilPageState extends State<PerfilPage> {
 
   _agregarLibroDialog() {
     print("_abrirAgregarLibroDialog");
-    _getLibrosUsuario().then((value) => print(value));
-    if (Sesion.librosDelUsuario.lista.length < 4 ||
+    if (Sesion.librosUsuarioLogeado.lista.length < 4 ||
         Sesion.usuarioLogeado.premium == 1) {
       agregarLibroDialog(context).then(
         (value) {
@@ -176,7 +145,7 @@ class _PerfilPageState extends State<PerfilPage> {
 
             LibroDao.postLibro(Sesion.libroAgregado).then((val) {
               //Sesion.libroAgregado = null;
-              Sesion.librosDelUsuario.lista.add(Sesion.libroAgregado);
+              Sesion.librosUsuarioLogeado.lista.add(Sesion.libroAgregado);
               Sesion.libroAgregado.codLibro = 0;
               setState(() {});
             });
