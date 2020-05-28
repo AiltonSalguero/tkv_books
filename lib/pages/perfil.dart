@@ -93,7 +93,7 @@ class _PerfilPageState extends State<PerfilPage> {
         ),
         floatingButton: CenterFloatingButtonTkv(
           icon: Icons.add,
-          accion: Sesion.getDatosUsuarioLogeado(),
+          accion: Sesion.getDatosUsuarioLogeado,
         ),
       ),
     );

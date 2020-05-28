@@ -103,6 +103,10 @@ class _LoginPageState extends State<LoginPage> {
         tituloDialog = "Nickname incorrecto";
         contenidoDialog = "Escriba un nickname existente.";
       }
+      if (error.details.contains("Incorrect username or password")) {
+        tituloDialog = "Datos incorrectos";
+        contenidoDialog = "Vuelva a el nickname y la contraseña.";
+      }
       if (error.details.contains("Failed to authenticate user")) {
         tituloDialog = "Contraseña incorrecta";
         contenidoDialog = "Vuelva a escribir la contraseña.";
