@@ -1,11 +1,11 @@
+import 'package:flutter/material.dart';
+import 'package:tkv_books/dao/dao.dart';
+import 'package:tkv_books/model/usuario.dart';
+
 /*
   Clase con funciones de get, post, put y delete para
   la clase Usuario
 */
-
-import 'package:flutter/material.dart';
-import 'package:tkv_books/dao/dao.dart';
-import 'package:tkv_books/model/usuario.dart';
 
 class UsuarioDao {
   static Future<Usuario> getUsuarioByCod(int codUsuario) async {

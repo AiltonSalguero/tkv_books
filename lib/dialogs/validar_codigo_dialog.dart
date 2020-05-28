@@ -1,21 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_aws_amplify_cognito/flutter_aws_amplify_cognito.dart';
+import 'package:tkv_books/cognito/registro_cognito.dart';
 import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dao/usuario_dao.dart';
-import 'package:tkv_books/model/usuario.dart';
-import 'package:tkv_books/widgets/inputs/inputPersonalizado.dart';
+import 'package:tkv_books/widgets/inputs/rounded_input.dart';
 
 /*
-
-
+  Dialog que aparece para que escriba el codigo de validacion
   Por limpiar
 */
-class ValidarCodigo {
+class ValidarCodigoDialog {
   final _formKey = GlobalKey<FormState>();
   final _codigo = TextEditingController();
+  BuildContext context;
+  ValidarCodigoDialog({@required this.context});
 
-  Future<void> dialog(BuildContext context) {
+  Future<void> build() {
     return showDialog(
       context: context,
       barrierDismissible: false,
@@ -49,15 +50,16 @@ class ValidarCodigo {
           ),
           actions: <Widget>[
             FlatButton(
-                child: Text(
-                  "Reenviar",
-                ),
-                onPressed: _reenviarCodigo),
+              child: Text(
+                "Reenviar",
+              ),
+              onPressed: _reenviarCodigo,
+            ),
             FlatButton(
               child: Text(
                 "OK",
               ),
-              onPressed: () => _validarCodigo(context),
+              onPressed: _validarCodigo,
             )
           ],
         );
@@ -66,33 +68,17 @@ class ValidarCodigo {
   }
 
   _reenviarCodigo() {
-    FlutterAwsAmplifyCognito.resendSignUp(Sesion.usuarioRegistro.nickname)
-        .then((SignUpResult result) {
-      print("codigo reenviado");
-    }).catchError((error) {
-      print(error);
-    });
+    RegistroCognito.reenviarCodigo();
   }
 
-  _validarCodigo(BuildContext context) {
-    FlutterAwsAmplifyCognito.confirmSignUp(
-            Sesion.usuarioRegistro.nickname, _codigo.text)
-        .then((SignUpResult result) {
-      if (!result.confirmationState) {
-        final UserCodeDeliveryDetails details = result.userCodeDeliveryDetails;
-        print(details.destination);
-      } else {
-        _registrarUsuario(context);
-      }
-    }).catchError((error) {
-      print(error);
-    });
+  _validarCodigo() {
+    RegistroCognito.validarCodigo();
   }
 
   _registrarUsuario(context) {
     UsuarioDao.postUsuario(Sesion.usuarioRegistro).then((value) {
       _iniciarSesion();
-      _irAperfil(context);
+      _irAperfil();
     });
   }
 
@@ -100,11 +86,7 @@ class ValidarCodigo {
     Sesion.usuarioLogeado = Sesion.usuarioRegistro;
   }
 
-  _cerrarDialog(BuildContext context) {
-    Navigator.pop(context);
-  }
-
-  _irAperfil(BuildContext context) {
+  _irAperfil() {
     Navigator.of(context).pushNamed('/perfil');
   }
 }

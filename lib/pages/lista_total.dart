@@ -51,6 +51,7 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
   @override
   Widget build(BuildContext context) {
     print("lista_libros");
+    Sesion.contextActual = context;
     return PageBackground(
       backgroundImagePath: "images/banner_nubes.jpg",
       topButton: TopButtonTkv(

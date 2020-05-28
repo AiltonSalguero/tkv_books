@@ -1,8 +1,9 @@
 import 'package:flutter_aws_amplify_cognito/flutter_aws_amplify_cognito.dart';
+import 'package:tkv_books/dao/sesion.dart';
 
 class SesionCognito {
-  logearUsuario(String nickname, String contrasenia) {
-    FlutterAwsAmplifyCognito.signIn(nickname, contrasenia)
+  static iniciarSesion() {
+    FlutterAwsAmplifyCognito.signIn(Sesion.usuarioLogeado.nickname, Sesion.contraseniaUsuario)
         .then((SignInResult result) {
       switch (result.signInState) {
         case SignInState.SMS_MFA:
@@ -41,7 +42,7 @@ class SesionCognito {
     });
   }
 
-  getNickname() {
+  static getNickname() {
     FlutterAwsAmplifyCognito.getUsername().then((username) {
       print('username is $username');
     }).catchError((error) {
@@ -49,7 +50,7 @@ class SesionCognito {
     });
   }
 
-  getIdentityId() {
+  static getIdentityId() {
     FlutterAwsAmplifyCognito.getIdentityId().then((identityId) {
       print('Identity ID is $identityId');
     }).catchError((error) {
@@ -57,7 +58,7 @@ class SesionCognito {
     });
   }
 
-  getDatosUsuario() {
+  static getDatosUsuario() {
     FlutterAwsAmplifyCognito.getUserAttributes().then((userDetails) {
       print('$userDetails');
     }).catchError((error) {
@@ -65,7 +66,7 @@ class SesionCognito {
     });
   }
 
-  cerrarSesionEnDispositivo() {
+  static cerrarSesionEnDispositivo() {
     FlutterAwsAmplifyCognito.signOut().then((value) {
       print('Signed Out successfully');
     }).catchError((error) {
@@ -73,7 +74,7 @@ class SesionCognito {
     });
   }
 
-  cerrarSesionTodosDispositivos() {
+  static cerrarSesionTodosDispositivos() {
     FlutterAwsAmplifyCognito.signOutGlobally().then((value) {
       print('Signed Out successfully');
     }).catchError((error) {
@@ -81,7 +82,7 @@ class SesionCognito {
     });
   }
 
-  estaLogeado() {
+  static estaLogeado() {
     FlutterAwsAmplifyCognito.isSignedIn().then((isSignedIn) {
       print("Is user signed in?: $isSignedIn");
     }).catchError((error) {

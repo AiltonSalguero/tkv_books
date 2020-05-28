@@ -4,7 +4,7 @@ import 'package:tkv_books/dao/dao.dart';
 import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dialogs/simple_dialog.dart';
 import 'package:tkv_books/widgets/buttons/large_button.dart';
-import 'package:tkv_books/widgets/inputs/inputPersonalizado.dart';
+import 'package:tkv_books/widgets/inputs/rounded_input.dart';
 import 'package:tkv_books/widgets/labels/labelPerzonalizado.dart';
 import 'package:tkv_books/widgets/page_background.dart';
 
@@ -30,6 +30,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     print("login");
+    Sesion.contextActual = context;
     return PageBackground(
       backgroundImagePath: "images/logo.jpg",
       content: SingleChildScrollView(
@@ -38,8 +39,17 @@ class _LoginPageState extends State<LoginPage> {
           //crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             titulo1Label("Login"),
-            inputPrincipal("Nickname", nicknameController),
-            inputContrasenia("Contraseña", contraseniaController),
+            RoundedInput(
+              nombre: "Nickname",
+              controller: nicknameController,
+              tipoInput: TextInputType.text,
+            ),
+            RoundedInput(
+              nombre: "Contraseña",
+              controller: contraseniaController,
+              tipoInput: TextInputType.visiblePassword,
+              ocultarDatos: true,
+            ),
             LargeButton(
               nombre: "Ingresar",
               accion: _ingresarDatos,
@@ -54,6 +64,28 @@ class _LoginPageState extends State<LoginPage> {
   _ingresarDatos() {
     _validarDatos();
     _loginCognito();
+  }
+
+  _validarDatos() {
+    String tituloDialog;
+    String contenidoDialog;
+    bool errorDatos = false;
+
+    if (nicknameController.text.isEmpty || contraseniaController.text.isEmpty) {
+      errorDatos = true;
+      tituloDialog = "No hay datos";
+      if (contraseniaController.text.isEmpty)
+        contenidoDialog = "Escriba la contraseña";
+      if (nicknameController.text.isEmpty)
+        contenidoDialog = "Escriba el nickname";
+    }
+    if (errorDatos) {
+      SimpleDialogTkv(
+        title: tituloDialog,
+        content: contenidoDialog,
+        rightText: "Ok",
+      ).build(context);
+    }
   }
 
   _loginCognito() {
@@ -123,38 +155,12 @@ class _LoginPageState extends State<LoginPage> {
     Sesion.usuarioLogeado.nickname = nicknameController.text;
     FlutterAwsAmplifyCognito.getTokens().then((Tokens tokens) {
       Dao.cognitoToken = tokens.idToken;
-
-      print('Access Token: ${tokens.accessToken}');
-      print('ID Token: ${tokens.idToken}');
-      print('Refresh Token: ${tokens.refreshToken}');
-     // Sesion.getDatosUsuarioLogeado();
+      // Sesion.getDatosUsuarioLogeado();
       Sesion.getLibroLeyendoUsuarioLogeado();
       Sesion.getLibrosUsuarioLogeado();
     }).catchError((error) {
       print(error);
     });
-  }
-
-  _validarDatos() {
-    String tituloDialog;
-    String contenidoDialog;
-    bool errorDatos = false;
-
-    if (nicknameController.text.isEmpty || contraseniaController.text.isEmpty) {
-      errorDatos = true;
-      tituloDialog = "No hay datos";
-      if (contraseniaController.text.isEmpty)
-        contenidoDialog = "Escriba la contraseña";
-      if (nicknameController.text.isEmpty)
-        contenidoDialog = "Escriba el nickname";
-    }
-    if (errorDatos) {
-      SimpleDialogTkv(
-        title: tituloDialog,
-        content: contenidoDialog,
-        rightText: "Ok",
-      ).build(context);
-    }
   }
 
   _irAperfil() {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_aws_amplify_cognito/flutter_aws_amplify_cognito.dart';
+import 'package:tkv_books/cognito/registro_cognito.dart';
 import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/util/screen.dart';
 import 'package:tkv_books/widgets/buttons/large_button.dart';
@@ -19,12 +19,13 @@ class _HomePageState extends State<HomePage> {
     Sesion.iniciarDatos();
 
     // Inicia cognito
-    FlutterAwsAmplifyCognito.initialize();
+    RegistroCognito.iniciar();
   }
 
   @override
   Widget build(BuildContext context) {
     print("home");
+    Sesion.contextActual = context;
     Screen.width = MediaQuery.of(context).size.width;
     Screen.height = MediaQuery.of(context).size.height;
     return Container(

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_aws_amplify_cognito/flutter_aws_amplify_cognito.dart';
+import 'package:tkv_books/cognito/registro_cognito.dart';
 import 'package:tkv_books/dao/sesion.dart';
-import 'package:tkv_books/dao/usuario_dao.dart';
 import 'package:tkv_books/dialogs/simple_dialog.dart';
-import 'package:tkv_books/dialogs/validar_codigo_dialog.dart';
 import 'package:tkv_books/model/usuario.dart';
 import 'package:tkv_books/widgets/buttons/large_button.dart';
 import 'package:tkv_books/widgets/inputs/rounded_input.dart';
@@ -35,6 +34,7 @@ class _RegistroPageState extends State<RegistroPage> {
   @override
   Widget build(BuildContext context) {
     print("registro");
+    Sesion.contextActual = context;
     return PageBackground(
       backgroundImagePath: "images/logo.jpg",
       content: SingleChildScrollView(
@@ -79,57 +79,24 @@ class _RegistroPageState extends State<RegistroPage> {
 
   _validarRegistro() {
     _validarDatos();
-
-    _guardarDatos();
-
     _registrarUsuario();
   }
 
-  _guardarDatos() {
+  _registrarUsuario() {
     Sesion.usuarioRegistro =
         Usuario(nombreCompleto.text, nickname.text, email.text);
-    Sesion.contraseniaRegistro = contrasenia.text;
-  }
-
-  _registrarUsuario() {
-    Map<String, String> userAttributes = Map<String, String>();
-    userAttributes["email"] = Sesion.usuarioRegistro.email;
-    FlutterAwsAmplifyCognito.signUp(
-            nickname.text, contrasenia.text, userAttributes)
-        .then((SignUpResult result) {
-      if (!result.confirmationState) {
-        // Si aun no valida su codigo
-        ValidarCodigo().dialog(context);
-      } else {
-        _iniciarSesion();
-      }
-    }).catchError((error) {
-      String tituloDialog = "Error";
-      String contenidoDialog = "Error desconocido";
-      print(error.message);
-      print(error.details);
-      if (error.details.contains("User already exists")) {
-        tituloDialog = "Nickname ya existente";
-        contenidoDialog = "Escriba otro nickname";
-      }
-      if (error.details.contains("fadsfads")) {
-        tituloDialog = "dsad";
-        contenidoDialog = "dsd";
-      }
-
-      SimpleDialogTkv(
-        title: tituloDialog,
-        content: contenidoDialog,
-        rightText: "Ok",
-      ).build(context);
-    });
+    Sesion.atributosUsuarioRegistro = Map<String, String>();
+    Sesion.atributosUsuarioRegistro["email"] = Sesion.usuarioRegistro.email;
+    Sesion.contraseniaUsuario = contrasenia.text;
+    RegistroCognito.registrarUsuario();
   }
 
   _iniciarSesion() {
     FlutterAwsAmplifyCognito.signIn(nickname.text, contrasenia.text)
         .then((result) {
-          print(result);
-      UsuarioDao.postUsuario(Sesion.usuarioRegistro);
+      print(result);
+      Sesion.usuarioLogeado = Sesion.usuarioRegistro;
+      _irAperfil();
     });
   }
 

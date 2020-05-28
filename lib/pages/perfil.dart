@@ -47,7 +47,7 @@ class _PerfilPageState extends State<PerfilPage> {
   @override
   Widget build(BuildContext context) {
     print("build");
-
+    Sesion.contextActual = context;
     return WillPopScope(
       onWillPop: _cerrarSesionDialog,
       child: PageBackground(

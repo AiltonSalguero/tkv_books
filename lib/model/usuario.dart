@@ -7,7 +7,7 @@ class Usuario {
   int nivel;
   int puntaje;
   int premium;
-  // cod usuario generado
+  
   Usuario(this.nombreCompleto, this.nickname, this.email) {
     this.codUsuario = 0;
     this.codLibroLeyendo = 0;

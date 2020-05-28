@@ -1,9 +1,13 @@
 import 'package:flutter_aws_amplify_cognito/flutter_aws_amplify_cognito.dart';
+import 'package:tkv_books/cognito/sesion_cognito.dart';
 import 'package:tkv_books/dao/sesion.dart';
+import 'package:tkv_books/dao/usuario_dao.dart';
+import 'package:tkv_books/dialogs/error_dialogs.dart';
+import 'package:tkv_books/dialogs/validar_codigo_dialog.dart';
 import 'package:tkv_books/model/usuario.dart';
 
 class RegistroCognito {
-  iniciar() {
+  static iniciar() {
     FlutterAwsAmplifyCognito.initialize().then((UserStatus status) {
       switch (status) {
         case UserStatus.GUEST:
@@ -33,38 +37,52 @@ class RegistroCognito {
     });
   }
 
-  registrarUsuario(Usuario usuario) {
-    Map<String, dynamic> userAttributes = Map<String, dynamic>();
-    userAttributes['email'] = usuario.email;
-    FlutterAwsAmplifyCognito.signUp(
-            usuario.nickname, Sesion.contraseniaRegistro, userAttributes)
+  static registrarUsuario() {
+    FlutterAwsAmplifyCognito.signUp(Sesion.usuarioRegistro.nickname,
+            Sesion.contraseniaUsuario, Sesion.atributosUsuarioRegistro)
+        .then((SignUpResult result) {
+      UsuarioDao.postUsuario(Sesion.usuarioRegistro);
+      if (!result.confirmationState) {
+        // Si aun no valida su codigo
+        ValidarCodigoDialog(
+          context: Sesion.contextActual,
+        ).build();
+      } else {
+        SesionCognito.iniciarSesion();
+      }
+    }).catchError((error) {
+      ErrorDialog(
+        context: Sesion.contextActual,
+        error: error,
+      ).build();
+    });
+  }
+
+  static validarCodigo() {
+    FlutterAwsAmplifyCognito.confirmSignUp(
+            Sesion.usuarioRegistro.nickname, Sesion.codigoValidacion)
         .then((SignUpResult result) {
       if (!result.confirmationState) {
         final UserCodeDeliveryDetails details = result.userCodeDeliveryDetails;
         print(details.destination);
       } else {
-        print('Sign Up Done!');
+        RegistroCognito.registrarUsuario();
       }
     }).catchError((error) {
       print(error);
     });
   }
 
-  confirmarCodigo(String nickname, String codigo) {
-    FlutterAwsAmplifyCognito.confirmSignUp(nickname, codigo)
+  static reenviarCodigo() {
+    FlutterAwsAmplifyCognito.resendSignUp(Sesion.usuarioRegistro.nickname)
         .then((SignUpResult result) {
-      if (!result.confirmationState) {
-        final UserCodeDeliveryDetails details = result.userCodeDeliveryDetails;
-        print(details.destination);
-      } else {
-        print('Sign Up Done!');
-      }
+      print("codigo reenviado");
     }).catchError((error) {
       print(error);
     });
   }
 
-  cambiarContrasenia(String nickname) {
+  static cambiarContrasenia(String nickname) {
     FlutterAwsAmplifyCognito.forgotPassword(nickname)
         .then((ForgotPasswordResult result) {
       switch (result.state) {
@@ -86,7 +104,7 @@ class RegistroCognito {
     });
   }
 
-  confirmarCodigoCambioContrasenia(
+  static confirmarCodigoCambioContrasenia(
       String nickname, String nuevaContrasenia, String codigoConfirmacion) {
     FlutterAwsAmplifyCognito.confirmForgotPassword(
             nickname, nuevaContrasenia, codigoConfirmacion)

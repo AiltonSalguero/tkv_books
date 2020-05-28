@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:tkv_books/dao/usuario_dao.dart';
 import 'package:tkv_books/model/libro.dart';
 import 'package:tkv_books/model/usuario.dart';
@@ -13,9 +14,14 @@ import 'libro_dao.dart';
 */
 
 class Sesion {
+  // Context
+  static BuildContext contextActual;
+
   // Registro
   static Usuario usuarioRegistro;
-  static String contraseniaRegistro;
+  static String codigoValidacion;
+  static String contraseniaUsuario;
+  static Map<String, String> atributosUsuarioRegistro;
 
   // Usuario Logeado
   static bool vieneDeRegistro;
@@ -37,7 +43,6 @@ class Sesion {
   static iniciarDatos() {
     // Registro
     usuarioRegistro = Usuario("", "", "");
-    contraseniaRegistro = "";
 
     // Usuario Logeado
     vieneDeRegistro = false;
