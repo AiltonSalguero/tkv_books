@@ -17,9 +17,13 @@ class Sesion {
   // Context
   static BuildContext contextActual;
 
+  // Validacion
+  static String codigoValidacion;
+  static bool codigoValidado;
+  static String errorValidacion;
+
   // Registro
   static Usuario usuarioRegistro;
-  static String codigoValidacion;
   static String contraseniaUsuario;
   static Map<String, String> atributosUsuarioRegistro;
 
@@ -43,6 +47,13 @@ class Sesion {
   static iniciarDatos() {
     // Registro
     usuarioRegistro = Usuario("", "", "");
+    contraseniaUsuario = "";
+    atributosUsuarioRegistro = Map<String, String>();
+
+    // Validacion
+    codigoValidacion = "";
+    codigoValidado = false;
+    errorValidacion = "Escriba el codigo que se le envio.";
 
     // Usuario Logeado
     vieneDeRegistro = false;
@@ -52,10 +63,6 @@ class Sesion {
 
     // Dialog
     libroAgregado = Libro("", "", 0, 0);
-
-    // General
-    librosRegistrados = ListaLibros();
-    usuariosRegistrados = ListaUsuarios();
 
     // Otros perfiles
     usuarioSeleccionado = Usuario("", "", "");

@@ -1,10 +1,11 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_aws_amplify_cognito/flutter_aws_amplify_cognito.dart';
 import 'package:tkv_books/cognito/sesion_cognito.dart';
 import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dao/usuario_dao.dart';
-import 'package:tkv_books/dialogs/error_dialogs.dart';
+import 'package:tkv_books/dialogs/error_cognito_dialog.dart';
 import 'package:tkv_books/dialogs/validar_codigo_dialog.dart';
-import 'package:tkv_books/model/usuario.dart';
 
 class RegistroCognito {
   static iniciar() {
@@ -38,20 +39,26 @@ class RegistroCognito {
   }
 
   static registrarUsuario() {
+    print("error aqui");
     FlutterAwsAmplifyCognito.signUp(Sesion.usuarioRegistro.nickname,
             Sesion.contraseniaUsuario, Sesion.atributosUsuarioRegistro)
         .then((SignUpResult result) {
       UsuarioDao.postUsuario(Sesion.usuarioRegistro);
       if (!result.confirmationState) {
         // Si aun no valida su codigo
+        print("error en registrar usuario1");
         ValidarCodigoDialog(
           context: Sesion.contextActual,
         ).build();
       } else {
+        print("error en registrar usuario2");
+        Sesion.codigoValidado = true;
+        Sesion.usuarioLogeado = Sesion.usuarioRegistro;
         SesionCognito.iniciarSesion();
       }
     }).catchError((error) {
-      ErrorDialog(
+      print("error en registrar usuario3");
+      ErrorCognitoDialog(
         context: Sesion.contextActual,
         error: error,
       ).build();
@@ -59,18 +66,44 @@ class RegistroCognito {
   }
 
   static validarCodigo() {
-    FlutterAwsAmplifyCognito.confirmSignUp(
-            Sesion.usuarioRegistro.nickname, Sesion.codigoValidacion)
-        .then((SignUpResult result) {
-      if (!result.confirmationState) {
-        final UserCodeDeliveryDetails details = result.userCodeDeliveryDetails;
-        print(details.destination);
-      } else {
-        RegistroCognito.registrarUsuario();
-      }
-    }).catchError((error) {
-      print(error);
-    });
+    print("validar");
+    try {
+      FlutterAwsAmplifyCognito.confirmSignUp(
+              Sesion.usuarioRegistro.nickname, Sesion.codigoValidacion)
+          .then((SignUpResult result) {
+        print("validando");
+        if (!result.confirmationState) {
+          final UserCodeDeliveryDetails details =
+              result.userCodeDeliveryDetails;
+          print(details.destination);
+          print("error en registrar usuario4");
+        } else {
+          print("error en registrar usuario5");
+          SesionCognito.iniciarSesion();
+          _irAperfil();
+        }
+      }).catchError((PlatformException error) {
+        Sesion.errorValidacion = error.details;
+        if (error.message
+            .contains("Member must have length greater than or equal to 1")) {
+          Sesion.errorValidacion = "No ha escrito un codigo.";
+        }
+
+        print("error en registrar usuario6");
+        print(error);
+        print(error.message);
+        print(error.details);
+      });
+    } catch (e) {
+      print("IMPRIMIR");
+      print(Sesion.usuarioLogeado.nickname);
+      print(Sesion.usuarioRegistro.nickname);
+      SesionCognito.iniciarSesion();
+    }
+  }
+
+  static _irAperfil() {
+    Navigator.of(Sesion.contextActual).pushNamed('/perfil');
   }
 
   static reenviarCodigo() {
@@ -79,6 +112,7 @@ class RegistroCognito {
       print("codigo reenviado");
     }).catchError((error) {
       print(error);
+      Sesion.errorValidacion = error.details;
     });
   }
 

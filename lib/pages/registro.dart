@@ -21,6 +21,8 @@ class _RegistroPageState extends State<RegistroPage> {
   final email = TextEditingController();
   final contrasenia = TextEditingController();
 
+  bool datosValidados = false;
+
   @override
   void dispose() {
     // Limpia los controlodadores
@@ -79,7 +81,10 @@ class _RegistroPageState extends State<RegistroPage> {
 
   _validarRegistro() {
     _validarDatos();
-    _registrarUsuario();
+    if (datosValidados) {
+      datosValidados = false;
+      _registrarUsuario();
+    }
   }
 
   _registrarUsuario() {
@@ -88,6 +93,7 @@ class _RegistroPageState extends State<RegistroPage> {
     Sesion.atributosUsuarioRegistro = Map<String, String>();
     Sesion.atributosUsuarioRegistro["email"] = Sesion.usuarioRegistro.email;
     Sesion.contraseniaUsuario = contrasenia.text;
+    Sesion.usuarioLogeado = Sesion.usuarioRegistro;
     RegistroCognito.registrarUsuario();
   }
 
@@ -103,12 +109,10 @@ class _RegistroPageState extends State<RegistroPage> {
   _validarDatos() {
     String tituloDialog;
     String contenidoDialog;
-    bool errorDatos = false;
     if (nickname.text.isEmpty ||
         email.text.isEmpty ||
         contrasenia.text.isEmpty ||
         nombreCompleto.text.isEmpty) {
-      errorDatos = true;
       tituloDialog = "Campo incompleto";
       if (contrasenia.text.isEmpty) contenidoDialog = "Escriba una contraseña";
       if (email.text.isEmpty) contenidoDialog = "Escriba un email";
@@ -116,7 +120,6 @@ class _RegistroPageState extends State<RegistroPage> {
       if (nombreCompleto.text.isEmpty) contenidoDialog = "Escriba un nombre";
     }
     if (nickname.text.length > 12 || nombreCompleto.text.length > 12) {
-      errorDatos = true;
       tituloDialog = "Campo muy largo";
       if (nickname.text.length > 12)
         contenidoDialog = "Escriba un nickname más corto";
@@ -125,15 +128,14 @@ class _RegistroPageState extends State<RegistroPage> {
     }
 
     if (nickname.text.length < 4 || contrasenia.text.length < 8) {
-      errorDatos = true;
       tituloDialog = "Campo muy corto";
       if (contrasenia.text.length < 8)
         contenidoDialog = "Escriba una contraseña más larga";
       if (nickname.text.length < 4)
         contenidoDialog = "Escriba un nickname más largo";
     }
-
-    if (errorDatos) {
+    datosValidados = true;
+    if (!datosValidados) {
       SimpleDialogTkv(
         title: tituloDialog,
         content: contenidoDialog,

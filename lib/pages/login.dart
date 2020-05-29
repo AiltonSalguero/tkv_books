@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_aws_amplify_cognito/flutter_aws_amplify_cognito.dart';
 import 'package:tkv_books/dao/dao.dart';
 import 'package:tkv_books/dao/sesion.dart';
+import 'package:tkv_books/dialogs/error_cognito_dialog.dart';
 import 'package:tkv_books/dialogs/simple_dialog.dart';
 import 'package:tkv_books/widgets/buttons/large_button.dart';
 import 'package:tkv_books/widgets/inputs/rounded_input.dart';
@@ -116,8 +117,8 @@ class _LoginPageState extends State<LoginPage> {
           break;
         case SignInState.DONE:
           print("8");
-          _iniciarSesion();
           _irAperfil();
+          _iniciarSesion();
           break;
         case SignInState.UNKNOWN:
           print("9");
@@ -127,27 +128,10 @@ class _LoginPageState extends State<LoginPage> {
           break;
       }
     }).catchError((error) {
-      String tituloDialog = "Error";
-      String contenidoDialog = "Error desconocido";
-      print(error.message);
-      print(error.details);
-      if (error.details.contains("User does not exist")) {
-        tituloDialog = "Nickname incorrecto";
-        contenidoDialog = "Escriba un nickname existente.";
-      }
-      if (error.details.contains("Incorrect username or password")) {
-        tituloDialog = "Datos incorrectos";
-        contenidoDialog = "Vuelva a el nickname y la contraseña.";
-      }
-      if (error.details.contains("Failed to authenticate user")) {
-        tituloDialog = "Contraseña incorrecta";
-        contenidoDialog = "Vuelva a escribir la contraseña.";
-      }
-      SimpleDialogTkv(
-        title: tituloDialog,
-        content: contenidoDialog,
-        rightText: "Ok",
-      ).build(context);
+      ErrorCognitoDialog(
+        error: error,
+        context: context,
+      ).build();
     });
   }
 
@@ -155,7 +139,7 @@ class _LoginPageState extends State<LoginPage> {
     Sesion.usuarioLogeado.nickname = nicknameController.text;
     FlutterAwsAmplifyCognito.getTokens().then((Tokens tokens) {
       Dao.cognitoToken = tokens.idToken;
-      // Sesion.getDatosUsuarioLogeado();
+     // Sesion.getDatosUsuarioLogeado();
       Sesion.getLibroLeyendoUsuarioLogeado();
       Sesion.getLibrosUsuarioLogeado();
     }).catchError((error) {

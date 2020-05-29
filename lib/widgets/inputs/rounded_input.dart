@@ -14,7 +14,7 @@ class RoundedInput extends StatelessWidget {
       this.ocultarDatos});
   @override
   Widget build(BuildContext context) {
-    List inputFormatos = [];
+    List<TextInputFormatter> inputFormatos = [];
     if (tipoInput == TextInputType.text) {
       inputFormatos = [
         WhitelistingTextInputFormatter(
@@ -59,7 +59,6 @@ class RoundedInput extends StatelessWidget {
     );
   }
 }
-
 
 Widget inputDialogText(
     String texto, TextEditingController controlador, String textoAdvertencia) {

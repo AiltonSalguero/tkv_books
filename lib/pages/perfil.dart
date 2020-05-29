@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_aws_amplify_cognito/flutter_aws_amplify_cognito.dart';
+import 'package:tkv_books/cognito/sesion_cognito.dart';
 import 'package:tkv_books/dao/dao.dart';
 import 'package:tkv_books/dao/libro_dao.dart';
 import 'package:tkv_books/dao/sesion.dart';
+import 'package:tkv_books/dao/usuario_dao.dart';
 import 'package:tkv_books/dialogs/agregar_libro_dialog.dart';
 import 'package:tkv_books/dialogs/simple_dialog.dart';
 import 'package:tkv_books/model/usuario.dart';
@@ -93,10 +95,16 @@ class _PerfilPageState extends State<PerfilPage> {
         ),
         floatingButton: CenterFloatingButtonTkv(
           icon: Icons.add,
-          accion: Sesion.getDatosUsuarioLogeado,
+          accion: _test,
         ),
       ),
     );
+  }
+  _test(){
+//    eyJraWQiOiJZTm44WkNNbDJDNUxEUnJyampFaXRaY1ZvUm8wOTgwNWZKdko1Z01WWllJPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI1YjVkMGVmYi04NWFkLTQ1NmQtYjFiZi01YWVmNWM0ZjA4YjciLCJhdWQiOiIxZXBuNWI0Z3VxZjdlMmM4OHRha2tidHYwbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6IjA5ZmE2N2I0LTE1YzItNGFlMi04YzQwLTQxYjMzNWExYjViMyIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNTkwNzkwODA2LCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtd2VzdC0yLmFtYXpvbmF3cy5jb21cL3VzLXdlc3QtMl8za2djeFd5cU0iLCJjb2duaXRvOnVzZXJuYW1lIjoiYXNkZmdoYXMiLCJleHAiOjE1OTA3OTQ0MDYsImlhdCI6MTU5MDc5MDgwNiwiZW1haWwiOiJhaWx0b24uc2FsZ0BnbWFpbC5jb20ifQ.UUBbob4Lk4OHmT8UnjJIIuE0A_7YhHguOT6EoHxxsj9KlqX_WPq5yTuHlAYbCzpOVk9ihbjz89YiED2cZwaNopRMO-BeC6i-WD1Kayev6MTBnoEGgV5JHGXvnUfgTfwQ6GwvN-zLF6fGndhv2dL10bW0647yky8VDuqZpF5DOWWT4GWaDDjJFhoTSOC1Vi2XqFOHfTwmrX1VagLQ1eKxdXoTNpXCNuuBcMTw07xlzsesigGBxRsdR0yh7_MWE9iQRbxDl3CziJaSQhGwWlLC3u10vv87CU8LUwMrpVUckECsqJuqGlcXWQiH0bMY0PCFfeUBaSeQc4Ihwoi8D1ovmA
+    Sesion.usuarioRegistro.nickname = "b";
+    print(Sesion.usuarioRegistro.nickname);
+    UsuarioDao.postUsuario(Sesion.usuarioRegistro).then((value) => null).catchError((onError){print(onError);});
   }
 
   _actualizarListaLibros() {
@@ -124,7 +132,7 @@ class _PerfilPageState extends State<PerfilPage> {
         .then(
       (value) {
         if (value == ConfirmAction.ACCEPT) {
-          Sesion.reiniciarDatos();
+          SesionCognito.cerrarSesion();
           _irAhome();
         }
       },

@@ -3,7 +3,8 @@ import 'package:tkv_books/dao/sesion.dart';
 
 class SesionCognito {
   static iniciarSesion() {
-    FlutterAwsAmplifyCognito.signIn(Sesion.usuarioLogeado.nickname, Sesion.contraseniaUsuario)
+    FlutterAwsAmplifyCognito.signIn(
+            Sesion.usuarioLogeado.nickname, Sesion.contraseniaUsuario)
         .then((SignInResult result) {
       switch (result.signInState) {
         case SignInState.SMS_MFA:
@@ -88,5 +89,11 @@ class SesionCognito {
     }).catchError((error) {
       print(error);
     });
+  }
+
+  static cerrarSesion() {
+    FlutterAwsAmplifyCognito.signOut().then((value) {
+      Sesion.reiniciarDatos();
+    }).catchError((error) {});
   }
 }

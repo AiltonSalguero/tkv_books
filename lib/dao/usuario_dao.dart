@@ -55,6 +55,7 @@ class UsuarioDao {
 
   static Future<Null> postUsuario(Usuario nuevoUsuario) async {
     String apiUrl = Dao.apiUrl + "/usuarios";
+    print(apiUrl);
     Dao.httpPost(apiUrl, nuevoUsuario);
   }
 

@@ -23,6 +23,7 @@ class Dao {
   }
 
   static httpPost(String url, var objeto) {
+    print(jsonEncode(objeto.toJson()));
     http.post(
       url,
       body: jsonEncode(objeto.toJson()),
