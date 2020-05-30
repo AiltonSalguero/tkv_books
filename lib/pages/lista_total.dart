@@ -1,24 +1,22 @@
+import 'package:flutter/material.dart';
+import 'package:tkv_books/dao/libro_dao.dart';
+import 'package:tkv_books/dao/sesion.dart';
+import 'package:tkv_books/dialogs/normal_dialog.dart';
+import 'package:tkv_books/util/screen.dart';
+import 'package:tkv_books/util/temaPersonlizado.dart';
+import 'package:tkv_books/util/utilFunctions.dart';
+import 'package:tkv_books/widgets/buttons/top_button.dart';
+import 'package:tkv_books/widgets/labels/labelPerzonalizado.dart';
+import 'package:tkv_books/widgets/page_background.dart';
+import 'package:tkv_books/widgets/progress/book_linear_progress.dart';
+import 'package:tkv_books/widgets/progress/experience_bar.dart';
+import 'package:tkv_books/widgets/progress/library_circular_progress.dart';
+
 /*
 
 
   Por limpiar dar mejores nombres a las vairable
 */
-
-import 'package:flutter/material.dart';
-import 'package:tkv_books/dao/libro_dao.dart';
-import 'package:tkv_books/dao/sesion.dart';
-import 'package:tkv_books/dialogs/simple_dialog.dart';
-import 'package:tkv_books/util/screen.dart';
-import 'package:tkv_books/util/temaPersonlizado.dart';
-import 'package:tkv_books/util/utilFunctions.dart';
-import 'package:tkv_books/widgets/buttons/top_button.dart';
-
-import 'package:tkv_books/widgets/labels/labelPerzonalizado.dart';
-
-import 'package:tkv_books/widgets/page_background.dart';
-import 'package:tkv_books/widgets/progress/book_linear_progress.dart';
-import 'package:tkv_books/widgets/progress/experience_bar.dart';
-import 'package:tkv_books/widgets/progress/library_circular_progress.dart';
 
 class ListaTotalPage extends StatefulWidget {
   @override
@@ -170,11 +168,12 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
       LibroDao.putLibroSetPaginasLeidas(Sesion.libroLeyendoUsuarioLogeado);
       if (levelAntiguo < calcularLevelUsuario(Sesion.usuarioLogeado.puntaje)) {
         // Mostrar mensaje de subida de leve
-        SimpleDialogTkv(
+        NormalDialog(
+          context: context,
           title: "Subiste de nivel!",
           content: "Ahora eres Lv. ${Sesion.usuarioLogeado.nivel}",
           rightText: ":D",
-        ).build(context);
+        ).build();
       }
       setState(() {});
     }

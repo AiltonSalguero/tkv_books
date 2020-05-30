@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_aws_amplify_cognito/flutter_aws_amplify_cognito.dart';
 import 'package:tkv_books/cognito/registro_cognito.dart';
 import 'package:tkv_books/cognito/sesion_cognito.dart';
 import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dao/usuario_dao.dart';
-import 'package:tkv_books/widgets/inputs/rounded_input.dart';
+import 'package:tkv_books/widgets/inputs/dialog_input.dart';
 import 'package:tkv_books/widgets/labels/labelPerzonalizado.dart';
 
 /*
@@ -48,7 +47,11 @@ class ValidarCodigoDialog {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
                       titulo3Label(Sesion.errorValidacion),
-                      inputDialogText("Código", _codigo, "Ingrese el código"),
+                      DialogInput(
+                        texto: "Código",
+                        controlador: _codigo,
+                        textoAdvertencia: "Ingrese el código",
+                      )
                     ],
                   ),
                 ),

@@ -6,8 +6,6 @@
 import 'package:flutter/material.dart';
 import 'package:tkv_books/dao/sesion.dart';
 
-enum ConfirmAction { CANCEL, ACCEPT }
-
 Future<ConfirmAction> editarLibroDialog(BuildContext context) {
   final _formKey = GlobalKey<FormState>();
 
@@ -16,7 +14,7 @@ Future<ConfirmAction> editarLibroDialog(BuildContext context) {
   final paginasLeidas = TextEditingController();
   final paginasTotales = TextEditingController();
 
-  void _cerrarDialog() {
+  _cerrarDialog() {
     Sesion.libroAgregado.codUsuario = Sesion.usuarioLogeado.codUsuario;
     Sesion.libroAgregado.nombre = nombre.text;
     Sesion.libroAgregado.autor = autor.text;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tkv_books/dialogs/simple_dialog.dart';
+import 'package:tkv_books/dialogs/normal_dialog.dart';
 
 class ErrorCognitoDialog {
   var error;
@@ -10,11 +10,12 @@ class ErrorCognitoDialog {
 
   build() {
     _completarCampos();
-    return SimpleDialogTkv(
+    return NormalDialog(
+      context: context,
       title: _tituloDialog,
       content: _contenidoDialog,
       rightText: "Ok",
-    ).build(context);
+    );
   }
 
   _completarCampos() {

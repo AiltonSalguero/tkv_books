@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:tkv_books/dao/sesion.dart';
 
-enum ConfirmAction { CANCEL, ACCEPT }
-
-class SimpleDialogTkv {
+class NormalDialog {
+  final BuildContext context;
   final String title;
   final String content;
   final String leftText;
-  @required
   final String rightText;
 
-  const SimpleDialogTkv(
-      {this.title, this.content, this.leftText, this.rightText});
+  const NormalDialog(
+      {@required this.context,
+      @required this.title,
+      @required this.content,
+      this.leftText,
+      @required this.rightText});
 
-  build(BuildContext context) {
+  build() {
     return showDialog(
       context: context,
       barrierDismissible: false,
@@ -35,20 +38,21 @@ class SimpleDialogTkv {
             leftText != null
                 ? FlatButton(
                     child: Text(leftText),
-                    onPressed: () {
-                      Navigator.of(context).pop(ConfirmAction.CANCEL);
-                    },
+                    onPressed: _cerrarDialog,
                   )
                 : null,
-            FlatButton(
-              child: Text(rightText),
-              onPressed: () {
-                Navigator.of(context).pop(ConfirmAction.ACCEPT);
-              },
-            ),
+            FlatButton(child: Text(rightText), onPressed: _aceptarDialog),
           ],
         );
       },
     );
+  }
+
+  _aceptarDialog() {
+    Navigator.of(context).pop(ConfirmAction.ACCEPT);
+  }
+
+  _cerrarDialog() {
+    Navigator.of(context).pop(ConfirmAction.CANCEL);
   }
 }

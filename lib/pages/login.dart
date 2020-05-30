@@ -3,7 +3,7 @@ import 'package:flutter_aws_amplify_cognito/flutter_aws_amplify_cognito.dart';
 import 'package:tkv_books/dao/dao.dart';
 import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dialogs/error_cognito_dialog.dart';
-import 'package:tkv_books/dialogs/simple_dialog.dart';
+import 'package:tkv_books/dialogs/normal_dialog.dart';
 import 'package:tkv_books/widgets/buttons/large_button.dart';
 import 'package:tkv_books/widgets/inputs/rounded_input.dart';
 import 'package:tkv_books/widgets/labels/labelPerzonalizado.dart';
@@ -81,11 +81,12 @@ class _LoginPageState extends State<LoginPage> {
         contenidoDialog = "Escriba el nickname";
     }
     if (errorDatos) {
-      SimpleDialogTkv(
+      NormalDialog(
+        context:context,
         title: tituloDialog,
         content: contenidoDialog,
         rightText: "Ok",
-      ).build(context);
+      ).build();
     }
   }
 

@@ -12,7 +12,7 @@ import 'libro_dao.dart';
   // que se guarden los datos en estas variables estaticas?
   // con cognito se puede mantener la sesion iniciada
 */
-
+enum ConfirmAction { CANCEL, ACCEPT }
 class Sesion {
   // Context
   static BuildContext contextActual;

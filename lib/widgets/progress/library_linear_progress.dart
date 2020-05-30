@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tkv_books/dao/libro_dao.dart';
 import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dao/usuario_dao.dart';
-import 'package:tkv_books/dialogs/simple_dialog.dart';
+import 'package:tkv_books/dialogs/normal_dialog.dart';
 import 'package:tkv_books/model/libro.dart';
 import 'package:tkv_books/util/screen.dart';
 import 'package:tkv_books/util/utilFunctions.dart';
@@ -90,12 +90,13 @@ class _LibraryLinearProgressTkvState extends State<LibraryLinearProgressTkv> {
 
   _abrirEliminarLibroDialog(Libro libro) {
     print("_abrirEliminarLibroDialog");
-    SimpleDialogTkv(
+    NormalDialog(
+      context: context,
       title: "¿Eliminar libro?",
       content: "Al eliminarlo se disminuirá el puntaje ganado.",
       leftText: "No",
       rightText: "Si",
-    ).build(context).eliminarLibroDialog(context).then(
+    ).build().then(
       (value) {
         if (value == ConfirmAction.ACCEPT) {
           Sesion.usuarioLogeado.puntaje -= libro.paginasLeidas;
