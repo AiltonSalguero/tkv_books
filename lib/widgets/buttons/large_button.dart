@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 
 class LargeButton extends StatelessWidget {
   final String nombre;
-  @required final bool primario;
+  final bool primario;
   final Function accion;
-  LargeButton({this.nombre, this.primario, this.accion});
+  LargeButton(
+      {@required this.nombre, @required this.primario, @required this.accion});
   @override
   Widget build(BuildContext context) {
     return Container(

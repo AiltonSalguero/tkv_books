@@ -6,7 +6,8 @@ import 'package:tkv_books/dialogs/normal_dialog.dart';
 import 'package:tkv_books/model/libro.dart';
 import 'package:tkv_books/util/screen.dart';
 import 'package:tkv_books/util/utilFunctions.dart';
-import 'package:tkv_books/widgets/labels/labelPerzonalizado.dart';
+import 'package:tkv_books/widgets/labels/subtitulo_label.dart';
+import 'package:tkv_books/widgets/labels/titulo_label.dart';
 import 'package:tkv_books/widgets/progress/book_linear_progress.dart';
 
 class LibraryLinearProgressTkv extends StatefulWidget {
@@ -45,18 +46,21 @@ class _LibraryLinearProgressTkvState extends State<LibraryLinearProgressTkv> {
                   width: Screen.width * 0.6,
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
-                    child: titulo3Label(
-                        Sesion.librosUsuarioLogeado.lista[index].nombre),
+                    child: TituloLabel(
+                      texto: Sesion.librosUsuarioLogeado.lista[index].nombre,
+                      numeroTitulo: 3,
+                    ),
                   ),
                 ),
                 Container(
                   height: 20,
                   width: Screen.width * 0.6,
                   child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: subTitulo3Label(
-                        Sesion.librosUsuarioLogeado.lista[index].autor),
-                  ),
+                      scrollDirection: Axis.horizontal,
+                      child: SubtituloLabel(
+                        texto: Sesion.librosUsuarioLogeado.lista[index].autor,
+                        numeroTitulo: 3,
+                      )),
                 ),
               ],
             ),

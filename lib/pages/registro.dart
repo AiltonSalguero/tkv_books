@@ -7,7 +7,7 @@ import 'package:tkv_books/dialogs/normal_dialog.dart';
 import 'package:tkv_books/model/usuario.dart';
 import 'package:tkv_books/widgets/buttons/large_button.dart';
 import 'package:tkv_books/widgets/inputs/rounded_input.dart';
-import 'package:tkv_books/widgets/labels/labelPerzonalizado.dart';
+import 'package:tkv_books/widgets/labels/titulo_label.dart';
 import 'package:tkv_books/widgets/page_background.dart';
 
 class RegistroPage extends StatefulWidget {
@@ -43,7 +43,10 @@ class _RegistroPageState extends State<RegistroPage> {
         scrollDirection: Axis.vertical,
         child: Column(
           children: <Widget>[
-            titulo1Label("Registro"),
+            TituloLabel(
+              texto: "Registro",
+              numeroTitulo: 1,
+            ),
             RoundedInput(
               nombre: "Nombre y apellido",
               controller: nombreCompleto,

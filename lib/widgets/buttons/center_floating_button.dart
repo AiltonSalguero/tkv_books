@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:tkv_books/util/temaPersonlizado.dart';
 
 class CenterFloatingButtonTkv extends StatelessWidget {
-  IconData icon;
-  Function accion;
-  CenterFloatingButtonTkv({this.icon, this.accion});
+  final IconData icon;
+  final Function accion;
+  CenterFloatingButtonTkv({@required this.icon, @required this.accion});
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(

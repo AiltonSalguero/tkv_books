@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class TopButtonTkv extends StatelessWidget {
   final String nombre;
   final Function navegarA;
-  TopButtonTkv({this.nombre, this.navegarA});
+  TopButtonTkv({@required this.nombre, @required this.navegarA});
 
   @override
   Widget build(BuildContext context) {

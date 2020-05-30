@@ -6,7 +6,7 @@ import 'package:tkv_books/util/screen.dart';
 import 'package:tkv_books/util/temaPersonlizado.dart';
 import 'package:tkv_books/util/utilFunctions.dart';
 import 'package:tkv_books/widgets/buttons/top_button.dart';
-import 'package:tkv_books/widgets/labels/labelPerzonalizado.dart';
+import 'package:tkv_books/widgets/labels/titulo_label.dart';
 import 'package:tkv_books/widgets/page_background.dart';
 import 'package:tkv_books/widgets/progress/book_linear_progress.dart';
 import 'package:tkv_books/widgets/progress/experience_bar.dart';
@@ -60,7 +60,10 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
         children: <Widget>[
           Align(
             alignment: Alignment(0, -0.9),
-            child: titulo1Label(Sesion.usuarioLogeado.nickname),
+            child: TituloLabel(
+              texto: Sesion.usuarioLogeado.nickname,
+              numeroTitulo: 1,
+            ),
           ),
           _buildLevel(Sesion.usuarioLogeado.nivel),
           Align(
@@ -82,14 +85,16 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Container(
-                            height: 20,
-                            width: Screen.width * 0.6,
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: titulo3Label(
-                                  Sesion.libroLeyendoUsuarioLogeado.nombre),
-                            ),
-                          ),
+                              height: 20,
+                              width: Screen.width * 0.6,
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: TituloLabel(
+                                  texto:
+                                      Sesion.libroLeyendoUsuarioLogeado.nombre,
+                                  numeroTitulo: 3,
+                                ),
+                              )),
                         ],
                       ),
                       boxHeight: Screen.height * 0.12,
@@ -111,7 +116,10 @@ class _ListaTotalPageState extends State<ListaTotalPage> {
       ),
       content: Column(
         children: <Widget>[
-          titulo1Label("Biblioteca global"),
+          TituloLabel(
+            texto: "Biblioteca global",
+            numeroTitulo: 1,
+          ),
           hayLibrosLeyendose
               ? LibraryCircularProgressTkv(
                   libreria: Sesion.librosRegistrados,

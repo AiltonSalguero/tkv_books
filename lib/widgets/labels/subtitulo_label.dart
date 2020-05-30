@@ -1,33 +1,26 @@
 import 'package:flutter/material.dart';
 
-Widget titulo1Label(String texto) {
-  return Text(
-    texto,
-    style: TextStyle(
-      fontSize: 28.0,
-      fontWeight: FontWeight.bold,
-    ),
-  );
-}
+class SubtituloLabel extends StatelessWidget {
+  final String texto;
+  final int numeroTitulo;
+  double _tamanioFuente;
+  SubtituloLabel({@required this.texto, @required this.numeroTitulo}) {
+    switch (numeroTitulo) {
+      case 1:
+        _tamanioFuente = 28.0;
+        break;
+      case 2:
+        _tamanioFuente = 18.0;
+        break;
+      default:
+        _tamanioFuente = 12.0;
+    }
+  }
 
-Widget titulo2Label(String texto) {
-  return Text(
-    texto,
-    style: TextStyle(
-      fontSize: 18.0,
-    ),
-  );
-}
-
-Widget titulo3Label(String texto) {
-  return Text(
-    texto,
-    style: TextStyle(
-      color: Colors.black,
-      fontSize: 12.0,
-      //fontWeight: FontWeight.bold,
-    ),
-  );
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
 }
 
 Widget subTitulo1Label(String texto) {

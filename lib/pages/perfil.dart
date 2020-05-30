@@ -8,7 +8,8 @@ import 'package:tkv_books/util/utilFunctions.dart';
 import 'package:tkv_books/widgets/buttons/center_floating_button.dart';
 import 'package:tkv_books/widgets/buttons/top_button.dart';
 import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
-import 'package:tkv_books/widgets/labels/labelPerzonalizado.dart';
+import 'package:tkv_books/widgets/labels/subtitulo_label.dart';
+import 'package:tkv_books/widgets/labels/titulo_label.dart';
 import 'package:tkv_books/widgets/page_background.dart';
 import 'package:tkv_books/widgets/progress/experience_bar.dart';
 import 'package:tkv_books/widgets/progress/library_linear_progress.dart';
@@ -63,9 +64,18 @@ class _PerfilPageState extends State<PerfilPage> {
                   SizedBox(
                     height: 50,
                   ),
-                  titulo1Label(Sesion.usuarioLogeado.nickname),
-                  subTitulo2Label(Sesion.usuarioLogeado.nombreCompleto),
-                  titulo2Label("Lv. " + Sesion.usuarioLogeado.nivel.toString()),
+                  TituloLabel(
+                    texto: Sesion.usuarioLogeado.nickname,
+                    numeroTitulo: 1,
+                  ),
+                  SubtituloLabel(
+                    texto: Sesion.usuarioLogeado.nombreCompleto,
+                    numeroTitulo: 2,
+                  ),
+                  TituloLabel(
+                    texto: "Lv. " + Sesion.usuarioLogeado.nivel.toString(),
+                    numeroTitulo: 1,
+                  ),
                 ],
               ),
             ),
@@ -80,7 +90,10 @@ class _PerfilPageState extends State<PerfilPage> {
         ),
         content: Column(
           children: <Widget>[
-            titulo1Label("Biblioteca"),
+            TituloLabel(
+              texto: "Biblioteca",
+              numeroTitulo: 1,
+            ),
             Sesion.librosUsuarioLogeado.lista.isNotEmpty
                 ? LibraryLinearProgressTkv(
                     libreria: Sesion.librosUsuarioLogeado,

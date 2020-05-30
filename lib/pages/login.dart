@@ -6,7 +6,7 @@ import 'package:tkv_books/dialogs/error_cognito_dialog.dart';
 import 'package:tkv_books/dialogs/normal_dialog.dart';
 import 'package:tkv_books/widgets/buttons/large_button.dart';
 import 'package:tkv_books/widgets/inputs/rounded_input.dart';
-import 'package:tkv_books/widgets/labels/labelPerzonalizado.dart';
+import 'package:tkv_books/widgets/labels/titulo_label.dart';
 import 'package:tkv_books/widgets/page_background.dart';
 
 /*
@@ -39,7 +39,10 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           //crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            titulo1Label("Login"),
+            TituloLabel(
+              texto: "Login",
+              numeroTitulo: 1,
+            ),
             RoundedInput(
               nombre: "Nickname",
               controller: nicknameController,
@@ -82,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
     }
     if (errorDatos) {
       NormalDialog(
-        context:context,
+        context: context,
         title: tituloDialog,
         content: contenidoDialog,
         rightText: "Ok",
@@ -140,7 +143,7 @@ class _LoginPageState extends State<LoginPage> {
     Sesion.usuarioLogeado.nickname = nicknameController.text;
     FlutterAwsAmplifyCognito.getTokens().then((Tokens tokens) {
       Dao.cognitoToken = tokens.idToken;
-     // Sesion.getDatosUsuarioLogeado();
+      // Sesion.getDatosUsuarioLogeado();
       Sesion.getLibroLeyendoUsuarioLogeado();
       Sesion.getLibrosUsuarioLogeado();
     }).catchError((error) {

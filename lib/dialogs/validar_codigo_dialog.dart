@@ -5,7 +5,7 @@ import 'package:tkv_books/cognito/sesion_cognito.dart';
 import 'package:tkv_books/dao/sesion.dart';
 import 'package:tkv_books/dao/usuario_dao.dart';
 import 'package:tkv_books/widgets/inputs/dialog_input.dart';
-import 'package:tkv_books/widgets/labels/labelPerzonalizado.dart';
+import 'package:tkv_books/widgets/labels/titulo_label.dart';
 
 /*
   Dialog que aparece para que escriba el codigo de validacion
@@ -46,7 +46,10 @@ class ValidarCodigoDialog {
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
-                      titulo3Label(Sesion.errorValidacion),
+                      TituloLabel(
+                        texto: Sesion.errorValidacion,
+                        numeroTitulo: 3,
+                      ),
                       DialogInput(
                         texto: "Código",
                         controlador: _codigo,
